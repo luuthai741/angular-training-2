@@ -1,0 +1,31 @@
+<app-loading [isLoading]="loading"></app-loading>
+<div class="container">
+    <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" [ngClass]="{ 'is-invalid': formHelper.isInvalid('username', authForm) }"
+                   class="form-control is-invalid" formControlName="username"/>
+        </div>
+        <p
+                class="text-danger"
+                *ngIf="formHelper.getError('username',authForm,'required')"
+        >
+            Please fill out the username!
+        </p>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" [ngClass]="{ 'is-invalid': formHelper.isInvalid('password', authForm) }"
+                   class="form-control is-invalid" formControlName="password"/>
+            <p
+                    class="text-danger"
+                    *ngIf="formHelper.getError('password',authForm,'required')"
+            >
+                Please fill out the password!
+            </p>
+        </div>
+        <app-list-errors [errors]="errorMessage"></app-list-errors>
+        <button type="submit" class="btn btn-primary" [disabled]="authForm.invalid && authForm.touched">
+            Submit
+        </button>
+    </form>
+</div>

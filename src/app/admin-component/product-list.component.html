@@ -1,0 +1,35 @@
+<div class="container mt-4">
+    <h2 class="mb-3">Danh sách sản phẩm</h2>
+    <button class="btn btn-info mt-2 mb-2" [routerLink]="['/admin/products/create']">Create new</button>
+    <table class="table table-bordered table-striped text-center align-middle">
+        <thead class="table-dark">
+        <tr>
+            <th scope="col">#ID</th>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Image</th>
+            <th scope="col">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let product of products">
+            <td>{{ product.id }}</td>
+            <td>{{ product.title }}</td>
+            <td>{{ product.description | truncate }}</td>
+            <td>
+                <img
+                        [src]="product.image"
+                        alt="Ảnh sản phẩm"
+                        style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px;"
+                />
+            </td>
+            <td>
+                <div class="d-flex flex-column align-items-center">
+                    <button class="btn btn-sm btn-warning w-100 mb-2" [routerLink]="['/admin/products/edit', product.id]">Edit</button>
+                    <button class="btn btn-sm btn-danger w-100">Delete</button>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
