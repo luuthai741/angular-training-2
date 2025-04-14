@@ -11,16 +11,14 @@ export class FormHelper{
         const control = formGroup.get(controlName);
         return !!(control?.hasError(errorType) && control?.touched);
     }
-    static focusOnControl(formGroup: FormGroup, inputs: QueryList<ElementRef>){
-        const invalidControlName = Object.keys(formGroup.controls).find(
-            key => formGroup.get(key)?.invalid
-        );
 
-        if (invalidControlName) {
-            const invalidInput = inputs.find(
-                (el) => el.nativeElement.getAttribute('formControlName') === invalidControlName
-            );
-            invalidInput?.nativeElement.focus();
+    static focusOnInvalidField(formFields: QueryList<ElementRef>, form: FormGroup) {
+        for (const formField of formFields.toArray()) {
+            const controlName =  formField.nativeElement.getAttribute("formControlName");
+            if (controlName && form.get(controlName)?.invalid) {
+                formField.nativeElement.focus();
+                break;
+            }
         }
     }
 }

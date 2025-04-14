@@ -1,83 +1,96 @@
 <app-loading [isLoading]="loading"></app-loading>
 <div class="container">
-  <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
-    <input type="text" hidden formControlName="id" value="0" />
-    <div class="form-group">
-      <label>Title</label>
-      <input
-        type="text"
-        class="form-control"
-        formControlName="title"
-        aria-describedby="emailHelp"
-        [ngClass]="{ 'is-invalid': formHelper.isInvalid('title', productForm) }"
-      />
-    </div>
-    <p
-      class="text-danger"
-      *ngIf="formHelper.getError('title',productForm,'required')"
-    >
-      Please fill out the title!
-    </p>
-    <div class="form-group">
-      <label>Price</label>
-      <input type="number" class="form-control" formControlName="price" [ngClass]="{ 'is-invalid': formHelper.isInvalid('price', productForm) }"/>
-      <p
-        class="text-danger"
-        *ngIf="formHelper.getError('price',productForm,'required')"
-      >
-        Please fill out the price!
-      </p>
-    </div>
-    <div class="form-group">
-      <label>Description</label>
-      <input
-        type="text"
-        class="form-control"
-        formControlName="description"
-        aria-describedby="emailHelp"
-        [ngClass]="{ 'is-invalid': formHelper.isInvalid('description', productForm) }"
-      />
-      <p
-        class="text-danger"
-        *ngIf="formHelper.getError('description',productForm,'required')"
-      >
-        Please fill out the description!
-      </p>
-    </div>
-    <div class="form-group">
-      <label>Category</label>
-      <input
-        type="text"
-        class="form-control"
-        formControlName="category"
-        aria-describedby="emailHelp"
-        [ngClass]="{ 'is-invalid': formHelper.isInvalid('category', productForm) }"
-      />
-      <p
-        class="text-danger"
-        *ngIf="formHelper.getError('category',productForm,'required')"
-      >
-        Please fill out the category!
-      </p>
-    </div>
-    <div class="form-group">
-      <label>Image</label>
-      <input
-        type="text"
-        class="form-control"
-        formControlName="image"
-        aria-describedby="emailHelp"
-        [ngClass]="{ 'is-invalid': formHelper.isInvalid('image', productForm) }"
-      />
-    </div>
-    <p
-      class="text-danger"
-      *ngIf="formHelper.getError('image',productForm,'required')"
-    >
-      Please fill out the image!
-    </p>
-      <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid && productForm.touched">
-          Submit
-      </button>
-  </form>
+    <app-message-response [messageResponse]="messageResponse"></app-message-response>
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+        <input type="number" hidden formControlName="id" value="0"/>
+        <div class="form-group">
+            <label>Title</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    formControlName="title"
+                    aria-describedby="emailHelp"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('title', productForm) }"
+                    autofocus
+                    #formFields
+            />
+        </div>
+        <p
+                class="text-danger"
+                *ngIf="formHelper.getError('title',productForm,'required')"
+        >
+            Please fill out the title!
+        </p>
+        <div class="form-group">
+            <label>Price</label>
+            <input type="text" class="form-control" formControlName="price"
+                   [ngClass]="{ 'is-invalid': formHelper.isInvalid('price', productForm) }" #formFields/>
+            <p
+                    class="text-danger"
+                    *ngIf="formHelper.getError('price',productForm,'required')"
+            >
+                Please fill out the price!
+            </p>
+            <p
+                    class="text-danger"
+                    *ngIf="formHelper.getError('price',productForm,'invalidNumber')"
+            >
+                Please enter a valid number.
+            </p>
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    formControlName="description"
+                    aria-describedby="emailHelp"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('description', productForm) }"
+                    #formFields
+            />
+            <p
+                    class="text-danger"
+                    *ngIf="formHelper.getError('description',productForm,'required')"
+            >
+                Please fill out the description!
+            </p>
+        </div>
+        <div class="form-group">
+            <label>Category</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    formControlName="category"
+                    aria-describedby="emailHelp"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('category', productForm) }"
+                    #formFields
+            />
+            <p
+                    class="text-danger"
+                    *ngIf="formHelper.getError('category',productForm,'required')"
+            >
+                Please fill out the category!
+            </p>
+        </div>
+        <div class="form-group">
+            <label>Image</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    formControlName="image"
+                    aria-describedby="emailHelp"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('image', productForm) }"
+                    #formFields
+            />
+        </div>
+        <p
+                class="text-danger"
+                *ngIf="formHelper.getError('image',productForm,'required')"
+        >
+            Please fill out the image url!
+        </p>
+        <button type="submit" class="btn btn-primary" (click)="onSubmit()">
+            Submit
+        </button>
+    </form>
 </div>

@@ -1,10 +1,12 @@
 import {ActivatedRoute} from '@angular/router';
 import {ProducerService} from '../service/product.service';
-import {Component, ElementRef, OnInit, QueryList, TemplateRef, ViewChildren} from '@angular/core';
+import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {FormType} from '../constant/form-type.model';
 import {LoadingState} from '../constant/loading-state.model';
 import {FormHelper} from "../common/form-helper";
+import {MessageResponse} from "../model/message-response.model";
+import {numberOnlyValidator} from "../validator/form-validator";
 
 @Component({
     selector: 'product-list',
@@ -15,6 +17,8 @@ export class ProductFormComponent implements OnInit {
     productForm: FormGroup;
     loading: LoadingState = LoadingState.NOT_LOADED;
     formHelper = FormHelper;
+    messageResponse: MessageResponse = null;
+    @ViewChildren("formFields") formFields: QueryList<ElementRef>;
 
     constructor(
         private productService: ProducerService,
@@ -28,7 +32,7 @@ export class ProductFormComponent implements OnInit {
                 validators: [Validators.required],
             }),
             price: new FormControl('', {
-                validators: [Validators.required],
+                validators: [Validators.required, numberOnlyValidator()],
             }),
             description: new FormControl('', {
                 validators: [Validators.required],
@@ -54,20 +58,23 @@ export class ProductFormComponent implements OnInit {
 
     onSubmit() {
         if (this.productForm.invalid) {
+            this.formHelper.focusOnInvalidField(this.formFields, this.productForm);
             this.productForm.markAllAsTouched();
             return;
         }
         this.loading = LoadingState.LOADING;
         let observable =
             this.formType === FormType.CREATE
-                ? this.productService.createProduct(this.productForm.controls.title.value)
+                ? this.productService.createProduct(this.productForm.value)
                 : this.productService.updateProduct(this.productForm.value);
         observable.subscribe({
             next: (data) => {
-                console.log('Product  ' + data);
+                this.loading = LoadingState.LOADED;
+                this.messageResponse = data;
             },
             error: (err) => {
-                console.log(`error ${err.name}`);
+                this.loading = LoadingState.LOADED;
+                this.messageResponse = err;
             },
         });
     }

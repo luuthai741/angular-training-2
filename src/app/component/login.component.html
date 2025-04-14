@@ -3,7 +3,7 @@
     <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
             <label>Username</label>
-            <input type="text" [ngClass]="{ 'is-invalid': formHelper.isInvalid('username', authForm) }"
+            <input type="text" [ngClass]="{ 'is-invalid': formHelper.isInvalid('username', authForm) }" autofocus
                    class="form-control is-invalid" formControlName="username"/>
         </div>
         <p
@@ -23,7 +23,7 @@
                 Please fill out the password!
             </p>
         </div>
-        <app-list-errors [errors]="errorMessage"></app-list-errors>
+        <app-message-response [messageResponse]="messageResponse"></app-message-response>
         <button type="submit" class="btn btn-primary" [disabled]="authForm.invalid && authForm.touched">
             Submit
         </button>

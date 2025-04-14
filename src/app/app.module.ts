@@ -16,19 +16,20 @@ import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {LoggingInterceptor} from './interceptor/logging.interceptor';
 import {ApiInterceptor} from './interceptor/api.interceptor';
 import {ErrorInterceptor} from './interceptor/error.interceptor';
-import {ErrorComponent} from './component/app-error.component';
 import {LoginComponent} from './component/login.component';
 import {UserService} from './service/user.service';
 import {TokenService} from './service/token.service';
-import {IfAuthenticatedDirective} from './directive/if-authenticated.directive';
 import {HeaderComponent} from './layout/header.component';
 import {TruncatePipe} from "./pipe/truncate.pipe";
 import {AdminModule} from "./admin.module";
 import {ShareModule} from "./share.module";
+import {UnauthorizedComponent} from "./component/unauthorized.component";
+import {LoginGuard} from "./guard/login.guard";
 
 const routes: Routes = [
     {path: '', component: ProductListComponent},
-    {path: 'login', component: LoginComponent},
+    {path: 'unauthorized', component: UnauthorizedComponent},
+    {path: 'login', component: LoginComponent, canActivate: [LoginGuard]},
     {path: ':id', component: ProductDetailComponent},
     {path: 'admin', loadChildren: () => import('./admin.module').then(m => m.AdminModule)},
 ];
@@ -41,10 +42,9 @@ const routes: Routes = [
         ProductDetailComponent,
         ProductFormComponent,
         LoadingComponent,
-        ErrorComponent,
         LoginComponent,
-        IfAuthenticatedDirective,
-        HeaderComponent
+        HeaderComponent,
+        UnauthorizedComponent
     ],
     imports: [
         BrowserModule,

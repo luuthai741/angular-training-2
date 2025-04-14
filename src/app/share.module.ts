@@ -1,9 +1,12 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import {TruncatePipe} from "./pipe/truncate.pipe"; // Đổi thành pipe của bạn
+import {NgModule} from '@angular/core';
+import {TruncatePipe} from "./pipe/truncate.pipe";
+import {MessageResponseComponent} from "./component/message-response.component";
+import {CommonModule} from "@angular/common";
 
 @NgModule({
-    declarations: [TruncatePipe],
-    exports: [TruncatePipe],
+    declarations: [TruncatePipe, MessageResponseComponent],
+    exports: [TruncatePipe, MessageResponseComponent],
+    imports:[CommonModule]
 })
-export class ShareModule { }
+export class ShareModule {
+}
