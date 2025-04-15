@@ -6,7 +6,7 @@ import {FormType} from '../constant/form-type.model';
 import {LoadingState} from '../constant/loading-state.model';
 import {FormHelper} from "../common/form-helper";
 import {MessageResponse} from "../model/message-response.model";
-import {numberOnlyValidator} from "../validator/form-validator";
+import {numberOnlyValidator} from "../common/form-validator";
 
 @Component({
     selector: 'product-list',

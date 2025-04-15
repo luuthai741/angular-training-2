@@ -1,5 +1,36 @@
-<div>
-  {{ product?.id }} - {{ product?.title }} - {{ product?.price }} -
-  {{ product?.description }} - {{ product?.category }} - {{ product?.image }} -
-  - {{ product?.rating.rate }} - {{ product?.rating.count }}
+<div class="container mt-4">
+    <div class="card">
+        <div class="row">
+            <aside class="col-sm-5">
+                <article class="gallery-wrap">
+                    <div class="img-big-wrap">
+                        <div>l
+                            <img [src]="product.image" [alt]="product.title">
+                        </div>
+                    </div>
+                </article>
+            </aside>
+            <aside class="col-sm-7">
+                <article class="card-body p-5">
+                    <h3 class="title mb-3">{{ product.title | titlecase }}</h3>
+                    <p class="price-detail-wrap">
+	<span class="price h3 text-warning">
+		<span class="currency">{{ product.price | currency }}</span>
+	</span>
+                    </p>
+                    <dl class="item-property">
+                        <dt>Description</dt>
+                        <dd>
+                            <p>{{ product.description }}
+                            </p>
+                        </dd>
+                    </dl>
+                    <dl class="param param-feature">
+                        <dt>Rating</dt>
+                        <dd>⭐ {{ product.rating.rate }} ({{ product.rating.count }} reviews)</dd>
+                    </dl>
+                </article>
+            </aside>
+        </div>
+    </div>
 </div>

@@ -45,4 +45,17 @@ export class ProducerService {
                     .build())
             );
     }
+
+    deleteProduct(productId: number): Observable<MessageResponse> {
+        return this.httpClient.delete(`/products/${productId}`, {
+            observe: 'response'
+        }).pipe(
+            map(response => new MessageResponseBuilder()
+                .withStatusCode(response.status)
+                .withTimestamp(new Date())
+                .withBody("Deleted product successfully")
+                .build())
+        );
+    }
+
 }

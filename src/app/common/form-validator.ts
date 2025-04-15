@@ -1,4 +1,4 @@
-import {AbstractControl, ValidationErrors} from '@angular/forms';
+import {AbstractControl, Form, FormArray, ValidationErrors} from '@angular/forms';
 
 export function usernameExistsValidator() {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -22,4 +22,10 @@ export function numberOnlyValidator() {
         }
         return null;
     };
+}
+
+export function atLeastOneRoleSelectedValidator(formArray: FormArray): ValidationErrors | null {
+    const hasAtLeastOneSelected = formArray.controls.some((ctrl: AbstractControl)=> ctrl.value === true);
+    console.log("atLeastOneRoleSelected", hasAtLeastOneSelected);
+    return hasAtLeastOneSelected ? null : { noRoleSelected: true };
 }

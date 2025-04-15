@@ -10,7 +10,7 @@ import {ProductComponent} from './component/product.component';
 import {RouterModule, Routes} from '@angular/router';
 import {ProductDetailComponent} from './component/product-details.component';
 import {ProductFormComponent} from './admin-component/product-form.component';
-import {ReactiveFormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {LoadingComponent} from './component/loading.component';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
 import {LoggingInterceptor} from './interceptor/logging.interceptor';
@@ -27,10 +27,35 @@ import {UnauthorizedComponent} from "./component/unauthorized.component";
 import {LoginGuard} from "./guard/login.guard";
 
 const routes: Routes = [
-    {path: '', component: ProductListComponent},
-    {path: 'unauthorized', component: UnauthorizedComponent},
-    {path: 'login', component: LoginComponent, canActivate: [LoginGuard]},
-    {path: ':id', component: ProductDetailComponent},
+    {
+        path: '',
+        component: ProductListComponent,
+        data: {
+            title: 'Home'
+        }
+    },
+    {
+        path: 'unauthorized',
+        component: UnauthorizedComponent,
+        data: {
+            title: 'Unauthorized'
+        }
+    },
+    {
+        path: 'login',
+        component: LoginComponent,
+        canActivate: [LoginGuard],
+        data: {
+            title: 'Login'
+        }
+    },
+    {
+        path: 'products/:id',
+        component: ProductDetailComponent,
+        data: {
+            title: 'Product'
+        }
+    },
     {path: 'admin', loadChildren: () => import('./admin.module').then(m => m.AdminModule)},
 ];
 
@@ -53,7 +78,8 @@ const routes: Routes = [
         ReactiveFormsModule,
         AdminModule,
         ShareModule,
-        CommonModule
+        CommonModule,
+        FormsModule
     ],
     providers: [
         ProducerService,

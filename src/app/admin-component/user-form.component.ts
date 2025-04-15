@@ -1,8 +1,7 @@
 import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators,} from '@angular/forms';
-import {User} from '../model/user.model';
 import {UserService} from '../service/user.service';
-import {numberOnlyValidator, usernameExistsValidator} from '../validator/form-validator';
+import {atLeastOneRoleSelectedValidator, numberOnlyValidator, usernameExistsValidator} from '../common/form-validator';
 import {GenderType} from "../constant/gender-type";
 import {FormHelper} from "../common/form-helper";
 import {ActivatedRoute} from "@angular/router";
@@ -48,6 +47,7 @@ export class UserFormComponent implements OnInit {
         this.userForm.get('username')?.disable();
         const rolesFormArray = this.userForm.get('roles') as FormArray;
         rolesFormArray.clear();
+        rolesFormArray.setValidators(atLeastOneRoleSelectedValidator);
         this.roles.forEach((role) => {
             const isChecked = user.roles.includes(role);
             rolesFormArray.push(this.formBuilder.control(isChecked));
@@ -93,7 +93,9 @@ export class UserFormComponent implements OnInit {
             gender: new FormControl('', {
                 validators: [Validators.required],
             }),
-            roles: this.formBuilder.array([], Validators.required),
+            roles: this.formBuilder.array(this.roles.map(() =>
+                    this.formBuilder.control(false)),
+                atLeastOneRoleSelectedValidator),
         });
         const rolesControls = this.roles.map(() => this.formBuilder.control(false));
         this.userForm.setControl('roles', this.formBuilder.array(rolesControls));
@@ -153,6 +155,7 @@ export class UserFormComponent implements OnInit {
         if (this.userForm.invalid) {
             this.formHelper.focusOnInvalidField(this.formFields, this.userForm);
             this.userForm.markAllAsTouched();
+            console.log(this.userForm.controls.roles.errors)
             return;
         }
         const selectedRoles = (this.userForm.get('roles') as FormArray).value
@@ -184,14 +187,21 @@ export class UserFormComponent implements OnInit {
 
     onReset(): void {
         this.userForm.get('username')?.enable();
-        this.userForm.reset();
-        const rolesFormArray = this.userForm.get('roles') as FormArray;
-        rolesFormArray.controls.forEach((control) => control.setValue(false));
+        if (this.formType === FormType.CREATE){
+            this.userForm.reset();const rolesFormArray = this.userForm.get('roles') as FormArray;
+            rolesFormArray.controls.forEach((control) => control.setValue(false));
+            rolesFormArray.setValidators(atLeastOneRoleSelectedValidator);
+        }else {
+            let userId = this.activatedRoute.snapshot.paramMap.get('id');
+            this.getCurrentUser(parseInt(userId));
+        }
+
         Object.keys(this.userForm.controls).forEach((key) => {
             const control = this.userForm.get(key);
             control?.setErrors(null);
             control?.markAsPristine();
             control?.markAsUntouched();
         });
+
     }
 }

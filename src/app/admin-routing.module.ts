@@ -8,32 +8,56 @@ import {RoleGuard} from "./guard/role.guard";
 
 const routes: Routes = [
     {
-        path: 'products', component: AdminProductListComponent, canActivate: [RoleGuard], data: {
+        path: 'products',
+        component: AdminProductListComponent,
+        canActivate: [RoleGuard],
+        data: {
+            roles: ['Admin', 'User'],
+            title: 'Products',
+        }
+    },
+    {
+        path: 'products/create',
+        component: ProductFormComponent,
+        canActivate: [RoleGuard],
+        data: {
+            title: 'Create Product',
+            roles: ['Admin']
+        }
+    },
+    {
+        path: 'products/edit/:id',
+        component: ProductFormComponent,
+        canActivate: [RoleGuard],
+        data: {
+            title: 'Edit Product',
+            roles: ['Admin']
+        }
+    },
+    {
+        path: 'users',
+        component: AdminUserListComponent,
+        canActivate: [RoleGuard],
+        data: {
+            title: 'Users',
             roles: ['Admin', 'User']
         }
     },
     {
-        path: 'products/create', component: ProductFormComponent, canActivate: [RoleGuard], data: {
+        path: 'users/create',
+        component: UserFormComponent,
+        canActivate: [RoleGuard],
+        data: {
+            title: 'Create User',
             roles: ['Admin']
         }
     },
     {
-        path: 'products/edit/:id', component: ProductFormComponent, canActivate: [RoleGuard], data: {
-            roles: ['Admin']
-        }
-    },
-    {
-        path: 'users', component: AdminUserListComponent, canActivate: [RoleGuard], data: {
-            roles: ['Admin','User']
-        }
-    },
-    {
-        path: 'users/create', component: UserFormComponent, canActivate: [RoleGuard], data: {
-            roles: ['Admin']
-        }
-    },
-    {
-        path: 'users/edit/:id', component: UserFormComponent, canActivate: [RoleGuard], data: {
+        path: 'users/edit/:id',
+        component: UserFormComponent,
+        canActivate: [RoleGuard],
+        data: {
+            title: 'Edit User',
             roles: ['Admin']
         }
     },

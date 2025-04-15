@@ -1,30 +1,26 @@
 <app-loading [isLoading]="loading"></app-loading>
 <div class="container">
-    <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)">
         <div class="form-group">
             <label>Username</label>
-            <input type="text" [ngClass]="{ 'is-invalid': formHelper.isInvalid('username', authForm) }" autofocus
-                   class="form-control is-invalid" formControlName="username"/>
+            <input type="text" required autofocus name="username" class="form-control"
+                   [ngClass]="{'is-invalid':username.errors && username.touched}"
+                   ngModel #username="ngModel"/>
         </div>
-        <p
-                class="text-danger"
-                *ngIf="formHelper.getError('username',authForm,'required')"
-        >
+        <p *ngIf="username.errors?.required && username.touched" class="text-danger">
             Please fill out the username!
         </p>
         <div class="form-group">
             <label>Password</label>
-            <input type="password" [ngClass]="{ 'is-invalid': formHelper.isInvalid('password', authForm) }"
-                   class="form-control is-invalid" formControlName="password"/>
-            <p
-                    class="text-danger"
-                    *ngIf="formHelper.getError('password',authForm,'required')"
-            >
+            <input type="password" required name="password" class="form-control"
+                   [ngClass]="{'is-invalid':password.errors && password.touched}"
+                   ngModel #password="ngModel"/>
+            <p *ngIf="password.errors?.required && password.touched" class="text-danger">
                 Please fill out the password!
             </p>
         </div>
         <app-message-response [messageResponse]="messageResponse"></app-message-response>
-        <button type="submit" class="btn btn-primary" [disabled]="authForm.invalid && authForm.touched">
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid && form.touched">
             Submit
         </button>
     </form>

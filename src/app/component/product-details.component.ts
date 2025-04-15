@@ -1,28 +1,32 @@
-import { Component } from '@angular/core';
-import { ProducerService } from '../service/product.service';
-import { ActivatedRoute } from '@angular/router';
-import { Product } from '../model/product.model';
+import {Component, OnInit} from '@angular/core';
+import {ProducerService} from '../service/product.service';
+import {ActivatedRoute} from '@angular/router';
+import {Product} from '../model/product.model';
 
 @Component({
-  selector: 'product-detail',
-  templateUrl: './product-details.component.html',
+    selector: 'product-detail',
+    templateUrl: './product-details.component.html',
+    styleUrls: ['./product-details.component.css']
 })
-export class ProductDetailComponent {
-  productId: string | null = null;
-  product: Product = null;
-  constructor(
-    private productService: ProducerService,
-    private route: ActivatedRoute
-  ) {}
-  ngOnInit(): void {
-    this.productId = this.route.snapshot.paramMap.get('id');
-    if (this.productId === null) {
-      return;
+export class ProductDetailComponent implements OnInit {
+    productId: string | null = null;
+    product: Product = null;
+
+    constructor(
+        private productService: ProducerService,
+        private route: ActivatedRoute
+    ) {
     }
-    this.productService
-      .getProductById(parseInt(this.productId))
-      .subscribe((data) => {
-        this.product = data;
-      });
-  }
+
+    ngOnInit(): void {
+        this.productId = this.route.snapshot.paramMap.get('id');
+        if (this.productId === null) {
+            return;
+        }
+        this.productService
+            .getProductById(parseInt(this.productId))
+            .subscribe((data) => {
+                this.product = data;
+            });
+    }
 }

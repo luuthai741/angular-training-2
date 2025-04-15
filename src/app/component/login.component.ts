@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {NgForm} from '@angular/forms';
 import {LoadingState} from '../constant/loading-state.model';
 import {Router} from '@angular/router';
 import {FormHelper} from "../common/form-helper";
@@ -11,7 +11,6 @@ import {MessageResponse} from "../model/message-response.model";
     templateUrl: './login.component.html',
 })
 export class LoginComponent {
-    authForm: FormGroup;
     loading: LoadingState = LoadingState.NOT_LOADED;
     messageResponse: MessageResponse = null;
     formHelper = FormHelper;
@@ -20,23 +19,14 @@ export class LoginComponent {
         private authService: AuthService,
         private router: Router
     ) {
-        this.authForm = new FormGroup({
-            username: new FormControl('', {
-                validators: [Validators.required],
-            }),
-            password: new FormControl('', {
-                validators: [Validators.required],
-            }),
-        });
     }
 
-    onSubmit() {
-        if (this.authForm.invalid) {
-            this.authForm.markAllAsTouched();
+    onSubmit(authForm: NgForm) {
+        if (authForm.invalid) {
             return;
         }
         this.loading = LoadingState.LOADING;
-        this.authService.signIn(this.authForm.value).subscribe({
+        this.authService.signIn(authForm.value).subscribe({
             next: () => this.router.navigate(['/']),
             error: (err) => {
                 this.loading = LoadingState.LOADED;
