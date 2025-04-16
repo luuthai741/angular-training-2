@@ -1,9 +1,14 @@
-import { Component } from '@angular/core';
-import { ProducerService } from './service/product.service';
+import {Component} from '@angular/core';
+
+import {ProductService} from './core/services/product.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.css'],
 })
-export class AppComponent {}
+export class AppComponent {
+    constructor(private productService: ProductService) {
+        this.productService.initProducts();
+    }
+}

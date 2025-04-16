@@ -3,36 +3,36 @@ import {NgModule} from '@angular/core';
 
 import {AppComponent} from './app.component';
 import {HttpClientModule} from '@angular/common/http';
-import {ProducerService} from './service/product.service';
-import {CommonModule} from '@angular/common';
-import {ProductListComponent} from './component/product-list.component';
-import {ProductComponent} from './component/product.component';
+import {ProductService} from './core/services/product.service';
+import {ProductListComponent} from './features/common/components/product-list.component';
+import {ProductComponent} from './features/common/components/product.component';
 import {RouterModule, Routes} from '@angular/router';
-import {ProductDetailComponent} from './component/product-details.component';
-import {ProductFormComponent} from './admin-component/product-form.component';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {LoadingComponent} from './component/loading.component';
+import {ProductDetailComponent} from './features/common/components/product-details.component';
+import {FormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS} from '@angular/common/http';
-import {LoggingInterceptor} from './interceptor/logging.interceptor';
-import {ApiInterceptor} from './interceptor/api.interceptor';
-import {ErrorInterceptor} from './interceptor/error.interceptor';
-import {LoginComponent} from './component/login.component';
-import {UserService} from './service/user.service';
-import {TokenService} from './service/token.service';
-import {HeaderComponent} from './layout/header.component';
-import {TruncatePipe} from "./pipe/truncate.pipe";
-import {AdminModule} from "./admin.module";
-import {ShareModule} from "./share.module";
-import {UnauthorizedComponent} from "./component/unauthorized.component";
-import {LoginGuard} from "./guard/login.guard";
+import {LoggingInterceptor} from './core/interceptors/logging.interceptor';
+import {ApiInterceptor} from './core/interceptors/api.interceptor';
+import {ErrorInterceptor} from './core/interceptors/error.interceptor';
+import {UserService} from './core/services/user.service';
+import {TokenService} from './core/services/token.service';
+import {HeaderComponent} from './shared/components/header.component';
+import {ShareModule} from "./shared/share.module";
+import {UnauthorizedComponent} from "./shared/components/unauthorized.component";
+import {LoginGuard} from "./core/guards/login.guard";
+import {RoleGuard} from "./core/guards/role.guard";
+import {RoleType} from "./shared/constant/role.type";
+import {PageNotFoundComponent} from "./shared/components/page-not-found.component";
+import {LoginFormComponent} from "./features/auth/components/login-form.component";
 
 const routes: Routes = [
     {
         path: '',
         component: ProductListComponent,
+        canActivate: [RoleGuard],
         data: {
-            title: 'Home'
-        }
+            title: 'Home',
+            roles: [RoleType[RoleType.ADMIN], RoleType[RoleType.USER], RoleType[RoleType.GUEST]],
+        },
     },
     {
         path: 'unauthorized',
@@ -43,7 +43,7 @@ const routes: Routes = [
     },
     {
         path: 'login',
-        component: LoginComponent,
+        component: LoginFormComponent,
         canActivate: [LoginGuard],
         data: {
             title: 'Login'
@@ -56,7 +56,11 @@ const routes: Routes = [
             title: 'Product'
         }
     },
-    {path: 'admin', loadChildren: () => import('./admin.module').then(m => m.AdminModule)},
+    {path: 'admin', loadChildren: () => import('./features/admin/admin.module').then(m => m.AdminModule)},
+    {
+        path: '**',
+        component: PageNotFoundComponent
+    }
 ];
 
 @NgModule({
@@ -65,24 +69,20 @@ const routes: Routes = [
         ProductListComponent,
         ProductComponent,
         ProductDetailComponent,
-        ProductFormComponent,
-        LoadingComponent,
-        LoginComponent,
+        LoginFormComponent,
         HeaderComponent,
-        UnauthorizedComponent
+        UnauthorizedComponent,
+        PageNotFoundComponent
     ],
     imports: [
         BrowserModule,
         HttpClientModule,
         RouterModule.forRoot(routes),
-        ReactiveFormsModule,
-        AdminModule,
         ShareModule,
-        CommonModule,
         FormsModule
     ],
     providers: [
-        ProducerService,
+        ProductService,
         UserService,
         TokenService,
         {
@@ -102,7 +102,6 @@ const routes: Routes = [
         },
     ],
     bootstrap: [AppComponent],
-    exports: [RouterModule, TruncatePipe],
 })
 export class AppModule {
 }

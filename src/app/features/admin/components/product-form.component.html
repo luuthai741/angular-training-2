@@ -1,0 +1,94 @@
+<app-loading [isLoading]="loading"></app-loading>
+<div class="container">
+    <common-message-response [messageResponse]="messageResponse"></common-message-response>
+    <form [formGroup]="productForm">
+        <input type="number" hidden formControlName="id" value="0"/>
+        <div class="form-group">
+            <label>Title</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    formControlName="title"
+                    aria-describedby="emailHelp"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('title', productForm) }"
+                    autofocus
+                    #formFields
+            />
+        </div>
+        <p
+                class="text-danger"
+                *ngIf="formHelper.getError('title',productForm,'required')"
+        >
+            Please fill out the title!
+        </p>
+        <div class="form-group">
+            <label>Price</label>
+            <input type="text" class="form-control" formControlName="price"
+                   [ngClass]="{ 'is-invalid': formHelper.isInvalid('price', productForm) }" #formFields
+                   [appNumberInput]="'decimal'"
+            />
+            <p
+                    class="text-danger"
+                    *ngIf="formHelper.isInvalid('price', productForm)"
+            >
+                Price should be between 0.1 and 1000!
+            </p>
+        </div>
+        <div class="form-group">
+            <label>Description</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    formControlName="description"
+                    aria-describedby="emailHelp"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('description', productForm) }"
+                    #formFields
+            />
+            <p
+                    class="text-danger"
+                    *ngIf="formHelper.getError('description',productForm,'required')"
+            >
+                Please fill out the description!
+            </p>
+        </div>
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select formControlName="category" class="form-control" id="category"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('category', productForm) }">
+                <option value="" disabled selected>Select category</option>
+                <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+            </select>
+            <div
+                    *ngIf="formHelper.getError('category',productForm,'required')"
+                    class="text-danger"
+            >
+                Category must be selected
+            </div>
+        </div>
+        <div class="form-group">
+            <label>Image</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    formControlName="image"
+                    aria-describedby="emailHelp"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('image', productForm) }"
+                    #formFields
+            />
+        </div>
+        <p
+                class="text-danger"
+                *ngIf="formHelper.getError('image',productForm,'invalidImageUrl')"
+        >
+            Please enter a valid image URL (e.g., https://example.com/image.jpg)
+        </p>
+        <button
+                type="submit"
+                class="btn btn-primary mr-2"
+                (click)="onSubmit()"
+        >
+            {{formType == form.CREATE ? 'Create' : 'Update'}}
+        </button>
+        <button (click)="onReset()" class="btn btn-secondary">Reset</button>
+    </form>
+</div>

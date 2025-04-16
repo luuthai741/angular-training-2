@@ -1,0 +1,27 @@
+<app-loading [isLoading]="loading"></app-loading>
+<div class="container">
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+        <div class="form-group">
+            <label>Username</label>
+            <input type="text" required autofocus name="username" class="form-control"
+                   [ngClass]="{'is-invalid':username.errors && username.touched}"
+                   ngModel #username="ngModel"/>
+        </div>
+        <p *ngIf="username.errors?.required && username.touched" class="text-danger">
+            Please fill out the username!
+        </p>
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" required name="password" class="form-control"
+                   [ngClass]="{'is-invalid':password.errors && password.touched}"
+                   ngModel #password="ngModel"/>
+            <p *ngIf="password.errors?.required && password.touched" class="text-danger">
+                Please fill out the password!
+            </p>
+        </div>
+        <common-message-response [messageResponse]="messageResponse"></common-message-response>
+        <button type="submit" class="btn btn-primary" [disabled]="form.invalid && form.touched">
+            Login
+        </button>
+    </form>
+</div>
