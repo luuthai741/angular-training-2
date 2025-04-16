@@ -1,0 +1,39 @@
+<div class="container mt-4">
+    <h2 class="mb-3">User list</h2>
+    <button class="btn btn-info mt-2 mb-2" [routerLink]="['/admin/users/create']" *ngIf="isAdmin">New</button>
+    <table class="table table-bordered table-striped text-center align-middle">
+        <thead class="table-dark">
+        <tr>
+            <th scope="col">#ID</th>
+            <th scope="col">Username</th>
+            <th scope="col">Full Name</th>
+            <th scope="col">Age</th>
+            <th scope="col">Gender</th>
+            <th scope="col">Roles</th>
+            <th scope="col">Metadata</th>
+            <th scope="col" *ngIf="isAdmin">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let user of users">
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.fullName | titlecase }}</td>
+            <td>{{ user.age }}</td>
+            <td>{{ user.gender }}</td>
+            <td>{{ user.role}}</td>
+            <td>{{ user.roleMetadata?.adminCode || user.roleMetadata?.subscriptionPlan }}</td>
+            <td *ngIf="isAdmin">
+                <div class="d-flex flex-column align-items-center">
+                    <button class="btn btn-sm btn-warning w-100 mb-2" [routerLink]="['/admin/users/edit', user.id]">
+                        Edit
+                    </button>
+                    <button class="btn btn-sm btn-danger w-100" [disabled]="currentUser.username === user.username"
+                            (click)="deleteUser(user)">Delete
+                    </button>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
