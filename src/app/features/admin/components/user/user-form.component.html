@@ -2,7 +2,7 @@
     <common-message-response [messageResponse]="messageResponse"></common-message-response>
     <input type="number" hidden formControlName="id"/>
     <div class="form-group">
-        <label for="username">Username</label>
+        <label [appRequiredMark]="'username'" for="username">Username</label>
         <input
                 type="text"
                 name="username"
@@ -28,7 +28,7 @@
     </div>
     <div formGroupName="passwordGroup">
         <div class="form-group">
-            <label for="password">Password</label>
+            <label [appRequiredMark]="'passwordGroup.password'" for="password">Password</label>
             <input type="password" id="password" formControlName="password" class="form-control"
                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('passwordGroup.password', userForm) }"
                    #formField
@@ -42,7 +42,7 @@
             </div>
         </div>
         <div class="form-group">
-            <label for="confirmPassword">Confirm password</label>
+            <label [appRequiredMark]="'passwordGroup.confirmPassword'" for="confirmPassword">Confirm password</label>
             <input
                     type="password"
                     formControlName="confirmPassword"
@@ -63,7 +63,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="fullName">Full Name</label>
+        <label [appRequiredMark]="'fullName'" for="fullName">Full Name</label>
         <input formControlName="fullName" class="form-control" id="fullName"
                [ngClass]="{ 'is-invalid': formHelper.isInvalid('fullName', userForm) }"
                #formField
@@ -76,7 +76,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="age">Age</label>
+        <label [appRequiredMark]="'age'" for="age">Age</label>
         <input formControlName="age" type="text" class="form-control" id="age"
                [appNumberInput]="'number'"
                [ngClass]="{ 'is-invalid': formHelper.isInvalid('age', userForm) }"
@@ -102,7 +102,7 @@
         </div>
     </div>
     <div class="form-group">
-        <label for="gender">Gender</label>
+        <label [appRequiredMark]="'gender'" for="gender">Gender</label>
         <select formControlName="gender" class="form-control" id="gender"
                 [ngClass]="{ 'is-invalid': formHelper.isInvalid('gender', userForm) }">
             <option value="" disabled selected>Select gender</option>
@@ -115,8 +115,8 @@
             Gender must be selected
         </div>
     </div>
-    <div class="form-group">
-        <label for="role">Role</label>
+    <div class="form-group" [hidden]="currentUser?.role == 'GUEST'">
+        <label [appRequiredMark]="'username'" for="role">Role</label>
         <select formControlName="role" class="form-control" id="role"
                 [ngClass]="{ 'is-invalid': formHelper.isInvalid('role', userForm) }">
             <option value="" disabled selected>Select gender</option>
@@ -130,8 +130,8 @@
         </div>
     </div>
     <div class="form-group" *ngIf="userForm.controls.adminCode">
-        <label>Admin code</label>
-        <input formControlName="adminCode" type="text" class="form-control"
+        <label [appRequiredMark]="'adminCode'">Admin code</label>
+        <input [appRequiredMark]="'adminCode'" formControlName="adminCode" type="text" class="form-control"
                [ngClass]="{ 'is-invalid': formHelper.isInvalid('adminCode', userForm) }" #formField/>
         <div
                 *ngIf="formHelper.getError('adminCode',userForm,'required')"
@@ -139,7 +139,7 @@
         ></div>
     </div>
     <div class="form-group" *ngIf="userForm.controls.subscriptionPlan">
-        <label>Subscription plan</label>
+        <label [appRequiredMark]="'subscriptionPlan'">Subscription plan</label>
         <input
                 formControlName="subscriptionPlan"
                 type="text"
@@ -159,5 +159,5 @@
     >
         {{ formType == form.CREATE ? 'Create' : 'Update' }}
     </button>
-    <button (click)="onReset()" class="btn btn-secondary">Reset</button>
+    <button (click)="onReset()" class="btn btn-secondary">{{formType == form.CREATE ? 'Clear' : 'Reset'}}</button>
 </form>

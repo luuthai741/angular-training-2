@@ -1,9 +1,9 @@
 import {Component, Input} from '@angular/core';
 
-import {Product} from '../../../core/models/product.model';
+import {Product} from '../../../../core/models/product.model';
 
 @Component({
-  selector: 'common-product',
+  selector: 'product',
   template: `
       <div class="product-card">
           <div class="product-image">
@@ -20,7 +20,7 @@ import {Product} from '../../../core/models/product.model';
           </div>
       </div>
   `,
-  styleUrls: ['../styles/product.component.css'],
+  styleUrls: ['./product.component.css'],
 })
 export class ProductComponent {
   @Input('product') product!: Product;

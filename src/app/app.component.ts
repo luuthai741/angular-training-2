@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 
-import {ProductService} from './core/services/product.service';
+import {ProductService} from './shared/services/product.service';
 
 @Component({
     selector: 'app-root',

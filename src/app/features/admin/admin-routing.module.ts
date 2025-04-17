@@ -1,10 +1,10 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 
-import {AdminProductListComponent} from "./components/product-list.component";
-import {ProductFormComponent} from "./components/product-form.component";
-import {AdminUserListComponent} from "./components/user-list.component";
-import {UserFormComponent} from "./components/user-form.component";
+import {AdminProductListComponent} from "./components/product/admin-product-list.component";
+import {ProductFormComponent} from "./components/product/product-form.component";
+import {AdminUserListComponent} from "./components/user/user-list.component";
+import {UserFormComponent} from "./components/user/user-form.component";
 import {RoleGuard} from "../../core/guards/role.guard";
 import {CanDeActiveGuard} from "../../core/guards/can-deactive.guard";
 import {RoleType} from "../../shared/constant/role.type";

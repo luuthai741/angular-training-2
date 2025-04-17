@@ -1,0 +1,43 @@
+<app-loading [isLoading]="loading"></app-loading>
+<div class="container">
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+        <div class="form-group">
+            <label>Username <span class="text-danger">*</span></label>
+            <input type="text" required usernameExisting autofocus name="username" class="form-control"
+                   [ngClass]="{'is-invalid':username.errors && username.touched}"
+                   ngModel #username="ngModel"/>
+        </div>
+        <p *ngIf="username.errors?.required && username.touched" class="text-danger">
+            Please fill out the username!
+        </p>
+        <p *ngIf="username.errors?.usernameExisting && username.touched" class="text-danger">
+            Username already exists!
+        </p>
+        <div class="form-group">
+            <label>Password <span class="text-danger">*</span></label>
+            <input type="password" required name="password" class="form-control"
+                   [ngClass]="{'is-invalid':password.errors && password.touched}"
+                   ngModel #password="ngModel"/>
+            <p *ngIf="password.errors?.required && password.touched" class="text-danger">
+                Please fill out the password!
+            </p>
+        </div>
+        <div>
+            <label>Confirm password <span class="text-danger">*</span></label>
+            <input type="password" required confirmPassword="password" name="confirmPassword" class="form-control"
+                   [ngClass]="{'is-invalid':confirmPassword.errors && confirmPassword.touched}"
+                   ngModel #confirmPassword="ngModel"/>
+            <p *ngIf="confirmPassword.errors && confirmPassword.touched" class="text-danger">
+                Passwords do not match!
+            </p>
+        </div>
+        <common-message-response [messageResponse]="messageResponse"></common-message-response>
+        <button type="submit" class="btn btn-primary mt-2" [disabled]="form.invalid && form.touched">
+            Register
+        </button>
+        <div class="form-inline mt-2">
+            <label class="mr-2">Having an account? </label>
+            <a class="" [routerLink]="['/login']">Sign in</a>
+        </div>
+    </form>
+</div>

@@ -1,10 +1,10 @@
 import {Observable} from 'rxjs';
 import {Injectable} from '@angular/core';
 
-import {User} from "../models/user.model";
-import {GenderType, getGender} from "../../shared/constant/gender.type";
-import {MessageResponse, MessageResponseBuilder} from "../models/message-response.model";
-import {getRole, RoleType} from "../../shared/constant/role.type";
+import {User} from "../../core/models/user.model";
+import {GenderType, getGender} from "../constant/gender.type";
+import {MessageResponse, MessageResponseBuilder} from "../../core/models/message-response.model";
+import {getRole, RoleType} from "../constant/role.type";
 
 @Injectable({
     providedIn: 'root',
@@ -65,7 +65,7 @@ export class UserService {
             ];
             window.localStorage.setItem('users', JSON.stringify(this.users));
             observable.next(new MessageResponseBuilder()
-                .withBody("Created common successfully")
+                .withBody("Created user successfully")
                 .withStatusCode(201)
                 .withTimestamp(new Date())
                 .build()
@@ -95,7 +95,7 @@ export class UserService {
             ];
             window.localStorage.setItem('users', JSON.stringify(this.users));
             observable.next(new MessageResponseBuilder()
-                .withBody("Updated common successfully")
+                .withBody("Updated user successfully")
                 .withStatusCode(200)
                 .withTimestamp(new Date())
                 .build()
@@ -113,6 +113,13 @@ export class UserService {
             return;
         }
         window.localStorage.removeItem('users');
+    }
+
+    isUsernameExists(username: string): boolean {
+        const usernames = JSON.parse(window.localStorage.getItem('users')).map((user: { username: string; }) => {
+            return user.username;
+        });
+        return usernames.includes(username);
     }
 
     private mockUser():User {

@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 
-import {LoadingStateType} from '../../../shared/constant/loading-state.type';
-import {ProductService} from '../../../core/services/product.service';
-import {Product} from '../../../core/models/product.model';
+import {LoadingStateType} from '../../../../shared/constant/loading-state.type';
+import {ProductService} from '../../../../shared/services/product.service';
+import {Product} from '../../../../core/models/product.model';
 
 @Component({
-    selector: 'common-products',
+    selector: 'products',
     templateUrl: './product-list.component.html',
 })
 export class ProductListComponent implements OnInit {

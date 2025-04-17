@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 
-import {AuthService} from "../../core/services/auth.service";
+import {AuthService} from "../services/auth.service";
 import {User} from "../../core/models/user.model";
-import {UserService} from "../../core/services/user.service";
+import {UserService} from "../services/user.service";
 import {RoleType} from "../constant/role.type";
 
 @Component({

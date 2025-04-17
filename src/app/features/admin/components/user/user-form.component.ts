@@ -1,18 +1,19 @@
 import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators,} from '@angular/forms';
 
-import {UserService} from '../../../core/services/user.service';
-import {numberOnlyValidator, usernameExistsValidator} from '../../../shared/validators/form-validator';
-import {GenderType, getGenderList} from "../../../shared/constant/gender.type";
-import {FormHelper} from "../../../shared/utils/form-helper";
-import {ActivatedRoute} from "@angular/router";
-import {FormType} from "../../../shared/constant/form.type";
-import {MessageResponse} from "../../../core/models/message-response.model";
-import {CanComponentDeactivate} from "../../../core/guards/can-component-deactivate";
-import {getRoleList, RoleType} from "../../../shared/constant/role.type";
+import {UserService} from '../../../../shared/services/user.service';
+import {numberOnlyValidator, usernameExistsValidator} from '../../../../shared/validators/form-validator';
+import {GenderType, getGenderList} from "../../../../shared/constant/gender.type";
+import {FormHelper} from "../../../../shared/utils/form-helper";
+import {ActivatedRoute, Router} from "@angular/router";
+import {FormType} from "../../../../shared/constant/form.type";
+import {MessageResponse} from "../../../../core/models/message-response.model";
+import {CanComponentDeactivate} from "../../../../core/guards/can-component-deactivate";
+import {getRoleByName, getRoleList, RoleType} from "../../../../shared/constant/role.type";
+import {User} from "../../../../core/models/user.model";
 
 @Component({
-    selector: 'admin-common-form',
+    selector: 'admin-user-form',
     templateUrl: './user-form.component.html',
 })
 export class UserFormComponent implements OnInit, CanComponentDeactivate {
@@ -23,21 +24,21 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
     roles = getRoleList();
     genders = getGenderList();
     messageResponse: MessageResponse = null;
-
+    currentUser: User = null;
     @ViewChildren('formField') formFields: QueryList<ElementRef>;
 
     constructor(
         private formBuilder: FormBuilder,
         private userService: UserService,
         private activatedRoute: ActivatedRoute,
+        private router: Router,
     ) {
     }
 
-
-    getCurrentUser(id: number) {
+    getCurrentUser(id: number): User {
         const user = this.userService.getUserById(id);
         if (!user) {
-            return;
+            return null;
         }
         this.userForm.patchValue({
             id: user.id,
@@ -55,6 +56,7 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
         this.handleDynamicFields(RoleType[user.role]);
         this.userForm.controls.adminCode?.setValue(user.roleMetadata?.adminCode);
         this.userForm.controls.subscriptionPlan?.setValue(user.roleMetadata?.subscriptionPlan);
+        return user;
     }
 
     ngOnInit() {
@@ -84,7 +86,7 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
                 validators: [
                     Validators.required,
                     Validators.min(1),
-                    Validators.max(100),
+                    Validators.max(99),
                     numberOnlyValidator()
                 ],
             }),
@@ -101,7 +103,11 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
             : FormType.UPDATE;
         if (this.formType === FormType.UPDATE) {
             let userId = this.activatedRoute.snapshot.paramMap.get('id');
-            this.getCurrentUser(parseInt(userId));
+            this.currentUser =  this.getCurrentUser(parseInt(userId));
+            if (this.currentUser.role == RoleType[RoleType.GUEST] || this.currentUser.role == RoleType[RoleType.USER]) {
+                this.roles = [];
+                this.roles.push(getRoleByName(this.currentUser.role));
+            }
         }
     }
 
@@ -126,7 +132,7 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
             if (!this.userForm.get('adminCode')) {
                 this.userForm.addControl(
                     'adminCode',
-                    new FormControl('', Validators.required)
+                    new FormControl('')
                 );
             }
         } else {
@@ -136,7 +142,7 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
             if (!this.userForm.get('subscriptionPlan')) {
                 this.userForm.addControl(
                     'subscriptionPlan',
-                    new FormControl('', Validators.required)
+                    new FormControl('')
                 );
             }
         } else {
@@ -166,7 +172,14 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
         };
         const observable = this.formType === FormType.UPDATE ? this.userService.updateUser(formValue) : this.userService.saveUser(formValue);
         observable.subscribe({
-            next: data => this.messageResponse = data,
+            next: data => {
+                if (this.formType === FormType.CREATE) {
+                    this.formHelper.clearFormValue(this.userForm);
+                }
+                this.router.navigate(['/admin/users'], {
+                    state: data
+                });
+            },
             error: err => this.messageResponse = err,
         })
         if (this.formType === FormType.CREATE) {

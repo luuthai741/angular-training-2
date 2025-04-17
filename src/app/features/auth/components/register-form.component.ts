@@ -7,10 +7,10 @@ import {AuthService} from "../../../shared/services/auth.service";
 import {MessageResponse} from "../../../core/models/message-response.model";
 
 @Component({
-    selector: 'login-form',
-    templateUrl: './login-form.component.html',
+    selector: 'register-form',
+    templateUrl: './register-form.component.html',
 })
-export class LoginFormComponent {
+export class RegisterFormComponent {
     loading: LoadingStateType = LoadingStateType.NOT_LOADED;
     messageResponse: MessageResponse = null;
 
@@ -18,12 +18,6 @@ export class LoginFormComponent {
         private authService: AuthService,
         private router: Router
     ) {
-        const navigation = this.router.getCurrentNavigation();
-        const state = navigation?.extras?.state;
-        console.log(state)
-        if (state) {
-            this.messageResponse = state as MessageResponse;
-        }
     }
 
     onSubmit(authForm: NgForm) {
@@ -31,12 +25,17 @@ export class LoginFormComponent {
             return;
         }
         this.loading = LoadingStateType.LOADING;
-        this.authService.signIn(authForm.value).subscribe({
-            next: () => this.router.navigate(['/']),
-            error: (err) => {
+        this.authService.signUp(authForm.value).subscribe({
+            next: (data) => {
+                this.loading = LoadingStateType.LOADED;
+                this.router.navigate(['/login'], {
+                    state: data
+                });
+            },
+            error: err => {
                 this.loading = LoadingStateType.LOADED;
                 this.messageResponse = err;
-            },
-        });
+            }
+        })
     }
 }

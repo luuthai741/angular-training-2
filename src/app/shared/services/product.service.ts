@@ -1,9 +1,9 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Product} from '../models/product.model';
+import {Product} from '../../core/models/product.model';
 
-import {MessageResponse, MessageResponseBuilder} from "../models/message-response.model";
+import {MessageResponse, MessageResponseBuilder} from "../../core/models/message-response.model";
 
 @Injectable({
     providedIn: 'root',

@@ -13,6 +13,9 @@ export function getRoleList() {
         }));
 }
 
+export function getRoleByName(roleType: RoleType | string) {
+    return getRoleList().find(role => role.value == roleType);
+}
 export function getRole(value: number | string): string | undefined {
     return RoleType[value];
 }

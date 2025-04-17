@@ -13,7 +13,7 @@
                 [(ngModel)]="searchTerm"
         />
         <div class="row row-cols-4 mt-4">
-            <common-product *ngFor="let product of filterProducts" [product]="product"></common-product>
+            <product *ngFor="let product of filterProducts" [product]="product"></product>
         </div>
     </div>
 </div>

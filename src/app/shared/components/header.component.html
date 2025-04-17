@@ -27,7 +27,7 @@
         <div class="form-inline my-2 my-lg-0">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item" *ngIf="currentUser">
-                    <div class="navbar-brand">{{currentUser?.username}}</div>
+                    <a class="nav-link" [routerLink]="['/users',currentUser.id]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">{{currentUser?.username}}</a>
                 </li>
                 <li class="nav-item" *ngIf="!currentUser">
                     <a class="nav-link" href="/login">Login</a>

@@ -20,8 +20,12 @@
             </p>
         </div>
         <common-message-response [messageResponse]="messageResponse"></common-message-response>
-        <button type="submit" class="btn btn-primary" [disabled]="form.invalid && form.touched">
+        <button type="submit" class="btn btn-primary mt-2 mb-2" [disabled]="form.invalid && form.touched">
             Login
         </button>
+        <div class="form-inline">
+            <label class="mr-2">Don't have an account? </label>
+            <a class="" [routerLink]="['/register']"> Sign up</a>
+        </div>
     </form>
 </div>

@@ -1,13 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 
-import {ProductService} from '../../../core/services/product.service';
+import {ProductService} from '../../../../shared/services/product.service';
 import {ActivatedRoute} from '@angular/router';
-import {Product} from '../../../core/models/product.model';
+import {Product} from '../../../../core/models/product.model';
 
 @Component({
-    selector: 'common-product-details',
+    selector: 'product-details',
     templateUrl: './product-details.component.html',
-    styleUrls: ['../styles/product-details.component.css']
+    styleUrls: ['./product-details.component.css']
 })
 export class ProductDetailComponent implements OnInit {
     productId: string | null = null;

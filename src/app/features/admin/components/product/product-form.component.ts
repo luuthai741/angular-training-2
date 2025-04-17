@@ -1,14 +1,14 @@
-import {ActivatedRoute} from '@angular/router';
-import {ProductService} from '../../../core/services/product.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ProductService} from '../../../../shared/services/product.service';
 import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 
-import {FormType} from '../../../shared/constant/form.type';
-import {LoadingStateType} from '../../../shared/constant/loading-state.type';
-import {FormHelper} from "../../../shared/utils/form-helper";
-import {MessageResponse} from "../../../core/models/message-response.model";
-import {imageUrlValidator} from "../../../shared/validators/form-validator";
-import {CanComponentDeactivate} from "../../../core/guards/can-component-deactivate";
+import {FormType} from '../../../../shared/constant/form.type';
+import {LoadingStateType} from '../../../../shared/constant/loading-state.type';
+import {FormHelper} from "../../../../shared/utils/form-helper";
+import {MessageResponse} from "../../../../core/models/message-response.model";
+import {imageUrlValidator} from "../../../../shared/validators/form-validator";
+import {CanComponentDeactivate} from "../../../../core/guards/can-component-deactivate";
 
 @Component({
     selector: 'admin-product-form',
@@ -27,7 +27,8 @@ export class ProductFormComponent implements OnInit, CanComponentDeactivate {
 
     constructor(
         private productService: ProductService,
-        private route: ActivatedRoute
+        private route: ActivatedRoute,
+        private router: Router,
     ) {
         this.productForm = new FormGroup({
             id: new FormControl('0', {
@@ -72,11 +73,12 @@ export class ProductFormComponent implements OnInit, CanComponentDeactivate {
                 : this.productService.updateProduct(this.productForm.value);
         observable.subscribe({
             next: (data) => {
-                this.loading = LoadingStateType.LOADED;
-                this.messageResponse = data;
                 if (this.formType === FormType.CREATE) {
                     this.formHelper.clearFormValue(this.productForm);
                 }
+                this.router.navigate(['/admin/products'], {
+                    state: data
+                });
             },
             error: (err) => {
                 this.loading = LoadingStateType.LOADED;
