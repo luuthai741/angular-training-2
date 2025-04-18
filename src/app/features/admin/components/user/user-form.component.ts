@@ -11,6 +11,7 @@ import {MessageResponse} from "../../../../core/models/message-response.model";
 import {CanComponentDeactivate} from "../../../../core/guards/can-component-deactivate";
 import {getRoleByName, getRoleList, RoleType} from "../../../../shared/constant/role.type";
 import {User} from "../../../../core/models/user.model";
+import {AuthService} from "../../../../shared/services/auth.service";
 
 @Component({
     selector: 'admin-user-form',
@@ -24,21 +25,23 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
     roles = getRoleList();
     genders = getGenderList();
     messageResponse: MessageResponse = null;
-    currentUser: User = null;
+    loggedInUser: User = null;
+
     @ViewChildren('formField') formFields: QueryList<ElementRef>;
 
     constructor(
         private formBuilder: FormBuilder,
         private userService: UserService,
+        private authService: AuthService,
         private activatedRoute: ActivatedRoute,
         private router: Router,
     ) {
     }
 
-    getCurrentUser(id: number): User {
+    getUserById(id: number): User {
         const user = this.userService.getUserById(id);
         if (!user) {
-            return null;
+            this.router.navigate(['/not-found']);
         }
         this.userForm.patchValue({
             id: user.id,
@@ -60,6 +63,7 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
     }
 
     ngOnInit() {
+        this.loggedInUser = this.authService.getCurrentUser();
         this.userForm = this.formBuilder.group({
             id: new FormControl('', {}),
             username: new FormControl('', {
@@ -103,11 +107,15 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
             : FormType.UPDATE;
         if (this.formType === FormType.UPDATE) {
             let userId = this.activatedRoute.snapshot.paramMap.get('id');
-            this.currentUser =  this.getCurrentUser(parseInt(userId));
-            if (this.currentUser.role == RoleType[RoleType.GUEST] || this.currentUser.role == RoleType[RoleType.USER]) {
-                this.roles = [];
-                this.roles.push(getRoleByName(this.currentUser.role));
-            }
+            const user = this.getUserById(parseInt(userId));
+            this.setRoleField(user.role);
+        }
+    }
+
+    setRoleField(userRole: string) {
+        if (this.loggedInUser.role != RoleType[RoleType.ADMIN]) {
+            this.roles = [];
+            this.roles.push(getRoleByName(userRole));
         }
     }
 
@@ -176,15 +184,25 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
                 if (this.formType === FormType.CREATE) {
                     this.formHelper.clearFormValue(this.userForm);
                 }
-                this.router.navigate(['/admin/users'], {
-                    state: data
-                });
+                this.redirectPage(data);
             },
             error: err => this.messageResponse = err,
         })
         if (this.formType === FormType.CREATE) {
             this.onReset();
         }
+    }
+
+    redirectPage(data: any) {
+        let url;
+        if (this.loggedInUser.role != RoleType[RoleType.ADMIN]) {
+            url = "/";
+        } else {
+            url = "/admin/users";
+        }
+        this.router.navigate([url], {
+            state: data
+        });
     }
 
     onReset(): void {
@@ -195,7 +213,7 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
         } else {
             let userId = this.activatedRoute.snapshot.paramMap.get('id');
             this.formHelper.clearFormErrors(this.userForm);
-            this.getCurrentUser(parseInt(userId));
+            this.getUserById(parseInt(userId));
         }
     }
 

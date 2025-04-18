@@ -6,6 +6,7 @@ import {AuthService} from "../../../../shared/services/auth.service";
 import {RoleType} from "../../../../shared/constant/role.type";
 import {Router} from "@angular/router";
 import {MessageResponse} from "../../../../core/models/message-response.model";
+import {getMessageResponse} from "../../../../shared/utils/router-helper";
 
 @Component({
     selector: 'admin-product-list',
@@ -19,11 +20,7 @@ export class AdminProductListComponent implements OnInit {
     constructor(private productService: ProductService,
                 private authService: AuthService,
                 private router: Router) {
-        const navigation = this.router.getCurrentNavigation();
-        const state = navigation?.extras?.state;
-        if (state) {
-            this.messageResponse = state as MessageResponse;
-        }
+        this.messageResponse = getMessageResponse(this.router);
     }
 
     ngOnInit(): void {

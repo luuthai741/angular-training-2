@@ -5,6 +5,7 @@ import {LoadingStateType} from '../../../shared/constant/loading-state.type';
 import {Router} from '@angular/router';
 import {AuthService} from "../../../shared/services/auth.service";
 import {MessageResponse} from "../../../core/models/message-response.model";
+import {getMessageResponse} from "../../../shared/utils/router-helper";
 
 @Component({
     selector: 'login-form',
@@ -18,12 +19,7 @@ export class LoginFormComponent {
         private authService: AuthService,
         private router: Router
     ) {
-        const navigation = this.router.getCurrentNavigation();
-        const state = navigation?.extras?.state;
-        console.log(state)
-        if (state) {
-            this.messageResponse = state as MessageResponse;
-        }
+        this.messageResponse = getMessageResponse(this.router);
     }
 
     onSubmit(authForm: NgForm) {
@@ -38,5 +34,11 @@ export class LoginFormComponent {
                 this.messageResponse = err;
             },
         });
+    }
+
+    goToRegister(event: Event) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.router.navigate(['/register']);
     }
 }

@@ -93,6 +93,9 @@ export class ProductFormComponent implements OnInit, CanComponentDeactivate {
         }
         const productId = this.route.snapshot.paramMap.get('id');
         const product = this.productService.getProductById(parseInt(productId));
+        if (!product){
+            this.router.navigate(['/not-found']);
+        }
         this.productForm.patchValue(product);
         this.formHelper.clearFormErrors(this.productForm);
     }

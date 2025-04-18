@@ -1,13 +1,13 @@
 <app-loading [isLoading]="loading"></app-loading>
 <div class="container">
-    <form #form="ngForm" (ngSubmit)="onSubmit(form)">
+    <form #form="ngForm">
         <div class="form-group">
             <label>Username <span class="text-danger">*</span></label>
-            <input type="text" required usernameExisting autofocus name="username" class="form-control"
-                   [ngClass]="{'is-invalid':username.errors && username.touched}"
+            <input type="text" required usernameExisting autoFocus name="username" class="form-control"
+                   [ngClass]="{'is-invalid':username.errors && username.touched && form.submitted}"
                    ngModel #username="ngModel"/>
         </div>
-        <p *ngIf="username.errors?.required && username.touched" class="text-danger">
+        <p *ngIf="username.errors?.required && username.touched && form.submitted" class="text-danger">
             Please fill out the username!
         </p>
         <p *ngIf="username.errors?.usernameExisting && username.touched" class="text-danger">
@@ -15,11 +15,17 @@
         </p>
         <div class="form-group">
             <label>Password <span class="text-danger">*</span></label>
-            <input type="password" required name="password" class="form-control"
+            <input type="password"
+                   required
+                   pattern="^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{9,}$"
+                   name="password"
+                   class="form-control"
                    [ngClass]="{'is-invalid':password.errors && password.touched}"
-                   ngModel #password="ngModel"/>
-            <p *ngIf="password.errors?.required && password.touched" class="text-danger">
-                Please fill out the password!
+                   ngModel
+                   #password="ngModel"/>
+            <p *ngIf="password.errors && password.touched" class="text-danger">
+                Password must be at least 9 characters, contain a capital letter and a
+                special character.
             </p>
         </div>
         <div>
@@ -32,12 +38,12 @@
             </p>
         </div>
         <common-message-response [messageResponse]="messageResponse"></common-message-response>
-        <button type="submit" class="btn btn-primary mt-2" [disabled]="form.invalid && form.touched">
-            Register
-        </button>
         <div class="form-inline mt-2">
             <label class="mr-2">Having an account? </label>
             <a class="" [routerLink]="['/login']">Sign in</a>
         </div>
     </form>
+    <button type="button" class="btn btn-primary mt-2" (click)="onSubmit(form)" [disabled]="form.invalid && form.touched && form.submitted">
+        Register
+    </button>
 </div>

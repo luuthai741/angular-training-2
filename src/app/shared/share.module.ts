@@ -8,6 +8,7 @@ import {LoadingComponent} from "./components/loading.component";
 import {RequiredMarkDirective} from "./directives/required-mark.directive";
 import {UsernameExistingDirective} from "./directives/username-existing.directive";
 import {ConfirmPasswordDirective} from "./directives/confirm-password.directive";
+import {AutoFocusDirective} from "./directives/auto-focus.directive";
 
 @NgModule({
     declarations: [TruncatePipe,
@@ -16,7 +17,8 @@ import {ConfirmPasswordDirective} from "./directives/confirm-password.directive"
         LoadingComponent,
         RequiredMarkDirective,
         UsernameExistingDirective,
-        ConfirmPasswordDirective
+        ConfirmPasswordDirective,
+        AutoFocusDirective
     ],
     exports: [TruncatePipe,
         MessageResponseComponent,
@@ -25,7 +27,8 @@ import {ConfirmPasswordDirective} from "./directives/confirm-password.directive"
         LoadingComponent,
         RequiredMarkDirective,
         UsernameExistingDirective,
-        ConfirmPasswordDirective
+        ConfirmPasswordDirective,
+        AutoFocusDirective
     ],
     imports: [CommonModule],
 })

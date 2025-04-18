@@ -3,6 +3,9 @@ import {Component, OnInit} from '@angular/core';
 import {LoadingStateType} from '../../../../shared/constant/loading-state.type';
 import {ProductService} from '../../../../shared/services/product.service';
 import {Product} from '../../../../core/models/product.model';
+import {MessageResponse} from "../../../../core/models/message-response.model";
+import {Router} from "@angular/router";
+import {getMessageResponse} from "../../../../shared/utils/router-helper";
 
 @Component({
     selector: 'products',
@@ -13,8 +16,11 @@ export class ProductListComponent implements OnInit {
     loadingState = LoadingStateType;
     products: Product[] = [];
     searchTerm: string = '';
+    messageResponse: MessageResponse = null;
 
-    constructor(private productService: ProductService) {
+    constructor(private productService: ProductService,
+                private router: Router,) {
+        this.messageResponse = getMessageResponse(this.router);
     }
 
     ngOnInit() {

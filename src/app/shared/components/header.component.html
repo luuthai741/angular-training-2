@@ -30,7 +30,14 @@
                     <a class="nav-link" [routerLink]="['/users',currentUser.id]" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">{{currentUser?.username}}</a>
                 </li>
                 <li class="nav-item" *ngIf="!currentUser">
-                    <a class="nav-link" href="/login">Login</a>
+                    <a class="nav-link" [routerLink]="['/login']"
+                       routerLinkActive="active"
+                       [routerLinkActiveOptions]="{ exact: true }">Login</a>
+                </li>
+                <li class="nav-item" *ngIf="!currentUser">
+                    <a class="nav-link" [routerLink]="['/register']"
+                       routerLinkActive="active"
+                       [routerLinkActiveOptions]="{ exact: true }">Register</a>
                 </li>
                 <li class="nav-item" *ngIf="currentUser">
                     <a class="nav-link" href="#" (click)="logout()">Logout</a>

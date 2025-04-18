@@ -4,6 +4,8 @@ import {AuthService} from "../services/auth.service";
 import {User} from "../../core/models/user.model";
 import {UserService} from "../services/user.service";
 import {RoleType} from "../constant/role.type";
+import {ActivatedRoute, Router} from "@angular/router";
+import {publicUrl} from "../constant/public-url";
 
 @Component({
     selector: 'header',
@@ -13,8 +15,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     currentUser: User = null;
     isHavePermission: boolean = false;
 
+
     constructor(private authService: AuthService,
                 private userService: UserService,
+                private router: Router,
+                private activeRoute: ActivatedRoute,
     ) {
     }
 
@@ -31,7 +36,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
         this.userService.getUsers();
         this.intervalId = window.setInterval(() => {
             this.currentUser = this.authService.getCurrentUser();
-            if (this.currentUser && (this.currentUser?.role == RoleType[RoleType.USER] || this.currentUser?.role == RoleType[RoleType.ADMIN])) {
+            if (!this.currentUser) {
+                publicUrl.includes(this.router.url)
+                    ? this.router.navigate([this.router.url])
+                    : this.router.navigate(['/login']);
+            }
+            if (this.currentUser?.role == RoleType[RoleType.USER] || this.currentUser?.role == RoleType[RoleType.ADMIN]) {
                 this.isHavePermission = true;
             }
         }, 500)

@@ -2,6 +2,9 @@
 <div class="form-group my-3">
 </div>
 <div *ngIf="loading === loadingState.LOADED" class="container">
+    <div class="mt-2 mb-2">
+        <common-message-response [messageResponse]="messageResponse"></common-message-response>
+    </div>
     <div *ngIf="products.length == 0;">
         The store has no any products
     </div>

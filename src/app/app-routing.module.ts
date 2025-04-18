@@ -10,6 +10,7 @@ import {RoleGuard} from "./core/guards/role.guard";
 import {RoleType} from "./shared/constant/role.type";
 import {RegisterFormComponent} from "./features/auth/components/register-form.component";
 import {UserFormComponent} from "./features/admin/components/user/user-form.component";
+import {UserRoleGuard} from "./core/guards/user-role.guard";
 
 const routes: Routes = [
     {
@@ -54,6 +55,7 @@ const routes: Routes = [
     {
         path: 'users/:id',
         component: UserFormComponent,
+        canActivate: [UserRoleGuard],
         data: {
             title: 'Product'
         }
