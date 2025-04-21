@@ -15,12 +15,6 @@
                     #formFields
             />
         </div>
-        <p
-                class="text-danger"
-                *ngIf="formHelper.getError('title',productForm,'required')"
-        >
-            Please fill out the title!
-        </p>
         <div class="form-group">
             <label [appRequiredMark]="'price'">Price</label>
             <div class="input-group">
@@ -33,12 +27,6 @@
                     <div class="input-group-text">$</div>
                 </div>
             </div>
-            <p
-                    class="text-danger"
-                    *ngIf="formHelper.isInvalid('price', productForm)"
-            >
-                Price should be between 0.1 and 1000!
-            </p>
         </div>
         <div class="form-group">
             <label [appRequiredMark]="'description'">Description</label>
@@ -50,12 +38,6 @@
                     [ngClass]="{ 'is-invalid': formHelper.isInvalid('description', productForm) }"
                     #formFields
             />
-            <p
-                    class="text-danger"
-                    *ngIf="formHelper.getError('description',productForm,'required')"
-            >
-                Please fill out the description!
-            </p>
         </div>
         <div class="form-group">
             <label [appRequiredMark]="'category'" for="category">Category</label>
@@ -64,12 +46,6 @@
                 <option value="" disabled selected>Select category</option>
                 <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
             </select>
-            <div
-                    *ngIf="formHelper.getError('category',productForm,'required')"
-                    class="text-danger"
-            >
-                Category must be selected
-            </div>
         </div>
         <div class="form-group">
             <label [appRequiredMark]="'image'">Image</label>
@@ -82,12 +58,7 @@
                     #formFields
             />
         </div>
-        <p
-                class="text-danger"
-                *ngIf="formHelper.getError('image',productForm,'invalidImageUrl')"
-        >
-            Please enter a valid image URL (e.g., https://example.com/image.jpg)
-        </p>
+
         <button
                 type="submit"
                 class="btn btn-primary mr-2"
@@ -97,4 +68,11 @@
         </button>
         <button (click)="onReset()" class="btn btn-secondary">{{formType == form.CREATE ? 'Clear' : 'Reset'}}</button>
     </form>
+    <div class="toast-container">
+        <form-validation-message [formGroup]="productForm" [controlName]="'title'" [title]="'Title'"></form-validation-message>
+        <form-validation-message [formGroup]="productForm" [controlName]="'price'" [title]="'Price'" [errorKey]="'invalidPrice'"></form-validation-message>
+        <form-validation-message [formGroup]="productForm" [controlName]="'description'" [title]="'Description'"></form-validation-message>
+        <form-validation-message [formGroup]="productForm" [controlName]="'category'" [title]="'Category'"></form-validation-message>
+        <form-validation-message [formGroup]="productForm" [controlName]="'image'" [title]="'Image'" [errorKey]="'invalidImageUrl'"></form-validation-message>
+    </div>
 </div>

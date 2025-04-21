@@ -2,7 +2,13 @@ import {Component, ElementRef, OnInit, QueryList, ViewChildren} from '@angular/c
 import {FormBuilder, FormControl, FormGroup, Validators,} from '@angular/forms';
 
 import {UserService} from '../../../../shared/services/user.service';
-import {numberOnlyValidator, usernameExistsValidator} from '../../../../shared/validators/form-validator';
+import {
+    ageValidator,
+    fullNameValidator,
+    numberOnlyValidator,
+    passwordValidator,
+    usernameExistsValidator
+} from '../../../../shared/validators/form-validator';
 import {GenderType, getGenderList} from "../../../../shared/constant/gender.type";
 import {FormHelper} from "../../../../shared/utils/form-helper";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -15,7 +21,7 @@ import {AuthService} from "../../../../shared/services/auth.service";
 
 @Component({
     selector: 'admin-user-form',
-    templateUrl: './user-form.component.html',
+    templateUrl: './user-form.component.html'
 })
 export class UserFormComponent implements OnInit, CanComponentDeactivate {
     userForm: FormGroup;
@@ -36,6 +42,54 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
         private activatedRoute: ActivatedRoute,
         private router: Router,
     ) {
+    }
+
+    ngOnInit() {
+        this.loggedInUser = this.authService.getCurrentUser();
+        this.userForm = this.formBuilder.group({
+            id: new FormControl('', {}),
+            username: new FormControl('', {
+                validators: [
+                    Validators.required,
+                    usernameExistsValidator(),
+                ],
+            }),
+            passwordGroup: this.formBuilder.group(
+                {
+                    password: ['', [Validators.required, passwordValidator()]],
+                    confirmPassword: ['', Validators.required],
+                },
+                {validators: this.passwordMatchValidator}
+            ),
+            fullName: new FormControl('', {
+                validators: [
+                    Validators.required,
+                    fullNameValidator(),
+                ],
+            }),
+            age: new FormControl('', {
+                validators: [
+                    Validators.required,
+                    ageValidator(),
+                    numberOnlyValidator()
+                ],
+            }),
+            gender: new FormControl('', {
+                validators: [Validators.required],
+            }),
+            role: new FormControl('', {
+                validators: [Validators.required],
+            }),
+        });
+        this.userForm.controls.role?.valueChanges.subscribe(role => this.handleDynamicFields(role));
+        this.formType = this.activatedRoute.snapshot.routeConfig.path.includes('create')
+            ? FormType.CREATE
+            : FormType.UPDATE;
+        if (this.formType === FormType.UPDATE) {
+            let userId = this.activatedRoute.snapshot.paramMap.get('id');
+            const user = this.getUserById(parseInt(userId));
+            this.setRoleField(user.role);
+        }
     }
 
     getUserById(id: number): User {
@@ -60,56 +114,6 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
         this.userForm.controls.adminCode?.setValue(user.roleMetadata?.adminCode);
         this.userForm.controls.subscriptionPlan?.setValue(user.roleMetadata?.subscriptionPlan);
         return user;
-    }
-
-    ngOnInit() {
-        this.loggedInUser = this.authService.getCurrentUser();
-        this.userForm = this.formBuilder.group({
-            id: new FormControl('', {}),
-            username: new FormControl('', {
-                validators: [
-                    Validators.required,
-                    usernameExistsValidator(),
-                ],
-            }),
-            passwordGroup: this.formBuilder.group(
-                {
-                    password: ['', [Validators.required, Validators.pattern("^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{9,}$")]],
-                    confirmPassword: ['', Validators.required],
-                },
-                {validators: this.passwordMatchValidator}
-            ),
-            fullName: new FormControl('', {
-                validators: [
-                    Validators.required,
-                    Validators.maxLength(20),
-                    Validators.pattern(/^[a-zA-Z\s]*$/),
-                ],
-            }),
-            age: new FormControl('', {
-                validators: [
-                    Validators.required,
-                    Validators.min(1),
-                    Validators.max(99),
-                    numberOnlyValidator()
-                ],
-            }),
-            gender: new FormControl('', {
-                validators: [Validators.required],
-            }),
-            role: new FormControl('', {
-                validators: [Validators.required],
-            }),
-        });
-        this.userForm.controls.role?.valueChanges.subscribe(role => this.handleDynamicFields(role));
-        this.formType = this.activatedRoute.snapshot.routeConfig.path.includes('create')
-            ? FormType.CREATE
-            : FormType.UPDATE;
-        if (this.formType === FormType.UPDATE) {
-            let userId = this.activatedRoute.snapshot.paramMap.get('id');
-            const user = this.getUserById(parseInt(userId));
-            this.setRoleField(user.role);
-        }
     }
 
     setRoleField(userRole: string) {

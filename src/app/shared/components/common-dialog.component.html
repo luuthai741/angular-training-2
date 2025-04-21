@@ -1,0 +1,7 @@
+<div class="bottom-right-dialog" *ngIf="showCloseButton">
+    <span class="close-btn" *ngIf="canShowCloseButton()" (click)="closeToast()">&times;</span>
+    <h6>{{ title }}</h6>
+    <p [ngClass]="setClass()">
+        {{ message() }}
+    </p>
+</div>

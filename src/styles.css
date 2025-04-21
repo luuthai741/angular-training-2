@@ -1,0 +1,67 @@
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 10px;
+}
+.bottom-right-dialog {
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 15px 20px;
+    border-radius: 8px;
+    max-width: 300px;
+    position: static;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.bottom-right-dialog h6 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.bottom-right-dialog p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.bottom-right-dialog p.error {
+    color: #dc3545;
+}
+
+.bottom-right-dialog p.success {
+    color: #28a745;
+}
+
+.bottom-right-dialog p.warning {
+    color: #ffc107;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #999;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #000;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

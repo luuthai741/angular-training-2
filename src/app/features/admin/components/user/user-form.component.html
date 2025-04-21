@@ -1,163 +1,114 @@
-<form [formGroup]="userForm" class="container">
-    <common-message-response [messageResponse]="messageResponse"></common-message-response>
-    <input type="number" hidden formControlName="id"/>
-    <div class="form-group">
-        <label [appRequiredMark]="'username'" for="username">Username</label>
-        <input
-                type="text"
-                name="username"
-                formControlName="username"
-                class="form-control"
-                [ngClass]="{ 'is-invalid': formHelper.isInvalid('username', userForm) }"
-                autoFocus
-                #formField
-        />
-        <div
-                *ngIf="formHelper.getError('username',userForm,'required')"
-                class="text-danger"
-                id="username"
-        >
-            Username is required.
-        </div>
-        <div
-                *ngIf="formHelper.getError('username',userForm,'usernameExisting')"
-                class="text-danger"
-        >
-            Username already exists.
-        </div>
-    </div>
-    <div formGroupName="passwordGroup">
+<div class="container">
+    <form [formGroup]="userForm">
+        <common-message-response [messageResponse]="messageResponse"></common-message-response>
+        <input type="number" hidden formControlName="id"/>
         <div class="form-group">
-            <label [appRequiredMark]="'passwordGroup.password'" for="password">Password</label>
-            <input type="password" id="password" formControlName="password" class="form-control"
-                   [ngClass]="{ 'is-invalid': formHelper.isInvalid('passwordGroup.password', userForm) }"
-                   #formField
-            />
-            <div
-                    *ngIf="formHelper.isInvalid('passwordGroup.password', userForm)"
-                    class="text-danger"
-            >
-                Password must be at least 9 characters, contain a capital letter and a
-                special character.
-            </div>
-        </div>
-        <div class="form-group">
-            <label [appRequiredMark]="'passwordGroup.confirmPassword'" for="confirmPassword">Confirm password</label>
+            <label [appRequiredMark]="'username'">Username</label>
             <input
-                    type="password"
-                    formControlName="confirmPassword"
+                    type="text"
+                    name="username"
+                    formControlName="username"
                     class="form-control"
-                    id="confirmPassword"
-                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('passwordGroup.confirmPassword',userForm)}"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('username', userForm) }"
+                    autoFocus
                     #formField
             />
-            <div *ngIf="formHelper.getError('passwordGroup.confirmPassword', userForm, 'required')"
-                 class="text-danger">
-                Confirm password must be at least 9 characters, contain a capital letter
-                and a special character.
+        </div>
+        <div formGroupName="passwordGroup">
+            <div class="form-group">
+                <label [appRequiredMark]="'passwordGroup.password'" for="password">Password</label>
+                <input type="password" id="password" formControlName="password" class="form-control"
+                       [ngClass]="{ 'is-invalid': formHelper.isInvalid('passwordGroup.password', userForm) }"
+                       #formField
+                />
             </div>
-            <div *ngIf="isMismatchPassword()"
-                 class="text-danger">
-                Passwords do not match!
+            <div class="form-group">
+                <label [appRequiredMark]="'passwordGroup.confirmPassword'" for="confirmPassword">Confirm password</label>
+                <input
+                        type="password"
+                        formControlName="confirmPassword"
+                        class="form-control"
+                        id="confirmPassword"
+                        [ngClass]="{ 'is-invalid': formHelper.isInvalid('passwordGroup.confirmPassword',userForm)}"
+                        #formField
+                />
+
             </div>
         </div>
-    </div>
-    <div class="form-group">
-        <label [appRequiredMark]="'fullName'" for="fullName">Full Name</label>
-        <input formControlName="fullName" class="form-control" id="fullName"
-               [ngClass]="{ 'is-invalid': formHelper.isInvalid('fullName', userForm) }"
-               #formField
-        />
-        <div
-                *ngIf="formHelper.isInvalid('fullName', userForm)"
-                class="text-danger"
-        >
-            Full name is required, max 20 characters, and no special characters.
+        <div class="form-group">
+            <label [appRequiredMark]="'fullName'" for="fullName">Full Name</label>
+            <input formControlName="fullName" class="form-control" id="fullName"
+                   [ngClass]="{ 'is-invalid': formHelper.isInvalid('fullName', userForm) }"
+                   #formField
+            />
         </div>
-    </div>
-    <div class="form-group">
-        <label [appRequiredMark]="'age'" for="age">Age</label>
-        <input formControlName="age" type="text" class="form-control" id="age"
-               [appNumberInput]="'number'"
-               [ngClass]="{ 'is-invalid': formHelper.isInvalid('age', userForm) }"
-               #formField
-        />
-        <div
-                *ngIf="formHelper.getError('age',userForm,'required')"
-                class="text-danger"
-        >
-            Please fill out the age field
+        <div class="form-group">
+            <label [appRequiredMark]="'age'" for="age">Age</label>
+            <input formControlName="age" type="text" class="form-control" id="age"
+                   [appNumberInput]="'number'"
+                   [ngClass]="{ 'is-invalid': formHelper.isInvalid('age', userForm) }"
+                   #formField
+            />
         </div>
-        <div
-                *ngIf="formHelper.getError('age',userForm,'min') || formHelper.getError('age',userForm,'max')"
-                class="text-danger"
-        >
-            Age should be between 1 and 99
+        <div class="form-group">
+            <label [appRequiredMark]="'gender'" for="gender">Gender</label>
+            <select formControlName="gender" class="form-control" id="gender"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('gender', userForm) }">
+                <option value="" disabled selected>Select gender</option>
+                <option *ngFor="let gender of genders" [value]="gender.value">{{ gender.label }}</option>
+            </select>
         </div>
-        <div
-                *ngIf="formHelper.getError('age',userForm,'invalidNumber')"
-                class="text-danger"
-        >
-            Please enter a valid number.
+        <div class="form-group" [hidden]="loggedInUser?.role != 'ADMIN'">
+            <label [appRequiredMark]="'role'" for="role">Role</label>
+            <select formControlName="role" class="form-control" id="role"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('role', userForm) }">
+                <option value="" disabled selected>Select gender</option>
+                <option *ngFor="let role of roles" [value]="role.value">{{ role.label }}</option>
+            </select>
         </div>
-    </div>
-    <div class="form-group">
-        <label [appRequiredMark]="'gender'" for="gender">Gender</label>
-        <select formControlName="gender" class="form-control" id="gender"
-                [ngClass]="{ 'is-invalid': formHelper.isInvalid('gender', userForm) }">
-            <option value="" disabled selected>Select gender</option>
-            <option *ngFor="let gender of genders" [value]="gender.value">{{ gender.label }}</option>
-        </select>
-        <div
-                *ngIf="formHelper.getError('gender',userForm,'required')"
-                class="text-danger"
-        >
-            Gender must be selected
+        <div class="form-group" *ngIf="userForm.controls.adminCode" [hidden]="loggedInUser?.role != 'ADMIN'">
+            <label [appRequiredMark]="'adminCode'">Admin code</label>
+            <input [appRequiredMark]="'adminCode'" formControlName="adminCode" type="text" class="form-control"
+                   [ngClass]="{ 'is-invalid': formHelper.isInvalid('adminCode', userForm) }" #formField/>
+            <div
+                    *ngIf="formHelper.getError('adminCode',userForm,'required')"
+                    class="text-danger"
+            ></div>
         </div>
-    </div>
-    <div class="form-group" [hidden]="loggedInUser?.role != 'ADMIN'">
-        <label [appRequiredMark]="'username'" for="role">Role</label>
-        <select formControlName="role" class="form-control" id="role"
-                [ngClass]="{ 'is-invalid': formHelper.isInvalid('role', userForm) }">
-            <option value="" disabled selected>Select gender</option>
-            <option *ngFor="let role of roles" [value]="role.value">{{ role.label }}</option>
-        </select>
-        <div
-                *ngIf="formHelper.getError('role',userForm,'required')"
-                class="text-danger"
-        >
-            Role must be selected
+        <div class="form-group" *ngIf="userForm.controls.subscriptionPlan" [hidden]="loggedInUser?.role != 'ADMIN'">
+            <label [appRequiredMark]="'subscriptionPlan'">Subscription plan</label>
+            <input
+                    formControlName="subscriptionPlan"
+                    type="text"
+                    class="form-control"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('subscriptionPlan', userForm) }"
+                    #formField
+            />
+            <div
+                    *ngIf="formHelper.getError('subscriptionPlan',userForm,'required')"
+                    class="text-danger"
+            ></div>
         </div>
+        <button
+                type="submit"
+                class="btn btn-primary mr-2"
+                (click)="onSubmit()"
+        >
+            {{ formType == form.CREATE ? 'Create' : 'Update' }}
+        </button>
+        <button (click)="onReset()" class="btn btn-secondary">{{ formType == form.CREATE ? 'Clear' : 'Reset' }}</button>
+    </form>
+    <div class="toast-container">
+        <form-validation-message [formGroup]="userForm" [controlName]="'username'" [title]="'Username'" [errorKey]="'usernameExisting'"></form-validation-message>
+        <form-validation-message [formGroup]="userForm" [controlName]="'passwordGroup.password'" [title]="'Password'" [errorKey]="'invalidPassword'"></form-validation-message>
+        <form-validation-message [formGroup]="userForm" [controlName]="'passwordGroup.confirmPassword'" [title]="'Confirm Password'" [errorKey]="'invalidPassword'"></form-validation-message>
+        <form-validation-message [formGroup]="userForm" [controlName]="'fullName'" [title]="'Full Name'" [errorKey]="'invalidFullName'"></form-validation-message>
+        <form-validation-message [formGroup]="userForm" [controlName]="'gender'" [title]="'Gender'"></form-validation-message>
+        <form-validation-message [formGroup]="userForm" [controlName]="'age'" [title]="'Age'" [errorKey]="'invalidAge'"></form-validation-message>
+        <div *ngIf="isMismatchPassword()">
+            <common-dialog [title]="'Confirm password'" [messageKey]="'mismatch'"></common-dialog>
+        </div>
+        <form-validation-message [formGroup]="userForm" [controlName]="'role'" [title]="'Role'"></form-validation-message>
     </div>
-    <div class="form-group" *ngIf="userForm.controls.adminCode" [hidden]="loggedInUser?.role != 'ADMIN'">
-        <label [appRequiredMark]="'adminCode'">Admin code</label>
-        <input [appRequiredMark]="'adminCode'" formControlName="adminCode" type="text" class="form-control"
-               [ngClass]="{ 'is-invalid': formHelper.isInvalid('adminCode', userForm) }" #formField/>
-        <div
-                *ngIf="formHelper.getError('adminCode',userForm,'required')"
-                class="text-danger"
-        ></div>
-    </div>
-    <div class="form-group" *ngIf="userForm.controls.subscriptionPlan" [hidden]="loggedInUser?.role != 'ADMIN'">
-        <label [appRequiredMark]="'subscriptionPlan'">Subscription plan</label>
-        <input
-                formControlName="subscriptionPlan"
-                type="text"
-                class="form-control"
-                [ngClass]="{ 'is-invalid': formHelper.isInvalid('subscriptionPlan', userForm) }"
-                #formField
-        />
-        <div
-                *ngIf="formHelper.getError('subscriptionPlan',userForm,'required')"
-                class="text-danger"
-        ></div>
-    </div>
-    <button
-            type="submit"
-            class="btn btn-primary mr-2"
-            (click)="onSubmit()"
-    >
-        {{ formType == form.CREATE ? 'Create' : 'Update' }}
-    </button>
-    <button (click)="onReset()" class="btn btn-secondary">{{formType == form.CREATE ? 'Clear' : 'Reset'}}</button>
-</form>
+</div>
+

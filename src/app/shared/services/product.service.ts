@@ -73,7 +73,7 @@ export class ProductService {
             ];
             window.localStorage.setItem('products', JSON.stringify(this.products));
             observable.next(new MessageResponseBuilder()
-                .withBody("Created product successfully")
+                .withBody("productCreatedSuccess")
                 .withStatusCode(201)
                 .withTimestamp(new Date())
                 .build()
@@ -87,7 +87,7 @@ export class ProductService {
             const index = this.products.findIndex((p) => p.id === product.id);
             if (index === -1) {
                 observable.error(new MessageResponseBuilder()
-                    .withBody(`product ${product.id} not found`)
+                    .withBody("productIsNotFound")
                     .withStatusCode(404)
                     .withTimestamp(new Date())
                     .build());
@@ -103,7 +103,7 @@ export class ProductService {
             ];
             window.localStorage.setItem('products', JSON.stringify(this.products));
             observable.next(new MessageResponseBuilder()
-                .withBody("Updated product successfully")
+                .withBody("productUpdatedSuccess")
                 .withStatusCode(200)
                 .withTimestamp(new Date())
                 .build()

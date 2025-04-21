@@ -7,7 +7,7 @@ import {FormType} from '../../../../shared/constant/form.type';
 import {LoadingStateType} from '../../../../shared/constant/loading-state.type';
 import {FormHelper} from "../../../../shared/utils/form-helper";
 import {MessageResponse} from "../../../../core/models/message-response.model";
-import {imageUrlValidator} from "../../../../shared/validators/form-validator";
+import {imageUrlValidator, priceValidator} from "../../../../shared/validators/form-validator";
 import {CanComponentDeactivate} from "../../../../core/guards/can-component-deactivate";
 
 @Component({
@@ -38,7 +38,7 @@ export class ProductFormComponent implements OnInit, CanComponentDeactivate {
                 validators: [Validators.required],
             }),
             price: new FormControl('', {
-                validators: [Validators.required, Validators.min(0.1), Validators.max(1000)],
+                validators: [Validators.required, priceValidator()],
             }),
             description: new FormControl('', {
                 validators: [Validators.required],

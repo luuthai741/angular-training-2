@@ -7,6 +7,9 @@ import {RoleType} from "../../../../shared/constant/role.type";
 import {Router} from "@angular/router";
 import {MessageResponse} from "../../../../core/models/message-response.model";
 import {getMessageResponse} from "../../../../shared/utils/router-helper";
+import {MessageType} from "../../../../shared/constant/message.type";
+import {isError} from "../../../../shared/constant/message-mapping";
+import {isSuccess} from "angular-in-memory-web-api";
 
 @Component({
     selector: "admin-users",
@@ -17,11 +20,24 @@ export class AdminUserListComponent implements OnInit {
     isAdmin: boolean = false;
     currentUser: User = null;
     messageResponse: MessageResponse = null;
+    messageType: MessageType;
 
     constructor(private userService: UserService,
                 private authService: AuthService,
                 private router: Router) {
         this.messageResponse = getMessageResponse(this.router);
+        if (this.messageResponse) {
+            this.messageType = this.setMessageType();
+        }
+    }
+
+    setMessageType() {
+        if (isError(this.messageResponse.statusCode)) {
+            return MessageType.ERROR;
+        } else if (isSuccess(this.messageResponse.statusCode)) {
+            return MessageType.SUCCESS;
+        }
+        return null;
     }
 
     ngOnInit(): void {

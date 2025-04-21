@@ -65,7 +65,7 @@ export class UserService {
             ];
             window.localStorage.setItem('users', JSON.stringify(this.users));
             observable.next(new MessageResponseBuilder()
-                .withBody("Created user successfully")
+                .withBody("userCreatedSuccess")
                 .withStatusCode(201)
                 .withTimestamp(new Date())
                 .build()
@@ -79,7 +79,7 @@ export class UserService {
             const index = this.users.findIndex((u) => u.id === user.id);
             if (index === -1) {
                 observable.error(new MessageResponseBuilder()
-                    .withBody(`User ${user.id} not found`)
+                    .withBody(`userIsNotFound`)
                     .withStatusCode(404)
                     .withTimestamp(new Date())
                     .build());
@@ -95,7 +95,7 @@ export class UserService {
             ];
             window.localStorage.setItem('users', JSON.stringify(this.users));
             observable.next(new MessageResponseBuilder()
-                .withBody("Updated user successfully")
+                .withBody(`userUpdatedSuccess`)
                 .withStatusCode(200)
                 .withTimestamp(new Date())
                 .build()

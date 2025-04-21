@@ -9,6 +9,8 @@ import {RequiredMarkDirective} from "./directives/required-mark.directive";
 import {UsernameExistingDirective} from "./directives/username-existing.directive";
 import {ConfirmPasswordDirective} from "./directives/confirm-password.directive";
 import {AutoFocusDirective} from "./directives/auto-focus.directive";
+import {CommonDialogComponent} from "./components/common-dialog.component";
+import {FormValidationMessageComponent} from "./components/form-validation-message.component";
 
 @NgModule({
     declarations: [TruncatePipe,
@@ -18,7 +20,9 @@ import {AutoFocusDirective} from "./directives/auto-focus.directive";
         RequiredMarkDirective,
         UsernameExistingDirective,
         ConfirmPasswordDirective,
-        AutoFocusDirective
+        AutoFocusDirective,
+        CommonDialogComponent,
+        FormValidationMessageComponent
     ],
     exports: [TruncatePipe,
         MessageResponseComponent,
@@ -28,7 +32,9 @@ import {AutoFocusDirective} from "./directives/auto-focus.directive";
         RequiredMarkDirective,
         UsernameExistingDirective,
         ConfirmPasswordDirective,
-        AutoFocusDirective
+        AutoFocusDirective,
+        CommonDialogComponent,
+        FormValidationMessageComponent
     ],
     imports: [CommonModule],
 })
