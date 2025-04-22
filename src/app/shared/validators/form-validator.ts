@@ -1,4 +1,4 @@
-import {AbstractControl, ValidationErrors} from '@angular/forms';
+import {AbstractControl, FormGroup, ValidationErrors} from '@angular/forms';
 
 export function usernameExistsValidator() {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -44,6 +44,15 @@ export function fullNameValidator() {
     }
 }
 
+export function passwordMatchValidator(group: FormGroup) {
+    const password = group.controls.password;
+    const confirmPassword = group.controls.confirmPassword;
+    return password.value !== confirmPassword.value
+    && (password.touched || password.value != '')
+        ? {mismatch: true}
+        : null;
+}
+
 export function ageValidator() {
     return (control: AbstractControl): ValidationErrors | null => {
         const value = control.value;
@@ -66,7 +75,6 @@ export function imageUrlValidator() {
     return (control: AbstractControl): ValidationErrors | null => {
         const value = control.value;
         const pattern = /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg|bmp)$/i;
-        console.log(pattern.test(value));
         return value && !pattern.test(value)
             ? {'invalidImageUrl': true}
             : null;

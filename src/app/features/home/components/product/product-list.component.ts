@@ -6,9 +6,6 @@ import {Product} from '../../../../core/models/product.model';
 import {MessageResponse} from "../../../../core/models/message-response.model";
 import {Router} from "@angular/router";
 import {getMessageResponse} from "../../../../shared/utils/router-helper";
-import {MessageType} from "../../../../shared/constant/message.type";
-import {isError} from "../../../../shared/constant/message-mapping";
-import {isSuccess} from "angular-in-memory-web-api";
 
 @Component({
     selector: 'products',
@@ -20,23 +17,10 @@ export class ProductListComponent implements OnInit {
     products: Product[] = [];
     searchTerm: string = '';
     messageResponse: MessageResponse = null;
-    messageType: MessageType;
 
     constructor(private productService: ProductService,
                 private router: Router,) {
         this.messageResponse = getMessageResponse(this.router);
-        if (this.messageResponse) {
-            this.messageType = this.setMessageType();
-        }
-    }
-
-    setMessageType() {
-        if (isError(this.messageResponse.statusCode)) {
-            return MessageType.ERROR;
-        } else if (isSuccess(this.messageResponse.statusCode)) {
-            return MessageType.SUCCESS;
-        }
-        return null;
     }
 
     ngOnInit() {
@@ -45,7 +29,7 @@ export class ProductListComponent implements OnInit {
 
     getAll() {
         this.loading = LoadingStateType.LOADING;
-        this.products = this.productService.getAllProduct()
+        this.products = this.productService.getAllProducts()
         this.loading = LoadingStateType.LOADED;
     }
 

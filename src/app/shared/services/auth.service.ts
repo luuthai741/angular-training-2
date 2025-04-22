@@ -32,7 +32,7 @@ export class AuthService {
             const user = users.find(user => user.username === loginRequest.username && user.password === loginRequest.password);
             if (!user) {
                 observer.error(new MessageResponseBuilder()
-                    .withBody("Invalid login credentials")
+                    .withBody("loginFailed")
                     .withStatusCode(400)
                     .withTimestamp(new Date())
                     .build());
@@ -50,11 +50,11 @@ export class AuthService {
             let errorMessage = '';
             if (registerRequest.password !== registerRequest.confirmPassword) {
                 isPassed = false;
-                errorMessage = 'Passwords do not match';
+                errorMessage = "confirmPassword";
             }
             if (this.userService.isUsernameExists(registerRequest.username)) {
                 isPassed = false;
-                errorMessage = 'Username already exists';
+                errorMessage = "usernameExisting";
             }
             if (!isPassed) {
                 observer.error(new MessageResponseBuilder()
@@ -82,7 +82,7 @@ export class AuthService {
                 })).subscribe({
                 next: (data) => {
                     observer.next(new MessageResponseBuilder()
-                        .withBody("Created successfully. Now you can log in")
+                        .withBody("signUpSuccess")
                         .withTimestamp(new Date())
                         .withStatusCode(201)
                         .build()

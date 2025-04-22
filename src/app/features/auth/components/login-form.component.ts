@@ -5,7 +5,7 @@ import {LoadingStateType} from '../../../shared/constant/loading-state.type';
 import {Router} from '@angular/router';
 import {AuthService} from "../../../shared/services/auth.service";
 import {MessageResponse} from "../../../core/models/message-response.model";
-import {getMessageResponse} from "../../../shared/utils/router-helper";
+import {getMessageResponse, setMessageType} from "../../../shared/utils/router-helper";
 
 @Component({
     selector: 'login-form',
@@ -14,6 +14,7 @@ import {getMessageResponse} from "../../../shared/utils/router-helper";
 export class LoginFormComponent {
     loading: LoadingStateType = LoadingStateType.NOT_LOADED;
     messageResponse: MessageResponse = null;
+    dialogTitle: string;
 
     constructor(
         private authService: AuthService,
@@ -32,13 +33,9 @@ export class LoginFormComponent {
             error: (err) => {
                 this.loading = LoadingStateType.LOADED;
                 this.messageResponse = err;
+                this.dialogTitle = "Login failed";
+                setMessageType(this.messageResponse);
             },
         });
-    }
-
-    goToRegister(event: Event) {
-        event.preventDefault();
-        event.stopPropagation();
-        this.router.navigate(['/register']);
     }
 }

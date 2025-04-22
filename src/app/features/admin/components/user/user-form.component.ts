@@ -5,7 +5,7 @@ import {UserService} from '../../../../shared/services/user.service';
 import {
     ageValidator,
     fullNameValidator,
-    numberOnlyValidator,
+    numberOnlyValidator, passwordMatchValidator,
     passwordValidator,
     usernameExistsValidator
 } from '../../../../shared/validators/form-validator';
@@ -18,6 +18,8 @@ import {CanComponentDeactivate} from "../../../../core/guards/can-component-deac
 import {getRoleByName, getRoleList, RoleType} from "../../../../shared/constant/role.type";
 import {User} from "../../../../core/models/user.model";
 import {AuthService} from "../../../../shared/services/auth.service";
+import {ControlValidator} from "../../../../core/models/control-validator.model";
+import {userFormTitles, userFormValidators} from "../../../../shared/constant/form-constants";
 
 @Component({
     selector: 'admin-user-form',
@@ -32,6 +34,7 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
     genders = getGenderList();
     messageResponse: MessageResponse = null;
     loggedInUser: User = null;
+    controlValidators: ControlValidator[] = [];
 
     @ViewChildren('formField') formFields: QueryList<ElementRef>;
 
@@ -59,7 +62,7 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
                     password: ['', [Validators.required, passwordValidator()]],
                     confirmPassword: ['', Validators.required],
                 },
-                {validators: this.passwordMatchValidator}
+                {validators: passwordMatchValidator}
             ),
             fullName: new FormControl('', {
                 validators: [
@@ -90,6 +93,33 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
             const user = this.getUserById(parseInt(userId));
             this.setRoleField(user.role);
         }
+        this.setControlValidators()
+    }
+
+    setControlValidators() {
+        Object.keys(this.userForm.controls).forEach((controlName) => {
+            if (userFormValidators[controlName]) {
+                const controlValidator: ControlValidator = {
+                    title: userFormTitles[controlName],
+                    controlName: controlName,
+                    validatorNames: userFormValidators[controlName],
+                }
+                this.controlValidators.push(controlValidator);
+            }
+        })
+        const passwordValidator: ControlValidator = {
+            title: userFormTitles['passwordGroup.password'],
+            controlName: 'passwordGroup.password',
+            validatorNames: userFormValidators['passwordGroup.password'],
+        }
+        const confirmValidator: ControlValidator = {
+            title: userFormTitles['passwordGroup.confirmPassword'],
+            controlName: 'passwordGroup.confirmPassword',
+            validatorNames: userFormValidators['passwordGroup.confirmPassword'],
+        }
+        this.controlValidators.push(passwordValidator);
+        this.controlValidators.push(confirmValidator);
+        console.log(this.controlValidators)
     }
 
     getUserById(id: number): User {
@@ -123,17 +153,6 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
         }
     }
 
-    passwordMatchValidator(group: FormGroup) {
-        const password = group.controls.password?.value;
-        const confirmPassword = group.controls.confirmPassword?.value;
-        return password === confirmPassword ? null : {mismatch: true};
-    }
-
-    isMismatchPassword(): boolean {
-        const confirmPassword = this.userForm.get('passwordGroup.confirmPassword');
-        return this.userForm.controls.passwordGroup?.errors?.mismatch && confirmPassword?.touched;
-    }
-
     handleDynamicFields(role: string | number) {
         if (role === '') {
             this.userForm.removeControl('adminCode');
@@ -164,6 +183,8 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
 
     onSubmit(): void {
         if (this.userForm.invalid) {
+            console.log(this.userForm.get('passwordGroup.confirmPassword'))
+            console.log()
             this.formHelper.focusOnInvalidField(this.formFields, this.userForm);
             this.userForm.markAllAsTouched();
             return;
@@ -198,7 +219,7 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
     }
 
     redirectPage(data: any) {
-        let url;
+        let url: string;
         if (this.loggedInUser.role != RoleType[RoleType.ADMIN]) {
             url = "/";
         } else {

@@ -1,7 +1,7 @@
 <div class="container mt-4">
     <h2 class="mb-3">User list</h2>
     <div class="toast-container" *ngIf="messageResponse">
-        <common-dialog [messageKey]="messageResponse.body" [title]="'User'" [messageType]="messageType"></common-dialog>
+        <common-dialog [messageKey]="messageResponse.body" [title]="'User'" [messageType]="messageResponse.messageType"></common-dialog>
     </div>
     <button class="btn btn-info mt-2 mb-2" [routerLink]="['/admin/users/create']" *ngIf="isAdmin">New</button>
     <table class="table table-bordered table-striped text-center align-middle">
@@ -34,6 +34,13 @@
                     <button class="btn btn-sm btn-danger w-100" [disabled]="currentUser.username === user.username"
                             (click)="deleteUser(user)">Delete
                     </button>
+                    <common-confirm
+                            *ngIf="showConfirmDialog && selectedUser == user"
+                            [title]="'Delete user ' + user.id"
+                            [messageKey]="'deleteUserConfirm'"
+                            (confirm)="handleConfirmDelete($event)"
+                    >
+                    </common-confirm>
                 </div>
             </td>
         </tr>

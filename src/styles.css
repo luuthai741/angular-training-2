@@ -1,27 +1,74 @@
 .toast-container {
+    right: 10px;
     position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 9999;
+    top: 60px;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     gap: 10px;
+    z-index: 9999;
+    max-width: 90vw;
 }
+
+.confirm-container {
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 9998;
+    pointer-events: auto;
+}
+
 .bottom-right-dialog {
     background-color: #fff;
     color: #333;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     padding: 15px 20px;
     border-radius: 8px;
-    max-width: 300px;
     position: static;
     animation: fadeInUp 0.3s ease-out;
 }
 
-.bottom-right-dialog h6 {
+.bottom-right-dialog hr {
+    margin: 0 0 4px 0;
+    border: none;
+    border-top: 1px solid #ccc;
+}
+
+.toast-container .bottom-right-dialog {
+    max-width: 300px;
+}
+
+.confirm-container .bottom-right-dialog {
+    max-width: 600px;
+    height: 160px;
+}
+
+.toast-container .bottom-right-dialog .dialog-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.toast-container .bottom-right-dialog .dialog-body {
     font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 8px;
+}
+
+.confirm-container .bottom-right-dialog .dialog-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.confirm-container .bottom-right-dialog .dialog-body {
+    font-size: 20px;
 }
 
 .bottom-right-dialog p {
@@ -29,23 +76,12 @@
     font-size: 14px;
 }
 
-.bottom-right-dialog p.error {
-    color: #dc3545;
-}
-
-.bottom-right-dialog p.success {
-    color: #28a745;
-}
-
-.bottom-right-dialog p.warning {
-    color: #ffc107;
-}
 
 .close-btn {
     position: absolute;
-    top: 10px;
-    right: 12px;
-    font-size: 18px;
+    top: 4px;
+    right: 10px;
+    font-size: 20px;
     font-weight: bold;
     color: #999;
     cursor: pointer;
@@ -64,4 +100,15 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.dialog-button-group {
+    margin: 10px;
+}
+
+.dialog-button-group > button {
+    width: 80px;
+    margin: 10px;
+    border-radius: 8px;
+    font-size: 16px;
 }

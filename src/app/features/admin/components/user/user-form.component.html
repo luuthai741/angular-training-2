@@ -23,16 +23,17 @@
                 />
             </div>
             <div class="form-group">
-                <label [appRequiredMark]="'passwordGroup.confirmPassword'" for="confirmPassword">Confirm password</label>
+                <label [appRequiredMark]="'passwordGroup.confirmPassword'" for="confirmPassword">
+                    Confirm password
+                </label>
                 <input
                         type="password"
                         formControlName="confirmPassword"
                         class="form-control"
                         id="confirmPassword"
-                        [ngClass]="{ 'is-invalid': formHelper.isInvalid('passwordGroup.confirmPassword',userForm)}"
+                        [ngClass]="{ 'is-invalid': formHelper.isInvalid('passwordGroup.confirmPassword',userForm) || formHelper.isInvalid('passwordGroup',userForm)}"
                         #formField
                 />
-
             </div>
         </div>
         <div class="form-group">
@@ -98,17 +99,9 @@
         </button>
         <button (click)="onReset()" class="btn btn-secondary">{{ formType == form.CREATE ? 'Clear' : 'Reset' }}</button>
     </form>
-    <div class="toast-container">
-        <form-validation-message [formGroup]="userForm" [controlName]="'username'" [title]="'Username'" [errorKey]="'usernameExisting'"></form-validation-message>
-        <form-validation-message [formGroup]="userForm" [controlName]="'passwordGroup.password'" [title]="'Password'" [errorKey]="'invalidPassword'"></form-validation-message>
-        <form-validation-message [formGroup]="userForm" [controlName]="'passwordGroup.confirmPassword'" [title]="'Confirm Password'" [errorKey]="'invalidPassword'"></form-validation-message>
-        <form-validation-message [formGroup]="userForm" [controlName]="'fullName'" [title]="'Full Name'" [errorKey]="'invalidFullName'"></form-validation-message>
-        <form-validation-message [formGroup]="userForm" [controlName]="'gender'" [title]="'Gender'"></form-validation-message>
-        <form-validation-message [formGroup]="userForm" [controlName]="'age'" [title]="'Age'" [errorKey]="'invalidAge'"></form-validation-message>
-        <div *ngIf="isMismatchPassword()">
-            <common-dialog [title]="'Confirm password'" [messageKey]="'mismatch'"></common-dialog>
-        </div>
-        <form-validation-message [formGroup]="userForm" [controlName]="'role'" [title]="'Role'"></form-validation-message>
-    </div>
+    <form-validation-message
+            [controlValidators]="controlValidators"
+            [formGroup]="userForm">
+    </form-validation-message>
 </div>
 

@@ -68,11 +68,6 @@
         </button>
         <button (click)="onReset()" class="btn btn-secondary">{{formType == form.CREATE ? 'Clear' : 'Reset'}}</button>
     </form>
-    <div class="toast-container">
-        <form-validation-message [formGroup]="productForm" [controlName]="'title'" [title]="'Title'"></form-validation-message>
-        <form-validation-message [formGroup]="productForm" [controlName]="'price'" [title]="'Price'" [errorKey]="'invalidPrice'"></form-validation-message>
-        <form-validation-message [formGroup]="productForm" [controlName]="'description'" [title]="'Description'"></form-validation-message>
-        <form-validation-message [formGroup]="productForm" [controlName]="'category'" [title]="'Category'"></form-validation-message>
-        <form-validation-message [formGroup]="productForm" [controlName]="'image'" [title]="'Image'" [errorKey]="'invalidImageUrl'"></form-validation-message>
-    </div>
+    <form-validation-message [formGroup]="productForm" [controlValidators]="controlValidators">
+    </form-validation-message>
 </div>

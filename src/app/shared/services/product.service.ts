@@ -47,7 +47,7 @@ export class ProductService {
             : 1;
     }
 
-    getAllProduct(): Product[] {
+    getAllProducts(): Product[] {
         return this.products;
     }
 

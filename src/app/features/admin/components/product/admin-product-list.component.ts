@@ -7,9 +7,6 @@ import {RoleType} from "../../../../shared/constant/role.type";
 import {Router} from "@angular/router";
 import {MessageResponse} from "../../../../core/models/message-response.model";
 import {getMessageResponse} from "../../../../shared/utils/router-helper";
-import {MessageType} from "../../../../shared/constant/message.type";
-import {isError} from "../../../../shared/constant/message-mapping";
-import {isSuccess} from "angular-in-memory-web-api";
 
 @Component({
     selector: 'admin-product-list',
@@ -19,39 +16,42 @@ export class AdminProductListComponent implements OnInit {
     products: Product[];
     isAdmin: boolean = false;
     messageResponse: MessageResponse = null;
-    messageType: MessageType;
+    showConfirmDialog: boolean = false;
+    selectedProduct: Product = null;
 
     constructor(private productService: ProductService,
                 private authService: AuthService,
                 private router: Router) {
         this.messageResponse = getMessageResponse(this.router);
         console.log(this.messageResponse);
-        if (this.messageResponse) {
-            this.messageType = this.setMessageType();
-        }
     }
 
-    setMessageType() {
-        if (isError(this.messageResponse.statusCode)) {
-            return MessageType.ERROR;
-        } else if (isSuccess(this.messageResponse.statusCode)) {
-            return MessageType.SUCCESS;
-        }
-        return null;
-    }
 
     ngOnInit(): void {
-        this.products = this.productService.getAllProduct();
+        this.products = this.productService.getAllProducts();
         const currentUser = this.authService.getCurrentUser();
         if (currentUser && currentUser?.role === RoleType[RoleType.ADMIN]) {
             this.isAdmin = true;
         }
     }
 
+    closeConfirmDialog() {
+        this.showConfirmDialog = false;
+        this.selectedProduct = null;
+    }
+
     deleteProduct(product: Product): void {
-        if (confirm("Are you sure you want to delete this product?")) {
-            this.productService.deleteProduct(product)
-            this.products = this.productService.getAllProduct();
+        this.showConfirmDialog = true;
+        this.selectedProduct = product;
+    }
+
+    handleConfirmDelete(isConfirmed: boolean): void {
+        if (!isConfirmed) {
+            this.closeConfirmDialog();
+            return;
         }
+        this.productService.deleteProduct(this.selectedProduct);
+        this.products = this.productService.getAllProducts();
+        this.closeConfirmDialog();
     }
 }

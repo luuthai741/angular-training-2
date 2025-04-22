@@ -1,7 +1,12 @@
 <div class="bottom-right-dialog" *ngIf="showCloseButton">
     <span class="close-btn" *ngIf="canShowCloseButton()" (click)="closeToast()">&times;</span>
-    <h6>{{ title }}</h6>
-    <p [ngClass]="setClass()">
+    <div class="dialog-title">{{ title }}</div>
+    <hr/>
+    <div class="dialog-body" [ngClass]="setClass()">
         {{ message() }}
-    </p>
+    </div>
+    <div class="dialog-button-group" *ngIf="isConfirmDialog()">
+        <button class="btn btn-danger mr-2" (click)="this.confirm.emit(true)">Yes</button>
+        <button class="btn btn-secondary" (click)="closeToast()">No</button>
+    </div>
 </div>

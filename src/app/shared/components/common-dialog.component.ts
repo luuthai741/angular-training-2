@@ -1,6 +1,7 @@
-import {Component, Input} from "@angular/core";
+import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {MessageType} from "../constant/message.type";
-import {ERROR_MESSAGES, SUCCESS_MESSAGES} from "../constant/message-mapping";
+import {ERROR_MESSAGES, SUCCESS_MESSAGES, WARNING_MESSAGES} from "../constant/message-mapping";
+import {DialogType} from "../constant/dialog.type";
 
 @Component({
     selector: "common-dialog",
@@ -11,13 +12,20 @@ export class CommonDialogComponent {
     @Input() messageType: MessageType = MessageType.ERROR;
     @Input() messageKey: string;
     @Input() title: string;
-    showCloseButton: boolean = true;
+    @Input() showCloseButton: boolean = true;
+    @Input() dialogType: DialogType = DialogType.TOAST;
+    @Output() confirm = new EventEmitter<boolean>();
 
     canShowCloseButton(): boolean {
         return this.messageType != MessageType.ERROR;
     }
 
-    closeToast(){
+    isConfirmDialog(): boolean {
+        return this.dialogType === DialogType.CONFIRM;
+    }
+
+    closeToast() {
+        this.confirm.emit(false);
         this.showCloseButton = false;
     }
 
@@ -27,6 +35,8 @@ export class CommonDialogComponent {
                 return ERROR_MESSAGES[this.messageKey];
             case MessageType.SUCCESS:
                 return SUCCESS_MESSAGES[this.messageKey];
+            case MessageType.WARNING:
+                return WARNING_MESSAGES[this.messageKey];
             default:
                 return "";
         }
@@ -39,7 +49,7 @@ export class CommonDialogComponent {
             case MessageType.INFO:
                 return "text-info";
             case MessageType.WARNING:
-                return "text-warning";
+                return "text-dark";
             case MessageType.SUCCESS:
                 return "text-success";
         }

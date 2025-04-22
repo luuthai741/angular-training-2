@@ -4,15 +4,9 @@
         <div class="form-group">
             <label>Username <span class="text-danger">*</span></label>
             <input type="text" required usernameExisting autoFocus name="username" class="form-control"
-                   [ngClass]="{'is-invalid':username.errors && username.touched && form.submitted}"
+                   [ngClass]="{'is-invalid':username.errors && username.touched}"
                    ngModel #username="ngModel"/>
         </div>
-        <p *ngIf="username.errors?.required && username.touched && form.submitted" class="text-danger">
-            Please fill out the username!
-        </p>
-        <p *ngIf="username.errors?.usernameExisting && username.touched" class="text-danger">
-            Username already exists!
-        </p>
         <div class="form-group">
             <label>Password <span class="text-danger">*</span></label>
             <input type="password"
@@ -23,21 +17,14 @@
                    [ngClass]="{'is-invalid':password.errors && password.touched}"
                    ngModel
                    #password="ngModel"/>
-            <p *ngIf="password.errors && password.touched" class="text-danger">
-                Password must be at least 9 characters, contain a capital letter and a
-                special character.
-            </p>
         </div>
         <div>
             <label>Confirm password <span class="text-danger">*</span></label>
             <input type="password" required confirmPassword="password" name="confirmPassword" class="form-control"
                    [ngClass]="{'is-invalid':confirmPassword.errors && confirmPassword.touched}"
                    ngModel #confirmPassword="ngModel"/>
-            <p *ngIf="confirmPassword.errors && confirmPassword.touched" class="text-danger">
-                Passwords do not match!
-            </p>
         </div>
-        <common-message-response [messageResponse]="messageResponse"></common-message-response>
+        <common-dialog *ngIf="messageResponse" [messageKey]="messageResponse.body" [title]="'Register failure'" [messageType]="messageResponse.messageType"></common-dialog>
         <div class="form-inline mt-2">
             <label class="mr-2">Having an account? </label>
             <a class="" [routerLink]="['/login']">Sign in</a>
@@ -46,4 +33,10 @@
     <button type="button" class="btn btn-primary mt-2" (click)="onSubmit(form)" [disabled]="form.invalid && form.touched && form.submitted">
         Register
     </button>
+    <div class="toast-container">
+        <common-dialog *ngIf="username.errors?.required && username.touched" [messageKey]="'required'" [title]="'Username'"></common-dialog>
+        <common-dialog *ngIf="username.errors?.usernameExisting && username.touched" [messageKey]="'usernameExisting'" [title]="'Username'"></common-dialog>
+        <common-dialog *ngIf="password.errors && password.touched" [messageKey]="'invalidPassword'" [title]="'Password'"></common-dialog>
+        <common-dialog *ngIf="confirmPassword.errors && confirmPassword.touched" [messageKey]="'mismatch'" [title]="'Confirm Password'"></common-dialog>
+    </div>
 </div>

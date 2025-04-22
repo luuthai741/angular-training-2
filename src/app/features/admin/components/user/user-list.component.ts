@@ -7,9 +7,6 @@ import {RoleType} from "../../../../shared/constant/role.type";
 import {Router} from "@angular/router";
 import {MessageResponse} from "../../../../core/models/message-response.model";
 import {getMessageResponse} from "../../../../shared/utils/router-helper";
-import {MessageType} from "../../../../shared/constant/message.type";
-import {isError} from "../../../../shared/constant/message-mapping";
-import {isSuccess} from "angular-in-memory-web-api";
 
 @Component({
     selector: "admin-users",
@@ -20,24 +17,13 @@ export class AdminUserListComponent implements OnInit {
     isAdmin: boolean = false;
     currentUser: User = null;
     messageResponse: MessageResponse = null;
-    messageType: MessageType;
+    showConfirmDialog: boolean = false;
+    selectedUser: User = null;
 
     constructor(private userService: UserService,
                 private authService: AuthService,
                 private router: Router) {
         this.messageResponse = getMessageResponse(this.router);
-        if (this.messageResponse) {
-            this.messageType = this.setMessageType();
-        }
-    }
-
-    setMessageType() {
-        if (isError(this.messageResponse.statusCode)) {
-            return MessageType.ERROR;
-        } else if (isSuccess(this.messageResponse.statusCode)) {
-            return MessageType.SUCCESS;
-        }
-        return null;
     }
 
     ngOnInit(): void {
@@ -49,9 +35,22 @@ export class AdminUserListComponent implements OnInit {
     }
 
     deleteUser(user: User) {
-        if (window.confirm("Are you sure you want to delete this user?")) {
-            this.userService.remove(user);
-            this.users = this.userService.getUsers();
+        this.showConfirmDialog = true;
+        this.selectedUser = user;
+    }
+
+    closeConfirmDialog() {
+        this.showConfirmDialog = false;
+        this.selectedUser = null;
+    }
+
+    handleConfirmDelete(isConfirmed: boolean) {
+        if (!isConfirmed) {
+            this.closeConfirmDialog();
+            return;
         }
+        this.userService.remove(this.selectedUser);
+        this.users = this.userService.getUsers();
+        this.closeConfirmDialog();
     }
 }

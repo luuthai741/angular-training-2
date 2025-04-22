@@ -11,6 +11,7 @@ import {ConfirmPasswordDirective} from "./directives/confirm-password.directive"
 import {AutoFocusDirective} from "./directives/auto-focus.directive";
 import {CommonDialogComponent} from "./components/common-dialog.component";
 import {FormValidationMessageComponent} from "./components/form-validation-message.component";
+import {CommonConfirm} from "./components/common-confirm.component";
 
 @NgModule({
     declarations: [TruncatePipe,
@@ -22,7 +23,8 @@ import {FormValidationMessageComponent} from "./components/form-validation-messa
         ConfirmPasswordDirective,
         AutoFocusDirective,
         CommonDialogComponent,
-        FormValidationMessageComponent
+        FormValidationMessageComponent,
+        CommonConfirm
     ],
     exports: [TruncatePipe,
         MessageResponseComponent,
@@ -34,7 +36,8 @@ import {FormValidationMessageComponent} from "./components/form-validation-messa
         ConfirmPasswordDirective,
         AutoFocusDirective,
         CommonDialogComponent,
-        FormValidationMessageComponent
+        FormValidationMessageComponent,
+        CommonConfirm
     ],
     imports: [CommonModule],
 })

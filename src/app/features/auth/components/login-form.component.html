@@ -1,4 +1,7 @@
 <app-loading [isLoading]="loading"></app-loading>
+<div class="toast-container" *ngIf="messageResponse">
+    <common-dialog *ngIf="messageResponse" [messageKey]="messageResponse.body" [title]="dialogTitle" [messageType]="messageResponse.messageType"></common-dialog>
+</div>
 <div class="container">
     <form #form="ngForm" (ngSubmit)="onSubmit(form)">
         <div class="form-group">
@@ -28,7 +31,6 @@
                 Please fill out the password!
             </p>
         </div>
-        <common-message-response [messageResponse]="messageResponse"></common-message-response>
         <button type="submit" class="btn btn-primary mt-2 mb-2"
                 [disabled]="form.invalid && form.touched && form.submitted">
             Login

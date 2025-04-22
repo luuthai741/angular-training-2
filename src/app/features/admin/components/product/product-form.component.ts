@@ -9,6 +9,13 @@ import {FormHelper} from "../../../../shared/utils/form-helper";
 import {MessageResponse} from "../../../../core/models/message-response.model";
 import {imageUrlValidator, priceValidator} from "../../../../shared/validators/form-validator";
 import {CanComponentDeactivate} from "../../../../core/guards/can-component-deactivate";
+import {
+    productFormTitles,
+    productFormValidator,
+    userFormTitles,
+    userFormValidators
+} from "../../../../shared/constant/form-constants";
+import {ControlValidator} from "../../../../core/models/control-validator.model";
 
 @Component({
     selector: 'admin-product-form',
@@ -22,6 +29,7 @@ export class ProductFormComponent implements OnInit, CanComponentDeactivate {
     formHelper = FormHelper;
     messageResponse: MessageResponse = null;
     categories: string[] = [];
+    controlValidators: ControlValidator[] = [];
 
     @ViewChildren("formFields") formFields: QueryList<ElementRef>;
 
@@ -58,6 +66,19 @@ export class ProductFormComponent implements OnInit, CanComponentDeactivate {
             ? FormType.CREATE
             : FormType.UPDATE;
         this.setFormValue();
+        this.setControlValidators();
+    }
+
+    setControlValidators() {
+        Object.keys(this.productForm.controls).forEach((controlName) => {
+            const controlValidator: ControlValidator = {
+                title: productFormTitles[controlName],
+                controlName: controlName,
+                validatorNames: productFormValidator[controlName],
+            }
+            this.controlValidators.push(controlValidator);
+        })
+        console.log(this.controlValidators)
     }
 
     onSubmit() {
@@ -93,7 +114,7 @@ export class ProductFormComponent implements OnInit, CanComponentDeactivate {
         }
         const productId = this.route.snapshot.paramMap.get('id');
         const product = this.productService.getProductById(parseInt(productId));
-        if (!product){
+        if (!product) {
             this.router.navigate(['/not-found']);
         }
         this.productForm.patchValue(product);

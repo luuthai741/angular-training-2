@@ -14,6 +14,7 @@ export const ERROR_MESSAGES: { [key: string]: string } = {
     productUpdatedFail: "Product updated fail",
     productDeleteFail: "Product deleted fail",
     userIsNotFound: "User's not found",
+    loginFailed: "Invalid login credentials",
 }
 
 export const SUCCESS_MESSAGES: { [key: string]: string } = {
@@ -23,7 +24,13 @@ export const SUCCESS_MESSAGES: { [key: string]: string } = {
     userCreatedSuccess: "User created successfully",
     userUpdatedSuccess: "User updated successfully",
     userDeletedSuccess: "User deleted successfully",
+    signUpSuccess: "Sign up successfully",
 }
+export const WARNING_MESSAGES: { [key: string]: string } = {
+    deleteProductConfirm: "Do you really want to delete this product?",
+    deleteUserConfirm: "Do you really want to delete this user?",
+}
+
 
 export function isSuccess(code: number): boolean {
     return code >= 200 && code < 300;
