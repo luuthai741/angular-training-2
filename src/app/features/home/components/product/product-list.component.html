@@ -16,7 +16,4 @@
             <product *ngFor="let product of filterProducts" [product]="product"></product>
         </div>
     </div>
-    <div class="toast-container" *ngIf="messageResponse">
-        <common-dialog [messageKey]="messageResponse.body" [title]="'Product'" [messageType]="messageResponse.messageType"></common-dialog>
-    </div>
 </div>

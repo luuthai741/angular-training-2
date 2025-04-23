@@ -1,42 +1,46 @@
 <app-loading [isLoading]="loading"></app-loading>
 <div class="container">
+    <common-confirm (confirm)="closeNotificationAndRedirect($event)" *ngIf="messageResponse"
+                    [messageType]="messageResponse.messageType" [title]="'Register'"
+                    [messageKey]="messageResponse.body"
+                    [dialogType]="dialogType"
+    ></common-confirm>
     <form #form="ngForm">
         <div class="form-group">
             <label>Username <span class="text-danger">*</span></label>
             <input type="text" required usernameExisting autoFocus name="username" class="form-control"
-                   [ngClass]="{'is-invalid':username.errors && username.touched}"
-                   ngModel #username="ngModel"/>
+                   [ngClass]="{'is-invalid':username.errors && ((username.touched && isSubmitted) || isSubmitted)}"
+                   ngModel #username="ngModel" #formField/>
         </div>
         <div class="form-group">
             <label>Password <span class="text-danger">*</span></label>
             <input type="password"
                    required
-                   pattern="^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{9,}$"
+                   invalidPassword
                    name="password"
                    class="form-control"
-                   [ngClass]="{'is-invalid':password.errors && password.touched}"
+                   [ngClass]="{'is-invalid':password.errors && ((password.touched && isSubmitted)  || isSubmitted)}"
                    ngModel
-                   #password="ngModel"/>
+                   #password="ngModel" #formField/>
         </div>
         <div>
             <label>Confirm password <span class="text-danger">*</span></label>
             <input type="password" required confirmPassword="password" name="confirmPassword" class="form-control"
-                   [ngClass]="{'is-invalid':confirmPassword.errors && confirmPassword.touched}"
-                   ngModel #confirmPassword="ngModel"/>
+                   [ngClass]="{'is-invalid':confirmPassword.errors && ((confirmPassword.touched && isSubmitted) || isSubmitted)}"
+                   ngModel #confirmPassword="ngModel" #formField/>
         </div>
-        <common-dialog *ngIf="messageResponse" [messageKey]="messageResponse.body" [title]="'Register failure'" [messageType]="messageResponse.messageType"></common-dialog>
         <div class="form-inline mt-2">
             <label class="mr-2">Having an account? </label>
             <a class="" [routerLink]="['/login']">Sign in</a>
         </div>
     </form>
-    <button type="button" class="btn btn-primary mt-2" (click)="onSubmit(form)" [disabled]="form.invalid && form.touched && form.submitted">
+    <button type="button" class="btn btn-primary mt-2" (click)="onSubmit(form)">
         Register
     </button>
-    <div class="toast-container">
-        <common-dialog *ngIf="username.errors?.required && username.touched" [messageKey]="'required'" [title]="'Username'"></common-dialog>
-        <common-dialog *ngIf="username.errors?.usernameExisting && username.touched" [messageKey]="'usernameExisting'" [title]="'Username'"></common-dialog>
-        <common-dialog *ngIf="password.errors && password.touched" [messageKey]="'invalidPassword'" [title]="'Password'"></common-dialog>
-        <common-dialog *ngIf="confirmPassword.errors && confirmPassword.touched" [messageKey]="'mismatch'" [title]="'Confirm Password'"></common-dialog>
-    </div>
+    <form-validation-message *ngIf="isDialogOpen && formGroup"
+                             [controlValidators]="controlValidators"
+                             [formGroup]="formGroup"
+                             (confirm)="closeDialog($event)"
+    >
+    </form-validation-message>
 </div>

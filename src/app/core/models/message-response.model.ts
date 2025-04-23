@@ -1,4 +1,5 @@
 import {MessageType} from "../../shared/constant/message.type";
+import {isError, isSuccess} from "../../shared/constant/message-mapping";
 
 export interface MessageResponse {
     statusCode: number;
@@ -8,37 +9,42 @@ export interface MessageResponse {
 }
 
 export class MessageResponseBuilder {
-    private _statusCode!: number;
-    private _timestamp!: Date;
-    private _body!: string;
-    private _messageType: MessageType;
+    private statusCode!: number;
+    private timestamp!: Date;
+    private body!: string;
+    private messageType: MessageType;
 
     withStatusCode(statusCode: number): this {
-        this._statusCode = statusCode;
+        this.statusCode = statusCode;
         return this;
     }
 
     withTimestamp(timestamp: Date): this {
-        this._timestamp = timestamp;
+        this.timestamp = timestamp;
         return this;
     }
 
     withBody(body: string): this {
-        this._body = body;
+        this.body = body;
         return this;
     }
 
-    withMessageType(message: MessageType): this {
-        this._messageType = message;
+    setMessageType(): this {
+        if (isError(this.statusCode)) {
+            this.messageType = MessageType.ERROR;
+        } else if (isSuccess(this.statusCode)) {
+            this.messageType = MessageType.SUCCESS;
+        }
         return this;
     }
 
     build(): MessageResponse {
+        this.setMessageType();
         return {
-            statusCode: this._statusCode,
-            timestamp: this._timestamp,
-            body: this._body,
-            messageType: this._messageType,
-        };
+            statusCode: this.statusCode,
+            timestamp: this.timestamp,
+            body: this.body,
+            messageType: this.messageType,
+        }
     }
 }

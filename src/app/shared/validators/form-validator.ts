@@ -75,7 +75,7 @@ export function imageUrlValidator() {
     return (control: AbstractControl): ValidationErrors | null => {
         const value = control.value;
         const pattern = /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg|bmp)$/i;
-        return value && !pattern.test(value)
+        return (value && !pattern.test(value))
             ? {'invalidImageUrl': true}
             : null;
     };

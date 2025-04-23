@@ -5,7 +5,8 @@ import {UserService} from '../../../../shared/services/user.service';
 import {
     ageValidator,
     fullNameValidator,
-    numberOnlyValidator, passwordMatchValidator,
+    numberOnlyValidator,
+    passwordMatchValidator,
     passwordValidator,
     usernameExistsValidator
 } from '../../../../shared/validators/form-validator';
@@ -19,7 +20,7 @@ import {getRoleByName, getRoleList, RoleType} from "../../../../shared/constant/
 import {User} from "../../../../core/models/user.model";
 import {AuthService} from "../../../../shared/services/auth.service";
 import {ControlValidator} from "../../../../core/models/control-validator.model";
-import {userFormTitles, userFormValidators} from "../../../../shared/constant/form-constants";
+import {DialogType} from "../../../../shared/constant/dialog.type";
 
 @Component({
     selector: 'admin-user-form',
@@ -35,7 +36,9 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
     messageResponse: MessageResponse = null;
     loggedInUser: User = null;
     controlValidators: ControlValidator[] = [];
-
+    isSubmitted: boolean = false;
+    isDialogOpen: boolean = false;
+    dialogType: DialogType = DialogType.NOTIFY;
     @ViewChildren('formField') formFields: QueryList<ElementRef>;
 
     constructor(
@@ -93,33 +96,7 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
             const user = this.getUserById(parseInt(userId));
             this.setRoleField(user.role);
         }
-        this.setControlValidators()
-    }
-
-    setControlValidators() {
-        Object.keys(this.userForm.controls).forEach((controlName) => {
-            if (userFormValidators[controlName]) {
-                const controlValidator: ControlValidator = {
-                    title: userFormTitles[controlName],
-                    controlName: controlName,
-                    validatorNames: userFormValidators[controlName],
-                }
-                this.controlValidators.push(controlValidator);
-            }
-        })
-        const passwordValidator: ControlValidator = {
-            title: userFormTitles['passwordGroup.password'],
-            controlName: 'passwordGroup.password',
-            validatorNames: userFormValidators['passwordGroup.password'],
-        }
-        const confirmValidator: ControlValidator = {
-            title: userFormTitles['passwordGroup.confirmPassword'],
-            controlName: 'passwordGroup.confirmPassword',
-            validatorNames: userFormValidators['passwordGroup.confirmPassword'],
-        }
-        this.controlValidators.push(passwordValidator);
-        this.controlValidators.push(confirmValidator);
-        console.log(this.controlValidators)
+        this.formHelper.setControlValidators(this.userForm, this.controlValidators, ['passwordGroup.password', 'passwordGroup.confirmPassword'])
     }
 
     getUserById(id: number): User {
@@ -183,9 +160,8 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
 
     onSubmit(): void {
         if (this.userForm.invalid) {
-            console.log(this.userForm.get('passwordGroup.confirmPassword'))
-            console.log()
-            this.formHelper.focusOnInvalidField(this.formFields, this.userForm);
+            this.isSubmitted = true;
+            this.isDialogOpen = true;
             this.userForm.markAllAsTouched();
             return;
         }
@@ -209,29 +185,37 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
                 if (this.formType === FormType.CREATE) {
                     this.formHelper.clearFormValue(this.userForm);
                 }
-                this.redirectPage(data);
+                this.messageResponse = data as MessageResponse;
             },
-            error: err => this.messageResponse = err,
+            error: err => {
+                this.messageResponse = err;
+            },
         })
         if (this.formType === FormType.CREATE) {
             this.onReset();
         }
     }
 
-    redirectPage(data: any) {
+    closeNotificationAndRedirect(isConfirm: boolean = false) {
+        if (!isConfirm) {
+            return;
+        }
+        this.redirectPage();
+    }
+
+    redirectPage() {
         let url: string;
         if (this.loggedInUser.role != RoleType[RoleType.ADMIN]) {
             url = "/";
         } else {
             url = "/admin/users";
         }
-        this.router.navigate([url], {
-            state: data
-        });
+        this.router.navigate([url]);
     }
 
     onReset(): void {
         this.userForm.get('username')?.enable();
+        this.isSubmitted = false;
         if (this.formType === FormType.CREATE) {
             this.formHelper.clearFormValue(this.userForm);
             this.handleDynamicFields(this.userForm.controls.role.value);
@@ -247,5 +231,10 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
             return confirm("Are you sure you want to out before submitting form?");
         }
         return true;
+    }
+
+    closeDialog(value: boolean): void {
+        this.isDialogOpen = false;
+        this.formHelper.focusOnInvalidField(this.formFields, this.userForm);
     }
 }

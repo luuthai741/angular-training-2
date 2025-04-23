@@ -1,11 +1,14 @@
 <app-loading [isLoading]="loading"></app-loading>
 <div class="toast-container" *ngIf="messageResponse">
-    <common-dialog *ngIf="messageResponse" [messageKey]="messageResponse.body" [title]="dialogTitle" [messageType]="messageResponse.messageType"></common-dialog>
+    <common-confirm *ngIf="messageResponse"
+                    (confirm)="closeResponseDialog($event)"
+                    [messageType]="messageResponse.messageType" [title]="'Login'"
+                    [messageKey]="messageResponse.body"></common-confirm>
 </div>
 <div class="container">
     <form #form="ngForm" (ngSubmit)="onSubmit(form)">
         <div class="form-group">
-            <label>Username</label>
+            <label>Username<span class="text-danger">*</span></label>
             <input type="text"
                    required
                    autoFocus
@@ -13,26 +16,19 @@
                    class="form-control"
                    [ngClass]="{'is-invalid':username.errors && username.touched && form.submitted}"
                    ngModel
-                   #username="ngModel"/>
+                   #username="ngModel" #formField/>
         </div>
-        <p *ngIf="username.errors?.required && username.touched && form.submitted" class="text-danger">
-            Please fill out the username!
-        </p>
         <div class="form-group">
-            <label>Password</label>
+            <label>Password<span class="text-danger">*</span></label>
             <input type="password"
                    required
                    name="password"
                    class="form-control"
-                   [ngClass]="{'is-invalid':password.errors && password.touched && form.submitted}"
+                   [ngClass]="{'is-invalid':password.errors && ((password.touched && isSubmitted)  || isSubmitted)}"
                    ngModel
-                   #password="ngModel"/>
-            <p *ngIf="password.errors?.required && password.touched && form.submitted" class="text-danger">
-                Please fill out the password!
-            </p>
+                   #password="ngModel" #formField/>
         </div>
-        <button type="submit" class="btn btn-primary mt-2 mb-2"
-                [disabled]="form.invalid && form.touched && form.submitted">
+        <button type="submit" class="btn btn-primary mt-2 mb-2">
             Login
         </button>
     </form>
@@ -40,4 +36,10 @@
         <label class="mr-2">Don't have an account? </label>
         <a class="" [routerLink]="['/register']"> Sign up</a>
     </div>
+    <form-validation-message *ngIf="isDialogOpen && formGroup"
+                             [controlValidators]="controlValidators"
+                             [formGroup]="formGroup"
+                             (confirm)="closeDialog($event)"
+    >
+    </form-validation-message>
 </div>

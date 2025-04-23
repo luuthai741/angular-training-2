@@ -11,10 +11,17 @@
 
 .confirm-container {
     position: fixed;
-    top: 30%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    padding: 16px;
+    box-sizing: border-box;
 }
 
 .overlay {
@@ -49,8 +56,16 @@
 }
 
 .confirm-container .bottom-right-dialog {
-    max-width: 600px;
-    height: 160px;
+    max-width: 680px;
+    min-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 15px 20px;
+    border-radius: 8px;
+    animation: fadeInUp 0.3s ease-out;
 }
 
 .toast-container .bottom-right-dialog .dialog-title {

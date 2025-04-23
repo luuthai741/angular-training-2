@@ -5,8 +5,6 @@ import {Product} from "../../../../core/models/product.model";
 import {AuthService} from "../../../../shared/services/auth.service";
 import {RoleType} from "../../../../shared/constant/role.type";
 import {Router} from "@angular/router";
-import {MessageResponse} from "../../../../core/models/message-response.model";
-import {getMessageResponse} from "../../../../shared/utils/router-helper";
 
 @Component({
     selector: 'admin-product-list',
@@ -15,15 +13,12 @@ import {getMessageResponse} from "../../../../shared/utils/router-helper";
 export class AdminProductListComponent implements OnInit {
     products: Product[];
     isAdmin: boolean = false;
-    messageResponse: MessageResponse = null;
     showConfirmDialog: boolean = false;
     selectedProduct: Product = null;
 
     constructor(private productService: ProductService,
                 private authService: AuthService,
                 private router: Router) {
-        this.messageResponse = getMessageResponse(this.router);
-        console.log(this.messageResponse);
     }
 
 

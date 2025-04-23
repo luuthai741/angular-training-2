@@ -1,4 +1,4 @@
 export enum DialogType {
-    TOAST,
-    CONFIRM
+    CONFIRM,
+    NOTIFY
 }

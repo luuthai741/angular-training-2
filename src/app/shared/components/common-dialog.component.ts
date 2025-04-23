@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {MessageType} from "../constant/message.type";
-import {ERROR_MESSAGES, SUCCESS_MESSAGES, WARNING_MESSAGES} from "../constant/message-mapping";
 import {DialogType} from "../constant/dialog.type";
+import {getMessageByKey} from "../constant/message-mapping";
 
 @Component({
     selector: "common-dialog",
@@ -12,46 +12,39 @@ export class CommonDialogComponent {
     @Input() messageType: MessageType = MessageType.ERROR;
     @Input() messageKey: string;
     @Input() title: string;
-    @Input() showCloseButton: boolean = true;
-    @Input() dialogType: DialogType = DialogType.TOAST;
+    @Input() dialogType: DialogType = DialogType.CONFIRM;
     @Output() confirm = new EventEmitter<boolean>();
-
-    canShowCloseButton(): boolean {
-        return this.messageType != MessageType.ERROR;
-    }
-
-    isConfirmDialog(): boolean {
-        return this.dialogType === DialogType.CONFIRM;
-    }
+    baseDialog = DialogType;
 
     closeToast() {
         this.confirm.emit(false);
-        this.showCloseButton = false;
     }
 
-    message(): string {
+    get message(): string {
+        return getMessageByKey(this.messageType, this.messageKey);
+    }
+
+    setTextClass(): string {
         switch (this.messageType) {
             case MessageType.ERROR:
-                return ERROR_MESSAGES[this.messageKey];
-            case MessageType.SUCCESS:
-                return SUCCESS_MESSAGES[this.messageKey];
             case MessageType.WARNING:
-                return WARNING_MESSAGES[this.messageKey];
-            default:
-                return "";
-        }
-    }
-
-    setClass(): string {
-        switch (this.messageType) {
-            case MessageType.ERROR:
                 return "text-danger";
             case MessageType.INFO:
                 return "text-info";
-            case MessageType.WARNING:
-                return "text-dark";
             case MessageType.SUCCESS:
                 return "text-success";
+        }
+    }
+
+    setButtonClass(): string {
+        switch (this.messageType) {
+            case MessageType.ERROR:
+            case MessageType.WARNING:
+                return "btn-danger";
+            case MessageType.INFO:
+                return "btn-info";
+            case MessageType.SUCCESS:
+                return "btn-success";
         }
     }
 }

@@ -1,6 +1,11 @@
 <div class="container">
     <form [formGroup]="userForm">
-        <common-message-response [messageResponse]="messageResponse"></common-message-response>
+        <common-confirm (confirm)="closeNotificationAndRedirect($event)" *ngIf="messageResponse"
+                        [messageType]="messageResponse.messageType"
+                        [title]="formType == form.CREATE ? 'Created' : 'Updated' + ' user response'"
+                        [messageKey]="messageResponse.body"
+                        [dialogType]="dialogType"
+        ></common-confirm>
         <input type="number" hidden formControlName="id"/>
         <div class="form-group">
             <label [appRequiredMark]="'username'">Username</label>
@@ -9,7 +14,7 @@
                     name="username"
                     formControlName="username"
                     class="form-control"
-                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('username', userForm) }"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('username', userForm) && isSubmitted}"
                     autoFocus
                     #formField
             />
@@ -18,7 +23,7 @@
             <div class="form-group">
                 <label [appRequiredMark]="'passwordGroup.password'" for="password">Password</label>
                 <input type="password" id="password" formControlName="password" class="form-control"
-                       [ngClass]="{ 'is-invalid': formHelper.isInvalid('passwordGroup.password', userForm) }"
+                       [ngClass]="{ 'is-invalid': formHelper.isInvalid('passwordGroup.password', userForm) && isSubmitted}"
                        #formField
                 />
             </div>
@@ -31,7 +36,8 @@
                         formControlName="confirmPassword"
                         class="form-control"
                         id="confirmPassword"
-                        [ngClass]="{ 'is-invalid': formHelper.isInvalid('passwordGroup.confirmPassword',userForm) || formHelper.isInvalid('passwordGroup',userForm)}"
+                        [ngClass]="{ 'is-invalid': (formHelper.isInvalid('passwordGroup.confirmPassword',userForm)
+                        || formHelper.isInvalid('passwordGroup',userForm)) && isSubmitted}"
                         #formField
                 />
             </div>
@@ -39,7 +45,7 @@
         <div class="form-group">
             <label [appRequiredMark]="'fullName'" for="fullName">Full Name</label>
             <input formControlName="fullName" class="form-control" id="fullName"
-                   [ngClass]="{ 'is-invalid': formHelper.isInvalid('fullName', userForm) }"
+                   [ngClass]="{ 'is-invalid': formHelper.isInvalid('fullName', userForm) && isSubmitted}"
                    #formField
             />
         </div>
@@ -47,14 +53,14 @@
             <label [appRequiredMark]="'age'" for="age">Age</label>
             <input formControlName="age" type="text" class="form-control" id="age"
                    [appNumberInput]="'number'"
-                   [ngClass]="{ 'is-invalid': formHelper.isInvalid('age', userForm) }"
+                   [ngClass]="{ 'is-invalid': formHelper.isInvalid('age', userForm) && isSubmitted}"
                    #formField
             />
         </div>
         <div class="form-group">
             <label [appRequiredMark]="'gender'" for="gender">Gender</label>
             <select formControlName="gender" class="form-control" id="gender"
-                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('gender', userForm) }">
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('gender', userForm) && isSubmitted}">
                 <option value="" disabled selected>Select gender</option>
                 <option *ngFor="let gender of genders" [value]="gender.value">{{ gender.label }}</option>
             </select>
@@ -62,7 +68,7 @@
         <div class="form-group" [hidden]="loggedInUser?.role != 'ADMIN'">
             <label [appRequiredMark]="'role'" for="role">Role</label>
             <select formControlName="role" class="form-control" id="role"
-                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('role', userForm) }">
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('role', userForm) && isSubmitted}">
                 <option value="" disabled selected>Select gender</option>
                 <option *ngFor="let role of roles" [value]="role.value">{{ role.label }}</option>
             </select>
@@ -70,11 +76,7 @@
         <div class="form-group" *ngIf="userForm.controls.adminCode" [hidden]="loggedInUser?.role != 'ADMIN'">
             <label [appRequiredMark]="'adminCode'">Admin code</label>
             <input [appRequiredMark]="'adminCode'" formControlName="adminCode" type="text" class="form-control"
-                   [ngClass]="{ 'is-invalid': formHelper.isInvalid('adminCode', userForm) }" #formField/>
-            <div
-                    *ngIf="formHelper.getError('adminCode',userForm,'required')"
-                    class="text-danger"
-            ></div>
+                   #formField/>
         </div>
         <div class="form-group" *ngIf="userForm.controls.subscriptionPlan" [hidden]="loggedInUser?.role != 'ADMIN'">
             <label [appRequiredMark]="'subscriptionPlan'">Subscription plan</label>
@@ -82,13 +84,8 @@
                     formControlName="subscriptionPlan"
                     type="text"
                     class="form-control"
-                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('subscriptionPlan', userForm) }"
                     #formField
             />
-            <div
-                    *ngIf="formHelper.getError('subscriptionPlan',userForm,'required')"
-                    class="text-danger"
-            ></div>
         </div>
         <button
                 type="submit"
@@ -99,9 +96,11 @@
         </button>
         <button (click)="onReset()" class="btn btn-secondary">{{ formType == form.CREATE ? 'Clear' : 'Reset' }}</button>
     </form>
-    <form-validation-message
-            [controlValidators]="controlValidators"
-            [formGroup]="userForm">
+    <form-validation-message *ngIf="isDialogOpen"
+                             [controlValidators]="controlValidators"
+                             [formGroup]="userForm"
+                             (confirm)="closeDialog($event)"
+    >
     </form-validation-message>
 </div>
 

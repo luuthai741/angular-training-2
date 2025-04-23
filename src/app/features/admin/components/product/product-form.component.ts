@@ -9,13 +9,8 @@ import {FormHelper} from "../../../../shared/utils/form-helper";
 import {MessageResponse} from "../../../../core/models/message-response.model";
 import {imageUrlValidator, priceValidator} from "../../../../shared/validators/form-validator";
 import {CanComponentDeactivate} from "../../../../core/guards/can-component-deactivate";
-import {
-    productFormTitles,
-    productFormValidator,
-    userFormTitles,
-    userFormValidators
-} from "../../../../shared/constant/form-constants";
 import {ControlValidator} from "../../../../core/models/control-validator.model";
+import {DialogType} from "../../../../shared/constant/dialog.type";
 
 @Component({
     selector: 'admin-product-form',
@@ -30,6 +25,9 @@ export class ProductFormComponent implements OnInit, CanComponentDeactivate {
     messageResponse: MessageResponse = null;
     categories: string[] = [];
     controlValidators: ControlValidator[] = [];
+    isSubmitted: boolean = false;
+    isDialogOpen: boolean = false;
+    dialogType: DialogType = DialogType.NOTIFY;
 
     @ViewChildren("formFields") formFields: QueryList<ElementRef>;
 
@@ -66,24 +64,13 @@ export class ProductFormComponent implements OnInit, CanComponentDeactivate {
             ? FormType.CREATE
             : FormType.UPDATE;
         this.setFormValue();
-        this.setControlValidators();
-    }
-
-    setControlValidators() {
-        Object.keys(this.productForm.controls).forEach((controlName) => {
-            const controlValidator: ControlValidator = {
-                title: productFormTitles[controlName],
-                controlName: controlName,
-                validatorNames: productFormValidator[controlName],
-            }
-            this.controlValidators.push(controlValidator);
-        })
-        console.log(this.controlValidators)
+        this.formHelper.setControlValidators(this.productForm, this.controlValidators);
     }
 
     onSubmit() {
         if (this.productForm.invalid) {
-            this.formHelper.focusOnInvalidField(this.formFields, this.productForm);
+            this.isSubmitted = true;
+            this.isDialogOpen = true;
             this.productForm.markAllAsTouched();
             return;
         }
@@ -97,15 +84,22 @@ export class ProductFormComponent implements OnInit, CanComponentDeactivate {
                 if (this.formType === FormType.CREATE) {
                     this.formHelper.clearFormValue(this.productForm);
                 }
-                this.router.navigate(['/admin/products'], {
-                    state: data
-                });
+                this.messageResponse = data as MessageResponse;
+                this.loading = LoadingStateType.LOADED;
             },
             error: (err) => {
                 this.loading = LoadingStateType.LOADED;
                 this.messageResponse = err;
             },
         });
+    }
+
+
+    closeNotificationAndRedirect(isConfirm: boolean = false) {
+        if (!isConfirm) {
+            return;
+        }
+        this.router.navigate(['/admin/products']);
     }
 
     setFormValue() {
@@ -122,6 +116,7 @@ export class ProductFormComponent implements OnInit, CanComponentDeactivate {
     }
 
     onReset() {
+        this.isSubmitted = false;
         if (this.formType === FormType.UPDATE) {
             this.setFormValue();
             return;
@@ -134,5 +129,10 @@ export class ProductFormComponent implements OnInit, CanComponentDeactivate {
             return confirm("Are you sure you want to out before submitting form?");
         }
         return true;
+    }
+
+    closeDialog(value: boolean): void {
+        this.isDialogOpen = false;
+        this.formHelper.focusOnInvalidField(this.formFields, this.productForm);
     }
 }

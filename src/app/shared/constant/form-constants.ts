@@ -1,7 +1,10 @@
-export const userFormTitles: { [key: string]: string } = {
+export const formTitles: { [key: string]: string } = {
     "id": "Id",
+    //User
     "username": "Username",
     "passwordGroup": "Confirm Password",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
     "passwordGroup.password": "Password",
     "passwordGroup.confirmPassword": "Confirm Password",
     "fullName": "Full Name",
@@ -9,25 +12,8 @@ export const userFormTitles: { [key: string]: string } = {
     "gender": "Gender",
     "role": "Role",
     "adminCode": "Admin Code",
-    "subscriptionCode": "Subscription Code"
-}
-
-export const userFormValidators: { [key: string]: string[] } = {
-    "id": [],
-    "username": ['required', 'usernameExisting'],
-    "passwordGroup": ['mismatch'],
-    "passwordGroup.password": ['required', 'invalidPassword'],
-    "passwordGroup.confirmPassword": ['required'],
-    "fullName": ['required', 'invalidFullName'],
-    "age": ['required', 'invalidAge', 'invalidNumber'],
-    "gender": ['required'],
-    "role": ['required'],
-    "adminCode": [],
-    "subscriptionCode": []
-}
-
-export const productFormTitles: { [key: string]: string } = {
-    "id": "Id",
+    "subscriptionCode": "Subscription Code",
+    //Product
     "title": "Title",
     "price": "Price",
     "description": "Description",
@@ -35,11 +21,26 @@ export const productFormTitles: { [key: string]: string } = {
     "image": "Image",
 }
 
-export const productFormValidator: { [key: string]: string[] } = {
+export const formValidators: { [key: string]: string[] } = {
     "id": [],
+    //User
+    "username": ['required', 'usernameExisting'],
+    "passwordGroup": ['mismatch'],
+    "password": ['required', 'invalidPassword'],
+    "confirmPassword": ['required', 'mismatch'],
+    "passwordGroup.password": ['required', 'invalidPassword'],
+    "passwordGroup.confirmPassword": ['required'],
+    "fullName": ['required', 'invalidFullName'],
+    "age": ['required', 'invalidAge', 'invalidNumber'],
+    "gender": ['required'],
+    "role": ['required'],
+    "adminCode": [],
+    "subscriptionCode": [],
+    //Product
     "title": ['required'],
     "price": ['required', 'invalidPrice'],
     "description": ['required'],
     "category": ['required'],
     "image": ['required', 'invalidImageUrl']
 }
+

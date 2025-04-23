@@ -1,8 +1,5 @@
 <div class="container mt-4">
     <h2 class="mb-3">Product List</h2>
-    <div class="toast-container" *ngIf="messageResponse">
-        <common-dialog [messageKey]="messageResponse.body" [title]="'Product'" [messageType]="messageResponse.messageType"></common-dialog>
-    </div>
     <button class="btn btn-info mt-2 mb-2" [routerLink]="['/admin/products/create']" *ngIf="isAdmin">New</button>
     <table class="table table-bordered table-striped text-center align-middle">
         <thead class="table-dark">
