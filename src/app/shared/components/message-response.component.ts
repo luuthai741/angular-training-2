@@ -1,8 +1,7 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
-import {MessageResponse} from "../../core/models/message-response.model";
+import {isError, MessageResponse} from "../../core/models/message-response.model";
 import {isSuccess} from "angular-in-memory-web-api";
-import {isError} from "../constant/message-mapping";
 
 @Component({
     selector: 'common-message-response',

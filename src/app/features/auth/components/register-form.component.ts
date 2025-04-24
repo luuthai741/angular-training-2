@@ -8,6 +8,7 @@ import {MessageResponse} from "../../../core/models/message-response.model";
 import {ControlValidator} from "../../../core/models/control-validator.model";
 import {FormHelper} from "../../../shared/utils/form-helper";
 import {DialogType} from "../../../shared/constant/dialog.type";
+import {MessageType} from "../../../shared/constant/message.type";
 
 @Component({
     selector: 'register-form',
@@ -59,6 +60,9 @@ export class RegisterFormComponent {
 
     closeNotificationAndRedirect(isConfirm: boolean = false) {
         if (!isConfirm) {
+            return;
+        }
+        if (this.messageResponse?.messageType == MessageType.ERROR){
             return;
         }
         this.router.navigate(['/login']);

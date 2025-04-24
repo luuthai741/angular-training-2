@@ -2,10 +2,13 @@
 <div class="toast-container" *ngIf="messageResponse">
     <common-confirm *ngIf="messageResponse"
                     (confirm)="closeResponseDialog($event)"
-                    [messageType]="messageResponse.messageType" [title]="'Login'"
-                    [messageKey]="messageResponse.body"></common-confirm>
+                    [messageType]="messageResponse.messageType"
+                    [title]="'Login'"
+                    [dialogType]="dialogType"
+                    [messageKey]="messageResponse.body">
+    </common-confirm>
 </div>
-<div class="container">
+<div class="container mt-4">
     <form #form="ngForm" (ngSubmit)="onSubmit(form)">
         <div class="form-group">
             <label>Username<span class="text-danger">*</span></label>
@@ -14,7 +17,7 @@
                    autoFocus
                    name="username"
                    class="form-control"
-                   [ngClass]="{'is-invalid':username.errors && username.touched && form.submitted}"
+                   [ngClass]="{'is-invalid':password.errors && ((password.touched && isSubmitted)  || isSubmitted)}"
                    ngModel
                    #username="ngModel" #formField/>
         </div>
@@ -40,6 +43,7 @@
                              [controlValidators]="controlValidators"
                              [formGroup]="formGroup"
                              (confirm)="closeDialog($event)"
+
     >
     </form-validation-message>
 </div>

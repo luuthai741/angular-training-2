@@ -1,5 +1,4 @@
 import {MessageType} from "../../shared/constant/message.type";
-import {isError, isSuccess} from "../../shared/constant/message-mapping";
 
 export interface MessageResponse {
     statusCode: number;
@@ -29,13 +28,12 @@ export class MessageResponseBuilder {
         return this;
     }
 
-    setMessageType(): this {
+    setMessageType() {
         if (isError(this.statusCode)) {
             this.messageType = MessageType.ERROR;
         } else if (isSuccess(this.statusCode)) {
             this.messageType = MessageType.SUCCESS;
         }
-        return this;
     }
 
     build(): MessageResponse {
@@ -47,4 +45,12 @@ export class MessageResponseBuilder {
             messageType: this.messageType,
         }
     }
+}
+
+export function isSuccess(code: number): boolean {
+    return code >= 200 && code < 300;
+}
+
+export function isError(code: number): boolean {
+    return code >= 400;
 }

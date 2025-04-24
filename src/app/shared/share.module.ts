@@ -13,6 +13,7 @@ import {CommonDialogComponent} from "./components/common-dialog.component";
 import {FormValidationMessageComponent} from "./components/form-validation-message.component";
 import {CommonConfirm} from "./components/common-confirm.component";
 import {InvalidPasswordDirective} from "./directives/invalid-password.directive";
+import {CloseDialogDirective} from "./directives/close-dialog.directive";
 
 @NgModule({
     declarations: [TruncatePipe,
@@ -26,7 +27,8 @@ import {InvalidPasswordDirective} from "./directives/invalid-password.directive"
         CommonDialogComponent,
         FormValidationMessageComponent,
         CommonConfirm,
-        InvalidPasswordDirective
+        InvalidPasswordDirective,
+        CloseDialogDirective
     ],
     exports: [TruncatePipe,
         MessageResponseComponent,
@@ -40,7 +42,8 @@ import {InvalidPasswordDirective} from "./directives/invalid-password.directive"
         CommonDialogComponent,
         FormValidationMessageComponent,
         CommonConfirm,
-        InvalidPasswordDirective
+        InvalidPasswordDirective,
+        CloseDialogDirective
     ],
     imports: [CommonModule],
 })

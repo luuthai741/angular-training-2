@@ -6,7 +6,6 @@ import {ProductFormComponent} from "./components/product/product-form.component"
 import {AdminUserListComponent} from "./components/user/user-list.component";
 import {UserFormComponent} from "./components/user/user-form.component";
 import {RoleGuard} from "../../core/guards/role.guard";
-import {CanDeActiveGuard} from "../../core/guards/can-deactive.guard";
 import {RoleType} from "../../shared/constant/role.type";
 
 const routes: Routes = [
@@ -23,7 +22,6 @@ const routes: Routes = [
         path: 'products/create',
         component: ProductFormComponent,
         canActivate: [RoleGuard],
-        canDeactivate: [CanDeActiveGuard],
         data: {
             title: 'Create Product',
             roles: [RoleType[RoleType.ADMIN]]
@@ -51,7 +49,6 @@ const routes: Routes = [
         path: 'users/create',
         component: UserFormComponent,
         canActivate: [RoleGuard],
-        canDeactivate: [CanDeActiveGuard],
         data: {
             title: 'Create User',
             roles: [RoleType[RoleType.ADMIN]]

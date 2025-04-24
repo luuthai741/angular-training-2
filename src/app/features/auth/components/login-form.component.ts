@@ -7,6 +7,7 @@ import {AuthService} from "../../../shared/services/auth.service";
 import {MessageResponse} from "../../../core/models/message-response.model";
 import {ControlValidator} from "../../../core/models/control-validator.model";
 import {FormHelper} from "../../../shared/utils/form-helper";
+import {DialogType} from "../../../shared/constant/dialog.type";
 
 @Component({
     selector: 'login-form',
@@ -22,6 +23,7 @@ export class LoginFormComponent {
     formHelper = FormHelper;
     authForm: NgForm;
     formGroup: FormGroup;
+    dialogType = DialogType.NOTIFY;
 
     @ViewChildren('formField') formFields: QueryList<ElementRef>;
 

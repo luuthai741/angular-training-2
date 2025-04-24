@@ -9,11 +9,13 @@ import {DialogType} from "../constant/dialog.type";
 @Component({
     selector: 'form-validation-message',
     template: `
-        <div class="overlay" (click)="handleConfirm(false)" *ngIf="isShow">
-            <common-dialog class="confirm-container" [messageType]="messageType" [title]="'Invalid Form'" [dialogType]="dialogType">
+        <div class="overlay" (click)="handleConfirm(false)" *ngIf="isShow" closeDialog
+             (enterPressed)="handleConfirm(false)">
+            <common-dialog class="confirm-container" [messageType]="messageType" [title]="'Invalid Form'"
+                           [dialogType]="dialogType">
                 <div *ngFor="let controlValidator of controlValidatorsAfterChecked | keyvalue">
                     <div>*
-                        {{ message(controlValidator.value.currentValidator, controlValidator.value.title) }}
+                        {{ message(controlValidator.value.invalidControlName, controlValidator.value.title) }}
                     </div>
                 </div>
             </common-dialog>
@@ -48,7 +50,7 @@ export class FormValidationMessageComponent implements OnInit {
                 if (!isInvalid) {
                     continue;
                 }
-                controlValidator.currentValidator = validatorName;
+                controlValidator.invalidControlName = validatorName;
                 this.controlValidatorsAfterChecked.set(controlValidator.controlName, controlValidator);
                 break;
             }

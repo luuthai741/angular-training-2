@@ -47,4 +47,8 @@ export class CommonDialogComponent {
                 return "btn-success";
         }
     }
+
+    onConfirm() {
+        this.confirm.emit(true);
+    }
 }

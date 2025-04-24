@@ -15,18 +15,18 @@ import {FormHelper} from "../../../../shared/utils/form-helper";
 import {ActivatedRoute, Router} from "@angular/router";
 import {FormType} from "../../../../shared/constant/form.type";
 import {MessageResponse} from "../../../../core/models/message-response.model";
-import {CanComponentDeactivate} from "../../../../core/guards/can-component-deactivate";
 import {getRoleByName, getRoleList, RoleType} from "../../../../shared/constant/role.type";
 import {User} from "../../../../core/models/user.model";
 import {AuthService} from "../../../../shared/services/auth.service";
 import {ControlValidator} from "../../../../core/models/control-validator.model";
 import {DialogType} from "../../../../shared/constant/dialog.type";
+import {MessageType} from "../../../../shared/constant/message.type";
 
 @Component({
     selector: 'admin-user-form',
     templateUrl: './user-form.component.html'
 })
-export class UserFormComponent implements OnInit, CanComponentDeactivate {
+export class UserFormComponent implements OnInit {
     userForm: FormGroup;
     formHelper = FormHelper;
     formType: FormType = FormType.CREATE;
@@ -179,7 +179,9 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
                 subscriptionPlan: this.userForm.controls.subscriptionPlan?.value,
             },
         };
-        const observable = this.formType === FormType.UPDATE ? this.userService.updateUser(formValue) : this.userService.saveUser(formValue);
+        const observable = this.formType === FormType.UPDATE
+            ? this.userService.updateUser(formValue)
+            : this.userService.saveUser(formValue);
         observable.subscribe({
             next: data => {
                 if (this.formType === FormType.CREATE) {
@@ -191,13 +193,13 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
                 this.messageResponse = err;
             },
         })
-        if (this.formType === FormType.CREATE) {
-            this.onReset();
-        }
     }
 
     closeNotificationAndRedirect(isConfirm: boolean = false) {
         if (!isConfirm) {
+            return;
+        }
+        if (this.messageResponse?.messageType == MessageType.ERROR){
             return;
         }
         this.redirectPage();
@@ -224,13 +226,6 @@ export class UserFormComponent implements OnInit, CanComponentDeactivate {
             this.formHelper.clearFormErrors(this.userForm);
             this.getUserById(parseInt(userId));
         }
-    }
-
-    canDeactivate(): boolean {
-        if (this.userForm.dirty) {
-            return confirm("Are you sure you want to out before submitting form?");
-        }
-        return true;
     }
 
     closeDialog(value: boolean): void {

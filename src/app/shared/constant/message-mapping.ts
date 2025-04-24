@@ -1,10 +1,10 @@
 import {MessageType} from "./message.type";
 
-export const ERROR_MESSAGES: { [key: string]: string } = {
+const ERROR_MESSAGES: { [key: string]: string } = {
     required: "Please enter ",
     usernameExisting: "Username already exists",
     invalidPassword: "Password must be at least 9 characters, contain a capital letter and a special character.",
-    confirmPassword: "Passwords do not match",
+    confirmPassword: "Passwords don't matches",
     invalidFullName: "Full name is required, max 20 characters, and no special characters.",
     invalidAge: "Age should be between 1 and 99",
     invalidNumber: "Invalid number",
@@ -19,7 +19,7 @@ export const ERROR_MESSAGES: { [key: string]: string } = {
     loginFailed: "Invalid login credentials",
 }
 
-export const SUCCESS_MESSAGES: { [key: string]: string } = {
+const SUCCESS_MESSAGES: { [key: string]: string } = {
     productCreatedSuccess: "Product created successfully",
     productUpdatedSuccess: "Product updated successfully",
     productDeletedSuccess: "Product deleted successfully",
@@ -29,18 +29,9 @@ export const SUCCESS_MESSAGES: { [key: string]: string } = {
     signUpSuccess: "Sign up successfully",
 }
 
-export const WARNING_MESSAGES: { [key: string]: string } = {
+const WARNING_MESSAGES: { [key: string]: string } = {
     deleteProductConfirm: "Do you really want to delete this product?",
     deleteUserConfirm: "Do you really want to delete this user?",
-}
-
-
-export function isSuccess(code: number): boolean {
-    return code >= 200 && code < 300;
-}
-
-export function isError(code: number): boolean {
-    return code >= 400;
 }
 
 export function getMessageByKey(messageType: MessageType, messageKey: string): string {

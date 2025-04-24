@@ -8,15 +8,15 @@ import {LoadingStateType} from '../../../../shared/constant/loading-state.type';
 import {FormHelper} from "../../../../shared/utils/form-helper";
 import {MessageResponse} from "../../../../core/models/message-response.model";
 import {imageUrlValidator, priceValidator} from "../../../../shared/validators/form-validator";
-import {CanComponentDeactivate} from "../../../../core/guards/can-component-deactivate";
 import {ControlValidator} from "../../../../core/models/control-validator.model";
 import {DialogType} from "../../../../shared/constant/dialog.type";
+import {MessageType} from "../../../../shared/constant/message.type";
 
 @Component({
     selector: 'admin-product-form',
     templateUrl: './product-form.component.html',
 })
-export class ProductFormComponent implements OnInit, CanComponentDeactivate {
+export class ProductFormComponent implements OnInit {
     formType: FormType;
     form = FormType;
     productForm: FormGroup;
@@ -81,9 +81,9 @@ export class ProductFormComponent implements OnInit, CanComponentDeactivate {
                 : this.productService.updateProduct(this.productForm.value);
         observable.subscribe({
             next: (data) => {
-                if (this.formType === FormType.CREATE) {
-                    this.formHelper.clearFormValue(this.productForm);
-                }
+                // if (this.formType === FormType.CREATE) {
+                //     this.formHelper.clearFormValue(this.productForm);
+                // }
                 this.messageResponse = data as MessageResponse;
                 this.loading = LoadingStateType.LOADED;
             },
@@ -94,9 +94,11 @@ export class ProductFormComponent implements OnInit, CanComponentDeactivate {
         });
     }
 
-
     closeNotificationAndRedirect(isConfirm: boolean = false) {
         if (!isConfirm) {
+            return;
+        }
+        if (this.messageResponse?.messageType == MessageType.ERROR){
             return;
         }
         this.router.navigate(['/admin/products']);
@@ -122,13 +124,6 @@ export class ProductFormComponent implements OnInit, CanComponentDeactivate {
             return;
         }
         this.formHelper.clearFormValue(this.productForm);
-    }
-
-    canDeactivate(): boolean {
-        if (this.productForm.dirty) {
-            return confirm("Are you sure you want to out before submitting form?");
-        }
-        return true;
     }
 
     closeDialog(value: boolean): void {
