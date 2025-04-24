@@ -8,12 +8,14 @@ import {MessageResponse} from "../../../core/models/message-response.model";
 import {ControlValidator} from "../../../core/models/control-validator.model";
 import {FormHelper} from "../../../shared/utils/form-helper";
 import {DialogType} from "../../../shared/constant/dialog.type";
+import {ROUTE} from "../../../shared/constant/public-url";
 
 @Component({
     selector: 'login-form',
     templateUrl: './login-form.component.html',
 })
 export class LoginFormComponent {
+    ROUTE = ROUTE;
     loading: LoadingStateType = LoadingStateType.NOT_LOADED;
     messageResponse: MessageResponse = null;
     dialogTitle: string;
@@ -47,7 +49,7 @@ export class LoginFormComponent {
         }
         this.loading = LoadingStateType.LOADING;
         this.authService.signIn(authForm.value).subscribe({
-            next: () => this.router.navigate(['/']),
+            next: () => this.router.navigate([ROUTE.HOME]),
             error: (err) => {
                 this.loading = LoadingStateType.LOADED;
                 this.messageResponse = err;

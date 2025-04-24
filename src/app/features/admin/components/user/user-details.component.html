@@ -1,0 +1,51 @@
+<div class="container mt-4">
+    <div class="mb-2 d-flex">
+        <div class="me-2 fw-bold text-end" style="min-width: 120px">#Id:</div>
+        <div>{{ user.id }}</div>
+    </div>
+
+    <div class="mb-2 d-flex">
+        <div class="me-2 fw-bold text-end" style="min-width: 120px">Username</div>
+        <div class="font-weight-bold">{{ user.username }}</div>
+    </div>
+
+    <div class="mb-2 d-flex">
+        <div class="me-2 fw-bold text-end" style="min-width: 120px">Full Name</div>
+        <div>{{ user.fullName }}</div>
+    </div>
+
+    <div class="mb-2 d-flex">
+        <div class="me-2 fw-bold text-end" style="min-width: 120px">Age</div>
+        <div>{{ user.age }}</div>
+    </div>
+
+    <div class="mb-2 d-flex">
+        <div class="me-2 fw-bold text-end" style="min-width: 120px">Gender</div>
+        <div>{{ user.gender }}</div>
+    </div>
+    <div class="mb-2 d-flex">
+        <div class="me-2 fw-bold text-end" style="min-width: 120px">Role</div>
+        <div>{{ user.role }}</div>
+    </div>
+    <div class="mb-2 d-flex">
+        <div class="me-2 fw-bold text-end" style="min-width: 120px">Metadata</div>
+        <div>{{ user.roleMetadata?.adminCode || user.roleMetadata?.adminCode }}</div>
+    </div>
+    <div class="dropdown">
+        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+            Manage User
+        </button>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" [routerLink]="[ROUTE.ADMIN_USERS_EDIT, user?.id]">Edit user</a>
+            <a *ngIf="currentUser.id != user.id" class="dropdown-item" (click)="deleteUser(user)">Delete user</a>
+        </div>
+    </div>
+    <common-confirm
+            *ngIf="showConfirmDialog"
+            [title]="'Delete user ' + user?.id"
+            [messageKey]="'deleteUserConfirm'"
+            (confirm)="handleConfirmDelete($event)"
+    >
+    </common-confirm>
+</div>

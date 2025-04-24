@@ -1,4 +1,4 @@
-import {Component, ElementRef, QueryList, ViewChildren} from '@angular/core';
+import {Component, ElementRef, HostListener, QueryList, ViewChildren} from '@angular/core';
 import {FormGroup, NgForm} from '@angular/forms';
 
 import {LoadingStateType} from '../../../shared/constant/loading-state.type';
@@ -9,6 +9,7 @@ import {ControlValidator} from "../../../core/models/control-validator.model";
 import {FormHelper} from "../../../shared/utils/form-helper";
 import {DialogType} from "../../../shared/constant/dialog.type";
 import {MessageType} from "../../../shared/constant/message.type";
+import {ROUTE} from "../../../shared/constant/public-url";
 
 @Component({
     selector: 'register-form',
@@ -40,6 +41,10 @@ export class RegisterFormComponent {
             this.formGroup = authForm.control;
             this.formHelper.setControlValidators(this.formGroup, this.controlValidators);
         }
+        if (this.isDialogOpen){
+            console.log("dialog is opened")
+            return;
+        }
         if (this.authForm.invalid) {
             authForm.control.markAllAsTouched();
             this.isDialogOpen = true;
@@ -59,13 +64,14 @@ export class RegisterFormComponent {
     }
 
     closeNotificationAndRedirect(isConfirm: boolean = false) {
+        console.log("closeDialog");
         if (!isConfirm) {
             return;
         }
         if (this.messageResponse?.messageType == MessageType.ERROR){
             return;
         }
-        this.router.navigate(['/login']);
+        this.router.navigate([ROUTE.LOGIN]);
     }
 
     closeDialog(value: boolean): void {

@@ -54,6 +54,14 @@ export class UserService {
 
     saveUser(user: User): Observable<MessageResponse> {
         return new Observable<MessageResponse>(observable => {
+            if (this.isUsernameExists(user.username)) {
+                observable.error(new MessageResponseBuilder()
+                    .withBody("usernameExisting")
+                    .withStatusCode(400)
+                    .withTimestamp(new Date())
+                    .build());
+                return;
+            }
             this.users = [
                 ...this.users,
                 {
@@ -83,6 +91,7 @@ export class UserService {
                     .withStatusCode(404)
                     .withTimestamp(new Date())
                     .build());
+                return;
             }
             this.users = [
                 ...this.users.slice(0, index),

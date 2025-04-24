@@ -5,7 +5,7 @@
                     [messageKey]="messageResponse.body"
                     [dialogType]="dialogType"
     ></common-confirm>
-    <form #form="ngForm">
+    <form #form="ngForm" (ngSubmit)="onSubmit(form)">
         <div class="form-group">
             <label>Username <span class="text-danger">*</span></label>
             <input type="text" required usernameExisting autoFocus name="username" class="form-control"
@@ -33,10 +33,10 @@
             <label class="mr-2">Having an account? </label>
             <a class="" [routerLink]="['/login']">Sign in</a>
         </div>
+        <button type="submit" class="btn btn-primary mt-2">
+            Register
+        </button>
     </form>
-    <button type="button" class="btn btn-primary mt-2" (click)="onSubmit(form)">
-        Register
-    </button>
     <form-validation-message *ngIf="isDialogOpen && formGroup"
                              [controlValidators]="controlValidators"
                              [formGroup]="formGroup"

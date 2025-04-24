@@ -7,13 +7,17 @@ import {AdminUserListComponent} from "./components/user/user-list.component";
 import {AdminProductListComponent} from "./components/product/admin-product-list.component";
 import {UserFormComponent} from "./components/user/user-form.component";
 import {ProductFormComponent} from "./components/product/product-form.component";
+import {UserDetailsComponent} from "./components/user/user-details.component";
+import {AdminProductDetailsComponent} from "./components/product/admin-product-details.component";
 
 @NgModule({
     declarations: [
         AdminUserListComponent,
         AdminProductListComponent,
         UserFormComponent,
-        ProductFormComponent
+        ProductFormComponent,
+        UserDetailsComponent,
+        AdminProductDetailsComponent
     ],
     imports: [
         AdminRoutingModule,

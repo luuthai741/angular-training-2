@@ -5,7 +5,7 @@ const ERROR_MESSAGES: { [key: string]: string } = {
     usernameExisting: "Username already exists",
     invalidPassword: "Password must be at least 9 characters, contain a capital letter and a special character.",
     confirmPassword: "Passwords don't matches",
-    invalidFullName: "Full name is required, max 20 characters, and no special characters.",
+    invalidFullName: "Full name is required, max 20 characters, and no special characters or numbers.",
     invalidAge: "Age should be between 1 and 99",
     invalidNumber: "Invalid number",
     mismatch: "Passwords do not match!",

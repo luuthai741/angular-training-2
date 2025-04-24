@@ -6,6 +6,7 @@ import {AuthService} from "../../shared/services/auth.service";
 import {RoleType} from "../../shared/constant/role.type";
 import {UserService} from "../../shared/services/user.service";
 import {User} from "../models/user.model";
+import {ROUTE} from "../../shared/constant/public-url";
 
 @Injectable({
     providedIn: "root",
@@ -20,19 +21,19 @@ export class UserRoleGuard implements CanActivate {
         const loggedInUser = this.authService.getCurrentUser();
         if (!loggedInUser) {
             console.log("Not logged in");
-            this.router.navigate(['/login']);
+            this.router.navigate([ROUTE.LOGIN]);
             return false;
         }
         const userId: number = parseInt(route.paramMap.get("id"));
         if (userId !== loggedInUser.id) {
             console.log("User has not permission");
-            this.router.navigate(['/unauthorized']);
+            this.router.navigate([ROUTE.UNAUTHORIZED]);
             return false;
         }
         const userById: User = this.userService.getUserById(userId);
         if (!userById) {
             console.log("User is not found");
-            this.router.navigate(['/not-found']);
+            this.router.navigate([ROUTE.UNAUTHORIZED]);
             return false;
         }
         return true;

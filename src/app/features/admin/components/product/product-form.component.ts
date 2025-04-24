@@ -11,6 +11,8 @@ import {imageUrlValidator, priceValidator} from "../../../../shared/validators/f
 import {ControlValidator} from "../../../../core/models/control-validator.model";
 import {DialogType} from "../../../../shared/constant/dialog.type";
 import {MessageType} from "../../../../shared/constant/message.type";
+import {ROUTE} from "../../../../shared/constant/public-url";
+import {RoleType} from "../../../../shared/constant/role.type";
 
 @Component({
     selector: 'admin-product-form',
@@ -28,6 +30,7 @@ export class ProductFormComponent implements OnInit {
     isSubmitted: boolean = false;
     isDialogOpen: boolean = false;
     dialogType: DialogType = DialogType.NOTIFY;
+    productId: string;
 
     @ViewChildren("formFields") formFields: QueryList<ElementRef>;
 
@@ -98,20 +101,30 @@ export class ProductFormComponent implements OnInit {
         if (!isConfirm) {
             return;
         }
-        if (this.messageResponse?.messageType == MessageType.ERROR){
+        if (this.messageResponse?.messageType == MessageType.ERROR) {
             return;
         }
-        this.router.navigate(['/admin/products']);
+        this.redirectPage();
+    }
+
+    redirectPage() {
+        let url = "";
+        if (this.formType == FormType.CREATE) {
+            url = ROUTE.ADMIN_PRODUCTS;
+        } else {
+            url = `${ROUTE.ADMIN_PRODUCTS_DETAILS}/${this.productId}`;
+        }
+        this.router.navigate([url]);
     }
 
     setFormValue() {
         if (this.formType !== FormType.UPDATE) {
             return;
         }
-        const productId = this.route.snapshot.paramMap.get('id');
-        const product = this.productService.getProductById(parseInt(productId));
+        this.productId = this.route.snapshot.paramMap.get('id');
+        const product = this.productService.getProductById(parseInt(this.productId));
         if (!product) {
-            this.router.navigate(['/not-found']);
+            this.router.navigate([ROUTE.NOT_FOUND]);
         }
         this.productForm.patchValue(product);
         this.formHelper.clearFormErrors(this.productForm);

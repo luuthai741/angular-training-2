@@ -37,7 +37,7 @@
     </form>
     <div class="form-inline">
         <label class="mr-2">Don't have an account? </label>
-        <a class="" [routerLink]="['/register']"> Sign up</a>
+        <a class="" [routerLink]="[ROUTE.REGISTER]"> Sign up</a>
     </div>
     <form-validation-message *ngIf="isDialogOpen && formGroup"
                              [controlValidators]="controlValidators"

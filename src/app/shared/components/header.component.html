@@ -17,7 +17,7 @@
                 </a>
             </li>
             <li class="nav-item" *ngIf="isHavePermission">
-                <a class="nav-link" [routerLink]="['/admin/products']"
+                <a class="nav-link" [routerLink]="[ROUTE.ADMIN_PRODUCTS]"
                    routerLinkActive="active"
                    [routerLinkActiveOptions]="{ exact: true }">
                     Products
@@ -35,7 +35,7 @@
                        [routerLinkActiveOptions]="{ exact: true }">Login</a>
                 </li>
                 <li class="nav-item" *ngIf="!currentUser">
-                    <a class="nav-link" [routerLink]="['/register']"
+                    <a class="nav-link" [routerLink]="[ROUTE.REGISTER]"
                        routerLinkActive="active"
                        [routerLinkActiveOptions]="{ exact: true }">Register</a>
                 </li>

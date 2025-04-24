@@ -91,6 +91,7 @@ export class ProductService {
                     .withStatusCode(404)
                     .withTimestamp(new Date())
                     .build());
+                return;
             }
             const oldProduct = this.products[index];
             this.products = [

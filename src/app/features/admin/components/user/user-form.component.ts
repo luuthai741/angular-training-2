@@ -21,6 +21,7 @@ import {AuthService} from "../../../../shared/services/auth.service";
 import {ControlValidator} from "../../../../core/models/control-validator.model";
 import {DialogType} from "../../../../shared/constant/dialog.type";
 import {MessageType} from "../../../../shared/constant/message.type";
+import {ROUTE} from "../../../../shared/constant/public-url";
 
 @Component({
     selector: 'admin-user-form',
@@ -39,6 +40,8 @@ export class UserFormComponent implements OnInit {
     isSubmitted: boolean = false;
     isDialogOpen: boolean = false;
     dialogType: DialogType = DialogType.NOTIFY;
+    user: User = null;
+
     @ViewChildren('formField') formFields: QueryList<ElementRef>;
 
     constructor(
@@ -93,8 +96,8 @@ export class UserFormComponent implements OnInit {
             : FormType.UPDATE;
         if (this.formType === FormType.UPDATE) {
             let userId = this.activatedRoute.snapshot.paramMap.get('id');
-            const user = this.getUserById(parseInt(userId));
-            this.setRoleField(user.role);
+            this.user = this.getUserById(parseInt(userId));
+            this.setRoleField(this.user.role);
         }
         this.formHelper.setControlValidators(this.userForm, this.controlValidators, ['passwordGroup.password', 'passwordGroup.confirmPassword'])
     }
@@ -102,7 +105,7 @@ export class UserFormComponent implements OnInit {
     getUserById(id: number): User {
         const user = this.userService.getUserById(id);
         if (!user) {
-            this.router.navigate(['/not-found']);
+            this.router.navigate([ROUTE.NOT_FOUND]);
         }
         this.userForm.patchValue({
             id: user.id,
@@ -184,9 +187,6 @@ export class UserFormComponent implements OnInit {
             : this.userService.saveUser(formValue);
         observable.subscribe({
             next: data => {
-                if (this.formType === FormType.CREATE) {
-                    this.formHelper.clearFormValue(this.userForm);
-                }
                 this.messageResponse = data as MessageResponse;
             },
             error: err => {
@@ -199,20 +199,24 @@ export class UserFormComponent implements OnInit {
         if (!isConfirm) {
             return;
         }
-        if (this.messageResponse?.messageType == MessageType.ERROR){
+        if (this.messageResponse?.messageType == MessageType.ERROR) {
             return;
         }
         this.redirectPage();
     }
 
     redirectPage() {
-        let url: string;
+        let url = "";
         if (this.loggedInUser.role != RoleType[RoleType.ADMIN]) {
-            url = "/";
+            this.router.navigate([ROUTE.HOME]);
         } else {
-            url = "/admin/users";
+            if (this.formType == FormType.CREATE) {
+                url = ROUTE.ADMIN_USERS;
+            } else {
+                url = `${ROUTE.ADMIN_USERS_DETAILS}/${this.user?.id}`;
+            }
+            this.router.navigate([url]);
         }
-        this.router.navigate([url]);
     }
 
     onReset(): void {

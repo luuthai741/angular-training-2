@@ -13,6 +13,7 @@ import {RegisterRequest} from "../../core/models/register-request.model";
 import {RoleType} from "../constant/role.type";
 import {GenderType} from "../constant/gender.type";
 import {stringify} from "@angular/compiler/src/util";
+import {ROUTE} from "../constant/public-url";
 
 @Injectable({
     providedIn: 'root',
@@ -98,7 +99,7 @@ export class AuthService {
 
     logout() {
         this.tokenService.removeToken();
-        this.router.navigate(['/login']);
+        this.router.navigate([ROUTE.LOGIN]);
     }
 
     getCurrentUser(): User {
