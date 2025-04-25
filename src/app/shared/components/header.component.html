@@ -11,15 +11,13 @@
         <ul class="navbar-nav mr-auto">
             <li class="nav-item" *ngIf="isHavePermission">
                 <a class="nav-link" [routerLink]="['/admin/users']"
-                   routerLinkActive="active"
-                   [routerLinkActiveOptions]="{ exact: true }">
+                   routerLinkActive="active">
                     Users
                 </a>
             </li>
             <li class="nav-item" *ngIf="isHavePermission">
                 <a class="nav-link" [routerLink]="[ROUTE.ADMIN_PRODUCTS]"
-                   routerLinkActive="active"
-                   [routerLinkActiveOptions]="{ exact: true }">
+                   routerLinkActive="active">
                     Products
                 </a>
             </li>

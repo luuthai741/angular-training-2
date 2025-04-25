@@ -49,7 +49,7 @@ const routes: Routes = [
         path: 'products/:id',
         component: ProductDetailComponent,
         data: {
-            title: 'Product'
+            title: 'Product Page'
         }
     },
     {
@@ -57,7 +57,7 @@ const routes: Routes = [
         component: UserFormComponent,
         canActivate: [UserRoleGuard],
         data: {
-            title: 'Product'
+            title: 'User Profile'
         }
     },
     {

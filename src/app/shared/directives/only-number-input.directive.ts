@@ -1,4 +1,5 @@
-import { Directive, ElementRef, HostListener, Input } from '@angular/core';
+import {Directive, ElementRef, HostListener, Input} from '@angular/core';
+import {currencyFormat} from "../utils/format-helper";
 
 @Directive({
     selector: '[appNumberInput]'
@@ -6,7 +7,8 @@ import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 export class NumberInputDirective {
     @Input('appNumberInput') appNumberInput: 'number' | 'decimal' = 'number';
 
-    constructor(private el: ElementRef<HTMLInputElement>) {}
+    constructor(private el: ElementRef<HTMLInputElement>) {
+    }
 
     @HostListener('input', ['$event'])
     onInputChange(event: Event): void {
@@ -23,10 +25,11 @@ export class NumberInputDirective {
             if (parts.length > 2) {
                 value = parts[0] + '.' + parts.slice(1).join('');
             }
+            value = currencyFormat(value);
         }
         if (input.value !== value) {
             input.value = value;
-            const newEvent = new Event('input', { bubbles: true });
+            const newEvent = new Event('input', {bubbles: true});
             input.dispatchEvent(newEvent);
         }
     }
@@ -50,8 +53,9 @@ export class NumberInputDirective {
                     }
                 }
             }
+            value = currencyFormat(value);
             input.value = value;
-            const newEvent = new Event('input', { bubbles: true });
+            const newEvent = new Event('input', {bubbles: true});
             input.dispatchEvent(newEvent);
         }
     }

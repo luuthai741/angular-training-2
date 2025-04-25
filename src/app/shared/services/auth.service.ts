@@ -20,7 +20,6 @@ import {ROUTE} from "../constant/public-url";
 })
 export class AuthService {
     constructor(
-        private httpClient: HttpClient,
         private tokenService: TokenService,
         private userService: UserService,
         private router: Router,
@@ -108,5 +107,10 @@ export class AuthService {
         }
         const username = localStorage.getItem('username');
         return this.userService.getUserByUsername(username);
+    }
+
+    isAdmin(): boolean {
+        const currentUser = this.getCurrentUser();
+        return currentUser && currentUser?.role === RoleType[RoleType.ADMIN];
     }
 }

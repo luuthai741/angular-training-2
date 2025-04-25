@@ -16,7 +16,7 @@
     </div>
     <div class="mb-2 d-flex">
         <div class="me-2 fw-bold text-end" style="min-width: 120px">Price</div>
-        <div class="font-weight-bold">{{ product.price | currency }}</div>
+        <div class="font-weight-bold">{{ product.price | currency}}</div>
     </div>
     <div class="mb-2 d-flex">
         <div class="me-2 fw-bold text-end" style="min-width: 120px">Category</div>
@@ -26,21 +26,23 @@
         <div class="me-2 fw-bold text-end" style="min-width: 120px">Description</div>
         <div>{{ product.description }}</div>
     </div>
-    <div class="dropdown">
-        <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
-                aria-haspopup="true" aria-expanded="false">
-            Manage Product
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" [routerLink]="[ROUTE.ADMIN_PRODUCTS_EDIT, product?.id]">Edit user</a>
-            <a class="dropdown-item" (click)="deleteProduct(product)">Delete product</a>
+    <div *ngIf="isAdmin">
+        <div class="dropdown">
+            <button class="btn btn-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                Manage Product
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" [routerLink]="[ROUTE.ADMIN_PRODUCTS_EDIT, product?.id]">Edit product</a>
+                <a class="dropdown-item" (click)="deleteProduct(product)">Delete product</a>
+            </div>
         </div>
+        <common-confirm
+                *ngIf="showConfirmDialog"
+                [title]="'Delete product ' + product?.id"
+                [messageKey]="'deleteProductConfirm'"
+                (confirm)="handleConfirmDelete($event)"
+        >
+        </common-confirm>
     </div>
-    <common-confirm
-            *ngIf="showConfirmDialog"
-            [title]="'Delete product ' + product?.id"
-            [messageKey]="'deleteProductConfirm'"
-            (confirm)="handleConfirmDelete($event)"
-    >
-    </common-confirm>
 </div>

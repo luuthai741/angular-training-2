@@ -15,6 +15,7 @@ export class AdminProductDetailsComponent implements OnInit {
     currentUser: User = null;
     showConfirmDialog: boolean = false;
     ROUTE = ROUTE;
+    isAdmin: boolean = this.authService.isAdmin();
 
     constructor(private productService: ProductService,
                 private activatedRoute: ActivatedRoute,

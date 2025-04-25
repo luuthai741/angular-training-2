@@ -35,15 +35,14 @@ export class RegisterFormComponent {
     }
 
     onSubmit(authForm: NgForm) {
+        if (this.isDialogOpen) {
+            return;
+        }
         if (!this.authForm) {
             this.authForm = authForm;
             this.isSubmitted = true;
             this.formGroup = authForm.control;
             this.formHelper.setControlValidators(this.formGroup, this.controlValidators);
-        }
-        if (this.isDialogOpen){
-            console.log("dialog is opened")
-            return;
         }
         if (this.authForm.invalid) {
             authForm.control.markAllAsTouched();
@@ -54,21 +53,23 @@ export class RegisterFormComponent {
         this.authService.signUp(authForm.value).subscribe({
             next: (data) => {
                 this.loading = LoadingStateType.LOADED;
+                this.isDialogOpen = true;
                 this.messageResponse = data as MessageResponse;
             },
             error: err => {
                 this.loading = LoadingStateType.LOADED;
                 this.messageResponse = err;
+                this.isDialogOpen = true;
             }
         })
     }
 
     closeNotificationAndRedirect(isConfirm: boolean = false) {
-        console.log("closeDialog");
+        this.isDialogOpen = isConfirm;
         if (!isConfirm) {
             return;
         }
-        if (this.messageResponse?.messageType == MessageType.ERROR){
+        if (this.messageResponse?.messageType == MessageType.ERROR) {
             return;
         }
         this.router.navigate([ROUTE.LOGIN]);

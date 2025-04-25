@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {User} from "../../../../core/models/user.model";
 import {UserService} from "../../../../shared/services/user.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -14,6 +14,7 @@ export class UserDetailsComponent implements OnInit {
     currentUser: User = null;
     showConfirmDialog: boolean = false;
     ROUTE = ROUTE;
+    isAdmin: boolean = this.authService.isAdmin();
 
     constructor(private userService: UserService,
                 private activatedRoute: ActivatedRoute,

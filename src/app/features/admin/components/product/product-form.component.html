@@ -1,7 +1,7 @@
 <app-loading [isLoading]="loading"></app-loading>
 <div class="container">
     <form [formGroup]="productForm">
-        <common-confirm (confirm)="closeNotificationAndRedirect($event)" *ngIf="messageResponse"
+        <common-confirm (confirm)="closeNotificationAndRedirect($event)" *ngIf="messageResponse && isDialogOpen"
                         [messageType]="messageResponse.messageType" [title]="formType == form.CREATE ? 'Created' : 'Updated' + ' product response'"
                         [messageKey]="messageResponse.body"
                         [dialogType]="dialogType">
@@ -16,6 +16,7 @@
                     aria-describedby="emailHelp"
                     [ngClass]="{ 'is-invalid': formHelper.isInvalid('title', productForm) && isSubmitted }"
                     autoFocus
+
                     #formFields
             />
         </div>
@@ -26,10 +27,8 @@
                        [ngClass]="{ 'is-invalid': formHelper.isInvalid('price', productForm) && isSubmitted }"
                        #formFields
                        [appNumberInput]="'decimal'"
+
                 />
-                <div class="input-group-prepend">
-                    <div class="input-group-text">$</div>
-                </div>
             </div>
         </div>
         <div class="form-group">
@@ -70,9 +69,9 @@
         >
             {{ formType == form.CREATE ? 'Create' : 'Update' }}
         </button>
-        <button (click)="onReset()" class="btn btn-secondary">{{ formType == form.CREATE ? 'Clear' : 'Reset' }}</button>
+        <button class="btn btn-danger" (click)="redirectPage()">Cancel</button>
     </form>
-    <form-validation-message *ngIf="isDialogOpen"
+    <form-validation-message *ngIf="isDialogOpen && productForm.invalid"
                              [controlValidators]="controlValidators"
                              [formGroup]="productForm"
                              (confirm)="closeDialog($event)"

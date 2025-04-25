@@ -34,8 +34,8 @@ const routes: Routes = [
                 component: AdminProductDetailsComponent,
                 canActivate: [RoleGuard],
                 data: {
-                    title: 'User Details',
-                    roles: [RoleType[RoleType.ADMIN]]
+                    title: 'Product Details',
+                    roles: [RoleType[RoleType.ADMIN], RoleType[RoleType.USER]],
                 }
             },
             {
@@ -54,7 +54,7 @@ const routes: Routes = [
         component: AdminUserListComponent,
         canActivate: [RoleGuard],
         data: {
-            title: 'Users',
+            title: 'Admin Users',
             roles: [RoleType[RoleType.ADMIN], RoleType[RoleType.USER]],
         },
         children: [
@@ -73,7 +73,7 @@ const routes: Routes = [
                 canActivate: [RoleGuard],
                 data: {
                     title: 'User Details',
-                    roles: [RoleType[RoleType.ADMIN]]
+                    roles: [RoleType[RoleType.ADMIN], RoleType[RoleType.USER]],
                 }
             },
             {

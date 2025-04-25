@@ -162,6 +162,9 @@ export class UserFormComponent implements OnInit {
     }
 
     onSubmit(): void {
+        if (this.isDialogOpen) {
+            return;
+        }
         if (this.userForm.invalid) {
             this.isSubmitted = true;
             this.isDialogOpen = true;
@@ -188,14 +191,17 @@ export class UserFormComponent implements OnInit {
         observable.subscribe({
             next: data => {
                 this.messageResponse = data as MessageResponse;
+                this.isDialogOpen = true;
             },
             error: err => {
+                this.isDialogOpen = true;
                 this.messageResponse = err;
             },
         })
     }
 
     closeNotificationAndRedirect(isConfirm: boolean = false) {
+        this.isDialogOpen = isConfirm;
         if (!isConfirm) {
             return;
         }
@@ -206,16 +212,16 @@ export class UserFormComponent implements OnInit {
     }
 
     redirectPage() {
-        let url = "";
         if (this.loggedInUser.role != RoleType[RoleType.ADMIN]) {
             this.router.navigate([ROUTE.HOME]);
         } else {
-            if (this.formType == FormType.CREATE) {
-                url = ROUTE.ADMIN_USERS;
-            } else {
-                url = `${ROUTE.ADMIN_USERS_DETAILS}/${this.user?.id}`;
-            }
-            this.router.navigate([url]);
+            // let url = "";
+            // if (this.formType == FormType.CREATE) {
+            //     url = ROUTE.ADMIN_USERS;
+            // } else {
+            //     url = `${ROUTE.ADMIN_USERS_DETAILS}/${this.user?.id}`;
+            // }
+            this.router.navigate([ROUTE.ADMIN_USERS]);
         }
     }
 

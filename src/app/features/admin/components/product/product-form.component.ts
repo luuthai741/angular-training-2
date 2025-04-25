@@ -12,7 +12,6 @@ import {ControlValidator} from "../../../../core/models/control-validator.model"
 import {DialogType} from "../../../../shared/constant/dialog.type";
 import {MessageType} from "../../../../shared/constant/message.type";
 import {ROUTE} from "../../../../shared/constant/public-url";
-import {RoleType} from "../../../../shared/constant/role.type";
 
 @Component({
     selector: 'admin-product-form',
@@ -71,6 +70,9 @@ export class ProductFormComponent implements OnInit {
     }
 
     onSubmit() {
+        if (this.isDialogOpen) {
+            return;
+        }
         if (this.productForm.invalid) {
             this.isSubmitted = true;
             this.isDialogOpen = true;
@@ -84,20 +86,20 @@ export class ProductFormComponent implements OnInit {
                 : this.productService.updateProduct(this.productForm.value);
         observable.subscribe({
             next: (data) => {
-                // if (this.formType === FormType.CREATE) {
-                //     this.formHelper.clearFormValue(this.productForm);
-                // }
                 this.messageResponse = data as MessageResponse;
                 this.loading = LoadingStateType.LOADED;
+                this.isDialogOpen = true;
             },
             error: (err) => {
                 this.loading = LoadingStateType.LOADED;
                 this.messageResponse = err;
+                this.isDialogOpen = true;
             },
         });
     }
 
     closeNotificationAndRedirect(isConfirm: boolean = false) {
+        this.isDialogOpen = isConfirm;
         if (!isConfirm) {
             return;
         }
@@ -108,13 +110,17 @@ export class ProductFormComponent implements OnInit {
     }
 
     redirectPage() {
+        const state: { [k: string]: any } = {};
         let url = "";
         if (this.formType == FormType.CREATE) {
             url = ROUTE.ADMIN_PRODUCTS;
         } else {
             url = `${ROUTE.ADMIN_PRODUCTS_DETAILS}/${this.productId}`;
+            state.productId = this.productId;
         }
-        this.router.navigate([url]);
+        this.router.navigate([url], {
+            state
+        });
     }
 
     setFormValue() {

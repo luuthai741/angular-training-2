@@ -1,6 +1,6 @@
 <app-loading [isLoading]="loading"></app-loading>
 <div class="container">
-    <common-confirm (confirm)="closeNotificationAndRedirect($event)" *ngIf="messageResponse"
+    <common-confirm (confirm)="closeNotificationAndRedirect($event)" *ngIf="messageResponse && isDialogOpen"
                     [messageType]="messageResponse.messageType" [title]="'Register'"
                     [messageKey]="messageResponse.body"
                     [dialogType]="dialogType"
@@ -37,7 +37,7 @@
             Register
         </button>
     </form>
-    <form-validation-message *ngIf="isDialogOpen && formGroup"
+    <form-validation-message *ngIf="isDialogOpen && authForm?.invalid"
                              [controlValidators]="controlValidators"
                              [formGroup]="formGroup"
                              (confirm)="closeDialog($event)"

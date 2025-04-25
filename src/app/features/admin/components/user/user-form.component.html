@@ -1,6 +1,6 @@
 <div class="container">
     <form [formGroup]="userForm">
-        <common-confirm (confirm)="closeNotificationAndRedirect($event)" *ngIf="messageResponse"
+        <common-confirm (confirm)="closeNotificationAndRedirect($event)" *ngIf="messageResponse && isDialogOpen"
                         [messageType]="messageResponse.messageType"
                         [title]="formType == form.CREATE ? 'Created user response' : 'Updated user response'"
                         [messageKey]="messageResponse.body"
@@ -94,10 +94,9 @@
         >
             {{ formType == form.CREATE ? 'Create' : 'Update' }}
         </button>
-        <button (click)="onReset()" class="btn btn-secondary mr-2">{{ formType == form.CREATE ? 'Clear' : 'Reset' }}</button>
         <button class="btn btn-danger" (click)="redirectPage()">Cancel</button>
     </form>
-    <form-validation-message *ngIf="isDialogOpen"
+    <form-validation-message *ngIf="isDialogOpen && userForm.invalid"
                              [controlValidators]="controlValidators"
                              [formGroup]="userForm"
                              (confirm)="closeDialog($event)"
