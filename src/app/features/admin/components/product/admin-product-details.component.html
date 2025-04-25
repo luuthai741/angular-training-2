@@ -33,7 +33,7 @@
                 Manage Product
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" [routerLink]="[ROUTE.ADMIN_PRODUCTS_EDIT, product?.id]">Edit product</a>
+                <a class="dropdown-item" [routerLink]="[ROUTE.ADMIN_PRODUCTS_EDIT]">Edit product</a>
                 <a class="dropdown-item" (click)="deleteProduct(product)">Delete product</a>
             </div>
         </div>

@@ -22,6 +22,7 @@ import {ControlValidator} from "../../../../core/models/control-validator.model"
 import {DialogType} from "../../../../shared/constant/dialog.type";
 import {MessageType} from "../../../../shared/constant/message.type";
 import {ROUTE} from "../../../../shared/constant/public-url";
+import {UserContextService} from "../../../../shared/services/user-context.service";
 
 @Component({
     selector: 'admin-user-form',
@@ -50,6 +51,7 @@ export class UserFormComponent implements OnInit {
         private authService: AuthService,
         private activatedRoute: ActivatedRoute,
         private router: Router,
+        private userContext: UserContextService
     ) {
     }
 
@@ -95,18 +97,18 @@ export class UserFormComponent implements OnInit {
             ? FormType.CREATE
             : FormType.UPDATE;
         if (this.formType === FormType.UPDATE) {
-            let userId = this.activatedRoute.snapshot.paramMap.get('id');
-            this.user = this.getUserById(parseInt(userId));
-            this.setRoleField(this.user.role);
+            this.user = this.setFormValue()
+            this.setRoleField(this.user?.role);
         }
         this.formHelper.setControlValidators(this.userForm, this.controlValidators, ['passwordGroup.password', 'passwordGroup.confirmPassword'])
     }
 
-    getUserById(id: number): User {
-        const user = this.userService.getUserById(id);
-        if (!user) {
+    setFormValue(): User {
+        if (!this.userContext.getSelectedUser()) {
             this.router.navigate([ROUTE.NOT_FOUND]);
+            return null;
         }
+        const user = this.userContext.getSelectedUser();
         this.userForm.patchValue({
             id: user.id,
             username: user.username,
@@ -192,6 +194,7 @@ export class UserFormComponent implements OnInit {
             next: data => {
                 this.messageResponse = data as MessageResponse;
                 this.isDialogOpen = true;
+                this.userContext.setSelectedUser(data.objectResponse);
             },
             error: err => {
                 this.isDialogOpen = true;
@@ -214,27 +217,16 @@ export class UserFormComponent implements OnInit {
     redirectPage() {
         if (this.loggedInUser.role != RoleType[RoleType.ADMIN]) {
             this.router.navigate([ROUTE.HOME]);
+            this.userContext.removeSelectedUser()
         } else {
-            // let url = "";
-            // if (this.formType == FormType.CREATE) {
-            //     url = ROUTE.ADMIN_USERS;
-            // } else {
-            //     url = `${ROUTE.ADMIN_USERS_DETAILS}/${this.user?.id}`;
-            // }
-            this.router.navigate([ROUTE.ADMIN_USERS]);
-        }
-    }
-
-    onReset(): void {
-        this.userForm.get('username')?.enable();
-        this.isSubmitted = false;
-        if (this.formType === FormType.CREATE) {
-            this.formHelper.clearFormValue(this.userForm);
-            this.handleDynamicFields(this.userForm.controls.role.value);
-        } else {
-            let userId = this.activatedRoute.snapshot.paramMap.get('id');
-            this.formHelper.clearFormErrors(this.userForm);
-            this.getUserById(parseInt(userId));
+            let url = "";
+            if (this.formType == FormType.CREATE) {
+                url = ROUTE.ADMIN_USERS;
+                this.userContext.removeSelectedUser()
+            } else {
+                url = ROUTE.ADMIN_USERS_DETAILS;
+            }
+            this.router.navigate([url]);
         }
     }
 

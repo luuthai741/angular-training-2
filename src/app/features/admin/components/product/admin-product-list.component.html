@@ -13,7 +13,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr [ngClass]="selectedProduct != product ? 'selectable-row' : 'selected-row'"
+                <tr [ngClass]="productContext.getSelectedProduct()?.id != product.id ? 'selectable-row' : 'selected-row'"
                     *ngFor="let product of products"
                     (click)="setSelectedProduct(product)"
                 >
@@ -25,10 +25,10 @@
             </table>
         </div>
         <div class="col">
-            <div *ngIf="!selectedProduct" style="font-size: 30px">
+            <div *ngIf="!productContext.getSelectedProduct()" style="font-size: 30px">
                 Please select a product
             </div>
-            <div *ngIf="selectedProduct">
+            <div *ngIf="productContext.getSelectedProduct() || isShowForm">
                 <router-outlet></router-outlet>
             </div>
         </div>

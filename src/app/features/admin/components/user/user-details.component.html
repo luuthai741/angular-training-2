@@ -38,7 +38,7 @@
                 Manage User
             </button>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" [routerLink]="[ROUTE.ADMIN_USERS_EDIT, user?.id]">Edit user</a>
+                <a class="dropdown-item" [routerLink]="[ROUTE.ADMIN_USERS_EDIT]">Edit user</a>
                 <a *ngIf="currentUser.id != user.id" class="dropdown-item" (click)="deleteUser(user)">Delete user</a>
             </div>
         </div>

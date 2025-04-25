@@ -4,7 +4,6 @@ import {Observable} from 'rxjs';
 import {Product} from '../../core/models/product.model';
 
 import {MessageResponse, MessageResponseBuilder} from "../../core/models/message-response.model";
-import {removeCurrencyFormat} from "../utils/format-helper";
 
 @Injectable({
     providedIn: 'root',
@@ -60,13 +59,12 @@ export class ProductService {
     }
 
     createProduct(product: Product): Observable<MessageResponse> {
+        product.id = this.createProductId();
         return new Observable<MessageResponse>(observable => {
             this.products = [
                 ...this.products,
                 {
                     ...product,
-                    id: this.createProductId(),
-                    price: removeCurrencyFormat(product.price as string),
                     rating: {
                         rate: 0,
                         count: 0
@@ -77,6 +75,7 @@ export class ProductService {
             observable.next(new MessageResponseBuilder()
                 .withBody("productCreatedSuccess")
                 .withStatusCode(201)
+                .withObjectResponse(product)
                 .withTimestamp(new Date())
                 .build()
             )
@@ -100,7 +99,6 @@ export class ProductService {
                 ...this.products.slice(0, index),
                 {
                     ...product,
-                    price: removeCurrencyFormat(product.price as string),
                     rating: oldProduct.rating,
                 },
                 ...this.products.slice(index + 1),
@@ -109,6 +107,7 @@ export class ProductService {
             observable.next(new MessageResponseBuilder()
                 .withBody("productUpdatedSuccess")
                 .withStatusCode(200)
+                .withObjectResponse(product)
                 .withTimestamp(new Date())
                 .build()
             )

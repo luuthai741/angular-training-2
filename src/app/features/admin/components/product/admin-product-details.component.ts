@@ -1,16 +1,17 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, DoCheck, OnInit} from "@angular/core";
 import {User} from "../../../../core/models/user.model";
-import {ActivatedRoute, Router} from "@angular/router";
+import {Router} from "@angular/router";
 import {AuthService} from "../../../../shared/services/auth.service";
 import {ROUTE} from "../../../../shared/constant/public-url";
 import {Product} from "../../../../core/models/product.model";
 import {ProductService} from "../../../../shared/services/product.service";
+import {ProductContextService} from "../../../../shared/services/product-context.service";
 
 @Component({
     selector: 'admin-product-details',
     templateUrl: './admin-product-details.component.html'
 })
-export class AdminProductDetailsComponent implements OnInit {
+export class AdminProductDetailsComponent implements OnInit, DoCheck {
     product: Product;
     currentUser: User = null;
     showConfirmDialog: boolean = false;
@@ -18,18 +19,26 @@ export class AdminProductDetailsComponent implements OnInit {
     isAdmin: boolean = this.authService.isAdmin();
 
     constructor(private productService: ProductService,
-                private activatedRoute: ActivatedRoute,
                 private router: Router,
-                private authService: AuthService
+                private authService: AuthService,
+                private productContext: ProductContextService
     ) {
     }
 
     ngOnInit(): void {
         this.currentUser = this.authService.getCurrentUser();
-        this.activatedRoute.paramMap.subscribe(params => {
-            const productId = params.get("id");
-            this.product = this.productService.getProductById(parseInt(productId));
-        })
+        if (!this.productContext.getSelectedProduct()) {
+            this.router.navigate([ROUTE.NOT_FOUND]);
+            return;
+        }
+        this.product = this.productContext.getSelectedProduct();
+    }
+
+    ngDoCheck(): void {
+        const updatedProduct = this.productContext.getSelectedProduct();
+        if (updatedProduct !== this.product) {
+            this.product = updatedProduct;
+        }
     }
 
     deleteProduct(product: Product) {

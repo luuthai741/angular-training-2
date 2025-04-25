@@ -1,5 +1,4 @@
 import {Directive, ElementRef, HostListener, Input} from '@angular/core';
-import {currencyFormat} from "../utils/format-helper";
 
 @Directive({
     selector: '[appNumberInput]'
@@ -25,7 +24,6 @@ export class NumberInputDirective {
             if (parts.length > 2) {
                 value = parts[0] + '.' + parts.slice(1).join('');
             }
-            value = currencyFormat(value);
         }
         if (input.value !== value) {
             input.value = value;
@@ -53,7 +51,6 @@ export class NumberInputDirective {
                     }
                 }
             }
-            value = currencyFormat(value);
             input.value = value;
             const newEvent = new Event('input', {bubbles: true});
             input.dispatchEvent(newEvent);

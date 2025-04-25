@@ -4,6 +4,7 @@ export interface MessageResponse {
     statusCode: number;
     timestamp: Date;
     body: string;
+    objectResponse: any,
     messageType?: MessageType;
 }
 
@@ -12,6 +13,7 @@ export class MessageResponseBuilder {
     private timestamp!: Date;
     private body!: string;
     private messageType: MessageType;
+    private objectResponse: MessageResponse;
 
     withStatusCode(statusCode: number): this {
         this.statusCode = statusCode;
@@ -25,6 +27,11 @@ export class MessageResponseBuilder {
 
     withBody(body: string): this {
         this.body = body;
+        return this;
+    }
+
+    withObjectResponse(objectResponse: any): this {
+        this.objectResponse = objectResponse;
         return this;
     }
 
@@ -43,6 +50,7 @@ export class MessageResponseBuilder {
             timestamp: this.timestamp,
             body: this.body,
             messageType: this.messageType,
+            objectResponse: this.objectResponse,
         }
     }
 }

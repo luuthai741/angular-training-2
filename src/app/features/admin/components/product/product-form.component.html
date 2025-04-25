@@ -26,8 +26,6 @@
                 <input type="text" class="form-control" formControlName="price"
                        [ngClass]="{ 'is-invalid': formHelper.isInvalid('price', productForm) && isSubmitted }"
                        #formFields
-                       [appNumberInput]="'decimal'"
-
                 />
             </div>
         </div>

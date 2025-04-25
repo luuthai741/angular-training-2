@@ -1,11 +1,11 @@
-import {Component, OnInit} from "@angular/core";
+import {Component} from "@angular/core";
 
 import {ProductService} from "../../../../shared/services/product.service";
 import {Product} from "../../../../core/models/product.model";
 import {AuthService} from "../../../../shared/services/auth.service";
-import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
+import {NavigationEnd, Router} from "@angular/router";
 import {ROUTE} from "../../../../shared/constant/public-url";
-import {getFirstActivatedRouteSnapshot, getParamValue} from "../../../../shared/utils/router-helper";
+import {ProductContextService} from "../../../../shared/services/product-context.service";
 
 @Component({
     selector: 'admin-product-list',
@@ -15,13 +15,15 @@ export class AdminProductListComponent {
     ROUTE = ROUTE;
     products: Product[];
     isAdmin: boolean = this.authService.isAdmin();
-    selectedProduct: any = null;
     isShowForm: boolean = false;
 
-    constructor(private productService: ProductService,
-                private authService: AuthService,
-                private router: Router,
-                private activatedRoute: ActivatedRoute) {
+    constructor(
+        public productContext: ProductContextService,
+        private productService: ProductService,
+        private authService: AuthService,
+        private router: Router,
+    ) {
+        this.productContext.removeSelectedProduct();
         this.products = this.productService.getAllProducts();
         this.handleRouterListening();
     }
@@ -33,33 +35,43 @@ export class AdminProductListComponent {
             }
             if (event.url === ROUTE.ADMIN_PRODUCTS) {
                 this.products = this.productService.getAllProducts();
-                this.selectedProduct = null;
+                this.productContext.removeSelectedProduct();
                 this.isShowForm = false;
             } else if (event.url.includes(ROUTE.ADMIN_PRODUCTS_EDIT)) {
-                const productId = getParamValue(getFirstActivatedRouteSnapshot(this.activatedRoute), 'id');
-                this.selectedProduct = this.productService.getProductById(parseInt(productId));
+                this.replaceProduct(this.productContext.getSelectedProduct());
                 this.isShowForm = true;
             } else if (event.url.includes(ROUTE.ADMIN_PRODUCTS_DETAILS)) {
-                const productId = getParamValue(getFirstActivatedRouteSnapshot(this.activatedRoute), 'id');
-                this.selectedProduct = this.productService.getProductById(parseInt(productId));
+                this.replaceProduct(this.productContext.getSelectedProduct());
                 this.isShowForm = false;
             } else if (event.url.includes(ROUTE.ADMIN_PRODUCTS_CREATE)) {
-                this.isShowForm = true;
                 this.createProduct();
             }
         });
     }
 
-    setSelectedProduct(product: Product) {
-        if (this.selectedProduct == product) {
+    replaceProduct(product: Product): void {
+        if (this.products.length == 0 || !product) {
             return;
         }
-        this.selectedProduct = product;
-        this.router.navigate([ROUTE.ADMIN_PRODUCTS_DETAILS, product.id]);
+        const index = this.products.findIndex((p) => p.id === product.id);
+        this.products = [
+            ...this.products.slice(0, index),
+            product,
+            ...this.products.slice(index + 1),
+        ];
+    }
+
+    setSelectedProduct(product: Product) {
+        if (this.productContext.getSelectedProduct()?.id == product.id) {
+            return;
+        }
+        this.productContext.setSelectedProduct(product);
+        this.router.navigate([ROUTE.ADMIN_PRODUCTS_DETAILS]);
     }
 
     createProduct() {
-        this.selectedProduct = {};
+        this.productContext.removeSelectedProduct();
         this.router.navigate([ROUTE.ADMIN_PRODUCTS_CREATE]);
+        this.isShowForm = true;
     }
 }

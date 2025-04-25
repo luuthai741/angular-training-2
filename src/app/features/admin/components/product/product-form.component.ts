@@ -12,6 +12,7 @@ import {ControlValidator} from "../../../../core/models/control-validator.model"
 import {DialogType} from "../../../../shared/constant/dialog.type";
 import {MessageType} from "../../../../shared/constant/message.type";
 import {ROUTE} from "../../../../shared/constant/public-url";
+import {ProductContextService} from "../../../../shared/services/product-context.service";
 
 @Component({
     selector: 'admin-product-form',
@@ -29,7 +30,6 @@ export class ProductFormComponent implements OnInit {
     isSubmitted: boolean = false;
     isDialogOpen: boolean = false;
     dialogType: DialogType = DialogType.NOTIFY;
-    productId: string;
 
     @ViewChildren("formFields") formFields: QueryList<ElementRef>;
 
@@ -37,6 +37,7 @@ export class ProductFormComponent implements OnInit {
         private productService: ProductService,
         private route: ActivatedRoute,
         private router: Router,
+        private productContext: ProductContextService
     ) {
         this.productForm = new FormGroup({
             id: new FormControl('0', {
@@ -89,6 +90,7 @@ export class ProductFormComponent implements OnInit {
                 this.messageResponse = data as MessageResponse;
                 this.loading = LoadingStateType.LOADED;
                 this.isDialogOpen = true;
+                this.productContext.setSelectedProduct(data.objectResponse);
             },
             error: (err) => {
                 this.loading = LoadingStateType.LOADED;
@@ -114,35 +116,23 @@ export class ProductFormComponent implements OnInit {
         let url = "";
         if (this.formType == FormType.CREATE) {
             url = ROUTE.ADMIN_PRODUCTS;
+            this.productContext.removeSelectedProduct();
         } else {
-            url = `${ROUTE.ADMIN_PRODUCTS_DETAILS}/${this.productId}`;
-            state.productId = this.productId;
+            url = ROUTE.ADMIN_PRODUCTS_DETAILS;
         }
-        this.router.navigate([url], {
-            state
-        });
+        this.router.navigate([url]);
     }
 
     setFormValue() {
         if (this.formType !== FormType.UPDATE) {
             return;
         }
-        this.productId = this.route.snapshot.paramMap.get('id');
-        const product = this.productService.getProductById(parseInt(this.productId));
+        const product = this.productContext.getSelectedProduct();
         if (!product) {
             this.router.navigate([ROUTE.NOT_FOUND]);
         }
         this.productForm.patchValue(product);
         this.formHelper.clearFormErrors(this.productForm);
-    }
-
-    onReset() {
-        this.isSubmitted = false;
-        if (this.formType === FormType.UPDATE) {
-            this.setFormValue();
-            return;
-        }
-        this.formHelper.clearFormValue(this.productForm);
     }
 
     closeDialog(value: boolean): void {

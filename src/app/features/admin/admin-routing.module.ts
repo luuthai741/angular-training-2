@@ -30,7 +30,7 @@ const routes: Routes = [
                 }
             },
             {
-                path: 'details/:id',
+                path: 'details',
                 component: AdminProductDetailsComponent,
                 canActivate: [RoleGuard],
                 data: {
@@ -39,7 +39,7 @@ const routes: Routes = [
                 }
             },
             {
-                path: 'edit/:id',
+                path: 'edit',
                 component: ProductFormComponent,
                 canActivate: [RoleGuard],
                 data: {
@@ -68,7 +68,7 @@ const routes: Routes = [
                 }
             },
             {
-                path: 'details/:id',
+                path: 'details',
                 component: UserDetailsComponent,
                 canActivate: [RoleGuard],
                 data: {
@@ -77,7 +77,7 @@ const routes: Routes = [
                 }
             },
             {
-                path: 'edit/:id',
+                path: 'edit',
                 component: UserFormComponent,
                 canActivate: [RoleGuard],
                 data: {

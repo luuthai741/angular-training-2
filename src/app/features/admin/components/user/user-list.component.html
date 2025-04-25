@@ -13,7 +13,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr [ngClass]="selectedUser != user ? 'selectable-row' : 'selected-row'" *ngFor="let user of users"
+                <tr [ngClass]="userContext.getSelectedUser()?.id != user.id ? 'selectable-row' : 'selected-row'" *ngFor="let user of users"
                     (click)="setSelectedUser(user)">
                     <td>{{ user.id }}</td>
                     <td>{{ user.username }}</td>
@@ -24,10 +24,10 @@
             </table>
         </div>
         <div class="col">
-            <div *ngIf="!selectedUser" style="font-size: 30px">
+            <div *ngIf="!userContext.getSelectedUser()" style="font-size: 30px">
                 Please select a user
             </div>
-            <div *ngIf="selectedUser">
+            <div *ngIf="userContext.getSelectedUser() || isShowForm">
                 <router-outlet></router-outlet>
             </div>
         </div>

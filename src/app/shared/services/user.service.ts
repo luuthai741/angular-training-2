@@ -62,19 +62,21 @@ export class UserService {
                     .build());
                 return;
             }
+            const newUser = {
+                ...user,
+                id: this.createUserId(),
+                gender: getGender(user.gender),
+                role: getRole(user.role)
+            }
             this.users = [
                 ...this.users,
-                {
-                    ...user,
-                    id: this.createUserId(),
-                    gender: getGender(user.gender),
-                    role: getRole(user.role)
-                }
+                newUser
             ];
             window.localStorage.setItem('users', JSON.stringify(this.users));
             observable.next(new MessageResponseBuilder()
                 .withBody("userCreatedSuccess")
                 .withStatusCode(201)
+                .withObjectResponse(newUser)
                 .withTimestamp(new Date())
                 .build()
             )
@@ -93,19 +95,21 @@ export class UserService {
                     .build());
                 return;
             }
+            const updatedUser = {
+                ...user,
+                gender: getGender(user.gender),
+                role: getRole(user.role)
+            };
             this.users = [
                 ...this.users.slice(0, index),
-                {
-                    ...user,
-                    gender: getGender(user.gender),
-                    role: getRole(user.role)
-                },
+                updatedUser,
                 ...this.users.slice(index + 1),
             ];
             window.localStorage.setItem('users', JSON.stringify(this.users));
             observable.next(new MessageResponseBuilder()
                 .withBody(`userUpdatedSuccess`)
                 .withStatusCode(200)
+                .withObjectResponse(updatedUser)
                 .withTimestamp(new Date())
                 .build()
             )
@@ -131,7 +135,7 @@ export class UserService {
         return usernames.includes(username);
     }
 
-    private mockUser():User {
+    private mockUser(): User {
         return {
             id: 1,
             username: 'admin',

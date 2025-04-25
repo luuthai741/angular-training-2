@@ -1,11 +1,11 @@
-import {Component, OnInit} from "@angular/core";
+import {Component} from "@angular/core";
 
 import {UserService} from "../../../../shared/services/user.service";
 import {User} from "../../../../core/models/user.model";
 import {AuthService} from "../../../../shared/services/auth.service";
-import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
-import {getFirstActivatedRouteSnapshot, getParamValue} from "../../../../shared/utils/router-helper";
+import {NavigationEnd, Router} from "@angular/router";
 import {ROUTE} from "../../../../shared/constant/public-url";
+import {UserContextService} from "../../../../shared/services/user-context.service";
 
 @Component({
     selector: "admin-users",
@@ -14,13 +14,15 @@ import {ROUTE} from "../../../../shared/constant/public-url";
 export class AdminUserListComponent {
     users: User[];
     isAdmin: boolean = this.authService.isAdmin();
-    selectedUser: any = null;
     isShowForm: boolean = false;
 
-    constructor(private userService: UserService,
-                private authService: AuthService,
-                private router: Router,
-                private activatedRoute: ActivatedRoute) {
+    constructor(
+        public userContext: UserContextService,
+        private userService: UserService,
+        private authService: AuthService,
+        private router: Router,
+    ) {
+        this.userContext.removeSelectedUser();
         this.users = this.userService.getUsers()
         this.handleRouterListening();
     }
@@ -33,35 +35,44 @@ export class AdminUserListComponent {
             }
             if (event.url === ROUTE.ADMIN_USERS) {
                 this.users = this.userService.getUsers();
-                this.selectedUser = null;
+                this.userContext.removeSelectedUser();
                 this.isShowForm = false;
             } else if (event.url.includes(ROUTE.ADMIN_USERS_EDIT)) {
-                const userId = getParamValue(getFirstActivatedRouteSnapshot(this.activatedRoute), 'id');
-                this.selectedUser = this.userService.getUserById(parseInt(userId));
+                this.replaceUser(this.userContext.getSelectedUser());
                 this.isShowForm = true;
             } else if (event.url.includes(ROUTE.ADMIN_USERS_DETAILS)) {
-                const userId = getParamValue(getFirstActivatedRouteSnapshot(this.activatedRoute), 'id');
-                this.selectedUser = this.userService.getUserById(parseInt(userId));
+                this.replaceUser(this.userContext.getSelectedUser());
                 this.isShowForm = false;
             } else if (event.url.includes(ROUTE.ADMIN_USERS_CREATE)) {
-                this.isShowForm = true;
                 this.createUser();
             }
         });
     }
 
-    setSelectedUser(user: User) {
-        if (this.selectedUser == user) {
+    replaceUser(user:User): void {
+        if (this.users.length == 0 || !user) {
             return;
         }
-        this.selectedUser = user;
-        this.router.navigate([ROUTE.ADMIN_USERS_DETAILS, user.id]);
+        const index = this.users.findIndex((u) => u.id === user.id);
+        this.users = [
+            ...this.users.slice(0, index),
+            user,
+            ...this.users.slice(index + 1),
+        ];
+    }
+
+    setSelectedUser(user: User) {
+        if (this.userContext.getSelectedUser()?.id == user.id) {
+            return;
+        }
+        this.userContext.setSelectedUser(user);
+        this.router.navigate([ROUTE.ADMIN_USERS_DETAILS]);
     }
 
     createUser() {
-        this.selectedUser = {};
+        this.userContext.removeSelectedUser();
         this.router.navigate([ROUTE.ADMIN_USERS_CREATE]);
+        this.isShowForm = true;
     }
-
 
 }

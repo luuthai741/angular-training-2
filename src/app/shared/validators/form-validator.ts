@@ -1,5 +1,4 @@
 import {AbstractControl, FormGroup, ValidationErrors} from '@angular/forms';
-import {removeCurrencyFormat} from "../utils/format-helper";
 
 export function usernameExistsValidator() {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -65,7 +64,7 @@ export function ageValidator() {
 
 export function priceValidator() {
     return (control: AbstractControl): ValidationErrors | null => {
-        const value = removeCurrencyFormat(control.value as string);
+        const value = control.value;
         return value && (value <= 0 || value > 1000)
             ? {'invalidPrice': true}
             : null;
