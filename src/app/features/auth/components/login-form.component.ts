@@ -68,5 +68,4 @@ export class LoginFormComponent {
     closeResponseDialog(isConfirm: boolean): void {
         this.messageResponse = null;
     }
-
 }
