@@ -1,0 +1,78 @@
+<app-loading [isLoading]="loading"></app-loading>
+<div class="container">
+    <form [formGroup]="productForm">
+        <common-confirm (confirm)="closeNotificationAndRedirect($event)" *ngIf="messageResponse && isDialogOpen"
+                        [messageType]="messageResponse.messageType" [title]="formType == form.CREATE ? 'Created' : 'Updated' + ' product response'"
+                        [messageKey]="messageResponse.body"
+                        [dialogType]="dialogType">
+        </common-confirm>
+        <input type="number" hidden formControlName="id" value="0"/>
+        <div class="form-group">
+            <label [appRequiredMark]="'title'">Title</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    formControlName="title"
+                    aria-describedby="emailHelp"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('title', productForm) && isSubmitted }"
+                    autoFocus
+                    #formFields
+            />
+        </div>
+        <div class="form-group">
+            <label [appRequiredMark]="'price'">Price</label>
+            <div class="input-group">
+                <input type="text" class="form-control" formControlName="price"
+                       appCurrencyInput
+                       [ngClass]="{ 'is-invalid': formHelper.isInvalid('price', productForm) && isSubmitted }"
+                       #formFields
+                />
+            </div>
+        </div>
+        <div class="form-group">
+            <label [appRequiredMark]="'description'">Description</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    formControlName="description"
+                    aria-describedby="emailHelp"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('description', productForm) && isSubmitted }"
+                    #formFields
+            />
+        </div>
+        <div class="form-group">
+            <label [appRequiredMark]="'category'" for="category">Category</label>
+            <select formControlName="category" class="form-control" id="category"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('category', productForm) && isSubmitted }">
+                <option value="" disabled selected>Select category</option>
+                <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label [appRequiredMark]="'image'">Image</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    formControlName="image"
+                    aria-describedby="emailHelp"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('image', productForm) && isSubmitted }"
+                    #formFields
+            />
+        </div>
+
+        <button
+                type="submit"
+                class="btn btn-primary mr-2"
+                (click)="onSubmit()"
+        >
+            {{ formType == form.CREATE ? 'Create' : 'Update' }}
+        </button>
+        <button class="btn btn-danger" (click)="redirectPage()">Cancel</button>
+    </form>
+    <form-validation-message *ngIf="isDialogOpen && productForm.invalid"
+                             [controlValidators]="controlValidators"
+                             [formGroup]="productForm"
+                             (confirm)="closeDialog($event)"
+    >
+    </form-validation-message>
+</div>

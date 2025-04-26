@@ -1,0 +1,19 @@
+<app-loading [isLoading]="loading"></app-loading>
+<div class="form-group my-3">
+</div>
+<div *ngIf="loading === loadingState.LOADED" class="container">
+    <div *ngIf="products.length == 0;">
+        The store has no any products
+    </div>
+    <div>
+        <input
+                type="text"
+                class="form-control w-50"
+                placeholder="Search products..."
+                [(ngModel)]="searchTerm"
+        />
+        <div class="row row-cols-4 mt-4">
+            <product *ngFor="let product of filterProducts" [product]="product"></product>
+        </div>
+    </div>
+</div>

@@ -1,5 +1,7 @@
 import {AbstractControl, FormControl, FormGroup} from "@angular/forms";
 import {ElementRef, QueryList} from "@angular/core";
+import {ControlValidator} from "../../core/models/control-validator.model";
+import {formTitles, formValidators} from "../constant/form-constants";
 
 export class FormHelper {
     static isInvalid(controlName: string, formGroup: FormGroup): boolean {
@@ -14,7 +16,9 @@ export class FormHelper {
 
     static focusOnInvalidField(formFields: QueryList<ElementRef>, form: FormGroup) {
         for (const formField of formFields.toArray()) {
-            const controlName = formField.nativeElement.getAttribute("formControlName");
+            const controlName = formField.nativeElement.getAttribute("formControlName")
+                ? formField.nativeElement.getAttribute("formControlName")
+                : formField.nativeElement.getAttribute("name");
             if (controlName && form.get(controlName)?.invalid) {
                 formField.nativeElement.focus();
                 break;
@@ -54,5 +58,23 @@ export class FormHelper {
         control?.markAsPristine();
         control?.markAsUntouched();
         control?.updateValueAndValidity();
+    }
+
+    static setControlValidators(formGroup: FormGroup, controlValidators: ControlValidator[], additionalControls: string[] = []): void {
+        if (controlValidators.length > 0) {
+            return;
+        }
+        const keys: string[] = Object.keys(formGroup.controls);
+        keys.push(...additionalControls);
+        keys.forEach((controlName) => {
+            if (formValidators[controlName]) {
+                const controlValidator: ControlValidator = {
+                    title: formTitles[controlName],
+                    controlName: controlName,
+                    validatorNames: formValidators[controlName],
+                }
+                controlValidators.push(controlValidator);
+            }
+        })
     }
 }

@@ -1,0 +1,15 @@
+<div class="bottom-right-dialog">
+    <div class="dialog-title">{{ title }}</div>
+    <hr/>
+    <div class="dialog-body" [ngClass]="setTextClass()">
+        {{ message }}
+        <ng-content></ng-content>
+    </div>
+    <div class="dialog-button-group" *ngIf="dialogType == baseDialog.CONFIRM">
+        <button class="mr-2 btn" [ngClass]="setButtonClass()" (click)="onConfirm()">Yes</button>
+        <button class="btn btn-secondary" (click)="closeToast()">No</button>
+    </div>
+    <div class="dialog-button-group" *ngIf="dialogType == baseDialog.NOTIFY">
+        <button class="mr-2 btn" [ngClass]="setButtonClass()" (click)="onConfirm()">Confirm</button>
+    </div>
+</div>

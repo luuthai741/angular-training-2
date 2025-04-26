@@ -1,0 +1,106 @@
+<div class="container">
+    <form [formGroup]="userForm">
+        <common-confirm (confirm)="closeNotificationAndRedirect($event)" *ngIf="messageResponse && isDialogOpen"
+                        [messageType]="messageResponse.messageType"
+                        [title]="formType == form.CREATE ? 'Created user response' : 'Updated user response'"
+                        [messageKey]="messageResponse.body"
+                        [dialogType]="dialogType"
+        ></common-confirm>
+        <input type="number" hidden formControlName="id"/>
+        <div class="form-group">
+            <label [appRequiredMark]="'username'">Username</label>
+            <input
+                    type="text"
+                    name="username"
+                    formControlName="username"
+                    class="form-control"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('username', userForm) && isSubmitted}"
+                    autoFocus
+                    #formField
+            />
+        </div>
+        <div formGroupName="passwordGroup">
+            <div class="form-group">
+                <label [appRequiredMark]="'passwordGroup.password'" for="password">Password</label>
+                <input type="password" id="password" formControlName="password" class="form-control"
+                       [ngClass]="{ 'is-invalid': formHelper.isInvalid('passwordGroup.password', userForm) && isSubmitted}"
+                       #formField
+                />
+            </div>
+            <div class="form-group">
+                <label [appRequiredMark]="'passwordGroup.confirmPassword'" for="confirmPassword">
+                    Confirm password
+                </label>
+                <input
+                        type="password"
+                        formControlName="confirmPassword"
+                        class="form-control"
+                        id="confirmPassword"
+                        [ngClass]="{ 'is-invalid': (formHelper.isInvalid('passwordGroup.confirmPassword',userForm)
+                        || formHelper.isInvalid('passwordGroup',userForm)) && isSubmitted}"
+                        #formField
+                />
+            </div>
+        </div>
+        <div class="form-group">
+            <label [appRequiredMark]="'fullName'" for="fullName">Full Name</label>
+            <input formControlName="fullName" class="form-control" id="fullName"
+                   [ngClass]="{ 'is-invalid': formHelper.isInvalid('fullName', userForm) && isSubmitted}"
+                   #formField
+            />
+        </div>
+        <div class="form-group">
+            <label [appRequiredMark]="'age'" for="age">Age</label>
+            <input formControlName="age" type="text" class="form-control" id="age"
+                   [appNumberInput]="'number'"
+                   [ngClass]="{ 'is-invalid': formHelper.isInvalid('age', userForm) && isSubmitted}"
+                   #formField
+            />
+        </div>
+        <div class="form-group">
+            <label [appRequiredMark]="'gender'" for="gender">Gender</label>
+            <select formControlName="gender" class="form-control" id="gender"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('gender', userForm) && isSubmitted}">
+                <option value="" disabled selected>Select gender</option>
+                <option *ngFor="let gender of genders" [value]="gender.value">{{ gender.label }}</option>
+            </select>
+        </div>
+        <div class="form-group" [hidden]="loggedInUser?.role != 'ADMIN'">
+            <label [appRequiredMark]="'role'" for="role">Role</label>
+            <select formControlName="role" class="form-control" id="role"
+                    [ngClass]="{ 'is-invalid': formHelper.isInvalid('role', userForm) && isSubmitted}">
+                <option value="" disabled selected>Select gender</option>
+                <option *ngFor="let role of roles" [value]="role.value">{{ role.label }}</option>
+            </select>
+        </div>
+        <div class="form-group" *ngIf="userForm.controls.adminCode" [hidden]="loggedInUser?.role != 'ADMIN'">
+            <label [appRequiredMark]="'adminCode'">Admin code</label>
+            <input [appRequiredMark]="'adminCode'" formControlName="adminCode" type="text" class="form-control"
+                   #formField/>
+        </div>
+        <div class="form-group" *ngIf="userForm.controls.subscriptionPlan" [hidden]="loggedInUser?.role != 'ADMIN'">
+            <label [appRequiredMark]="'subscriptionPlan'">Subscription plan</label>
+            <input
+                    formControlName="subscriptionPlan"
+                    type="text"
+                    class="form-control"
+                    #formField
+            />
+        </div>
+        <button
+                type="submit"
+                class="btn btn-primary mr-2"
+                (click)="onSubmit()"
+        >
+            {{ formType == form.CREATE ? 'Create' : 'Update' }}
+        </button>
+        <button class="btn btn-danger" (click)="redirectPage()">Cancel</button>
+    </form>
+    <form-validation-message *ngIf="isDialogOpen && userForm.invalid"
+                             [controlValidators]="controlValidators"
+                             [formGroup]="userForm"
+                             (confirm)="closeDialog($event)"
+    >
+    </form-validation-message>
+</div>
+

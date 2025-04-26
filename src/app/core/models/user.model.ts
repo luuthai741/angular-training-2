@@ -5,7 +5,7 @@ export interface User {
     id: number,
     username: string;
     password: string;
-    fullName:string,
+    fullName: string,
     age: number;
     gender: string;
     role: string;
@@ -13,16 +13,4 @@ export interface User {
         adminCode?: string;
         subscriptionPlan?: string;
     }
-}
-
-export function mockUser():User {
-    return {
-        id: 1,
-        username: 'admin',
-        password: 'admin',
-        fullName: 'Admin',
-        age: 18,
-        gender: GenderType[GenderType.MALE],
-        role: RoleType[RoleType.ADMIN],
-    };
 }

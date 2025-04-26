@@ -1,0 +1,36 @@
+<div class="container mt-4">
+    <h2 class="mb-3">Product List</h2>
+    <div class="row">
+        <div class="col">
+            <button *ngIf="isAdmin" [disabled]="isShowForm" class="btn btn-info mt-2 mb-2" (click)="createProduct()">New
+            </button>
+            <table class="table table-bordered text-center align-middle">
+                <thead class="table-dark">
+                <tr>
+                    <th scope="col">#ID</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Price</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr [ngClass]="productContext.getSelectedProduct()?.id != product.id ? 'selectable-row' : 'selected-row'"
+                    *ngFor="let product of products"
+                    (click)="setSelectedProduct(product)"
+                >
+                    <td>{{ product.id }}</td>
+                    <td>{{ product.title }}</td>
+                    <td>{{ product.price | currency }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col">
+            <div *ngIf="!productContext.getSelectedProduct()" style="font-size: 30px">
+                Please select a product
+            </div>
+            <div *ngIf="productContext.getSelectedProduct() || isShowForm">
+                <router-outlet></router-outlet>
+            </div>
+        </div>
+    </div>
+</div>

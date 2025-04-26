@@ -1,34 +1,64 @@
+import {MessageType} from "../../shared/constant/message.type";
+
 export interface MessageResponse {
     statusCode: number;
     timestamp: Date;
     body: string;
+    objectResponse: any,
+    messageType?: MessageType;
 }
 
 export class MessageResponseBuilder {
-    private _statusCode!: number;
-    private _timestamp!: Date;
-    private _body!: string;
+    private statusCode!: number;
+    private timestamp!: Date;
+    private body!: string;
+    private messageType: MessageType;
+    private objectResponse: MessageResponse;
 
     withStatusCode(statusCode: number): this {
-        this._statusCode = statusCode;
+        this.statusCode = statusCode;
         return this;
     }
 
     withTimestamp(timestamp: Date): this {
-        this._timestamp = timestamp;
+        this.timestamp = timestamp;
         return this;
     }
 
     withBody(body: string): this {
-        this._body = body;
+        this.body = body;
         return this;
     }
 
-    build(): MessageResponse {
-        return {
-            statusCode: this._statusCode,
-            timestamp: this._timestamp,
-            body: this._body,
-        };
+    withObjectResponse(objectResponse: any): this {
+        this.objectResponse = objectResponse;
+        return this;
     }
+
+    setMessageType() {
+        if (isError(this.statusCode)) {
+            this.messageType = MessageType.ERROR;
+        } else if (isSuccess(this.statusCode)) {
+            this.messageType = MessageType.SUCCESS;
+        }
+    }
+
+    build(): MessageResponse {
+        this.setMessageType();
+        return {
+            statusCode: this.statusCode,
+            timestamp: this.timestamp,
+            body: this.body,
+            messageType: this.messageType,
+            objectResponse: this.objectResponse,
+        }
+    }
+}
+
+export function isSuccess(code: number): boolean {
+    return code >= 200 && code < 300;
+}
+
+export function isError(code: number): boolean {
+    return code >= 400;
 }

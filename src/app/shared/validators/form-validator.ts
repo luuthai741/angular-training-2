@@ -1,4 +1,4 @@
-import {AbstractControl, ValidationErrors} from '@angular/forms';
+import {AbstractControl, FormGroup, ValidationErrors} from '@angular/forms';
 
 export function usernameExistsValidator() {
     return (control: AbstractControl): ValidationErrors | null => {
@@ -24,11 +24,59 @@ export function numberOnlyValidator() {
     };
 }
 
+export function passwordValidator() {
+    return (control: AbstractControl): ValidationErrors | null => {
+        const value = control.value;
+        if (value && !/^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{9,}$/.test(value)) {
+            return {'invalidPassword': true};
+        }
+        return null;
+    };
+}
+
+export function fullNameValidator() {
+    return (control: AbstractControl): ValidationErrors | null => {
+        const value = control.value;
+        if (value && (!/^[a-zA-Z\s]*$/.test(value) || value.length > 20)) {
+            return {'invalidFullName': true};
+        }
+        return null;
+    }
+}
+
+export function passwordMatchValidator(group: FormGroup) {
+    const password = group.controls.password;
+    const confirmPassword = group.controls.confirmPassword;
+    return password.value !== confirmPassword.value
+    && (password.touched || password.value != '')
+        ? {mismatch: true}
+        : null;
+}
+
+export function ageValidator() {
+    return (control: AbstractControl): ValidationErrors | null => {
+        const value = control.value;
+        return value && (value < 1 || value > 99)
+            ? {'invalidAge': true}
+            : null;
+    }
+}
+
+export function priceValidator() {
+    return (control: AbstractControl): ValidationErrors | null => {
+        const value = control.value;
+        return value && (value <= 0 || value > 1000)
+            ? {'invalidPrice': true}
+            : null;
+    }
+}
+
 export function imageUrlValidator() {
     return (control: AbstractControl): ValidationErrors | null => {
         const value = control.value;
         const pattern = /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp|svg|bmp)$/i;
-        const valid = pattern.test(value);
-        return valid ? null : {invalidImageUrl: true};
+        return (value && !pattern.test(value))
+            ? {'invalidImageUrl': true}
+            : null;
     };
 }

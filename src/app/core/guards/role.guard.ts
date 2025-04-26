@@ -2,7 +2,8 @@ import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTre
 import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
 
-import {AuthService} from "../services/auth.service";
+import {AuthService} from "../../shared/services/auth.service";
+import {ROUTE} from "../../shared/constant/public-url";
 
 @Injectable({
     providedIn: "root",
@@ -16,14 +17,14 @@ export class RoleGuard implements CanActivate {
         const currentUser = this.authService.getCurrentUser();
         if (!currentUser) {
             console.log("Not logged in");
-            this.router.navigate(['/login']);
+            this.router.navigate([ROUTE.LOGIN]);
             return false;
         }
         const requiredRoles = route.data['roles'] as string[];
         const hasRole = requiredRoles.includes(currentUser.role);
         if (!hasRole) {
             console.log("Not permission");
-            this.router.navigate(['/unauthorized']);
+            this.router.navigate([ROUTE.UNAUTHORIZED]);
             return false;
         }
         return true;

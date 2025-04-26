@@ -1,15 +1,13 @@
 import {ChangeDetectionStrategy, Component, Input} from '@angular/core';
 
-import {MessageResponse} from "../../core/models/message-response.model";
+import {isError, MessageResponse} from "../../core/models/message-response.model";
+import {isSuccess} from "angular-in-memory-web-api";
 
 @Component({
     selector: 'common-message-response',
     template: `
         <div *ngIf="messageResponse"
-             [ngClass]="{
-                'text-success': isSuccess(messageResponse.statusCode),
-                'text-danger': isError(messageResponse.statusCode)
-            }">
+             [ngClass]="setClass()">
             {{ messageResponse.body }}
         </div>
     `,
@@ -26,12 +24,12 @@ export class MessageResponseComponent {
     get messageResponse(): MessageResponse {
         return this._messageResponse;
     }
-
-    isSuccess(code: number): boolean {
-        return code >= 200 && code < 300;
-    }
-
-    isError(code: number): boolean {
-        return code >= 400;
+    setClass(): string {
+        if (isSuccess(this.messageResponse.statusCode)) {
+            return 'text-success';
+        }else if (isError(this.messageResponse.statusCode)) {
+            return 'text-danger';
+        }
+        return '';
     }
 }

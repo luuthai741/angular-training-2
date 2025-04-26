@@ -1,27 +1,49 @@
 <app-loading [isLoading]="loading"></app-loading>
-<div class="container">
+<div class="toast-container" *ngIf="messageResponse">
+    <common-confirm *ngIf="messageResponse"
+                    (confirm)="closeResponseDialog($event)"
+                    [messageType]="messageResponse.messageType"
+                    [title]="'Login'"
+                    [dialogType]="dialogType"
+                    [messageKey]="messageResponse.body">
+    </common-confirm>
+</div>
+<div class="container mt-4">
     <form #form="ngForm" (ngSubmit)="onSubmit(form)">
         <div class="form-group">
-            <label>Username</label>
-            <input type="text" required autofocus name="username" class="form-control"
-                   [ngClass]="{'is-invalid':username.errors && username.touched}"
-                   ngModel #username="ngModel"/>
+            <label>Username<span class="text-danger">*</span></label>
+            <input type="text"
+                   required
+                   autoFocus
+                   name="username"
+                   class="form-control"
+                   [ngClass]="{'is-invalid':password.errors && ((password.touched && isSubmitted)  || isSubmitted)}"
+                   ngModel
+                   #username="ngModel" #formField/>
         </div>
-        <p *ngIf="username.errors?.required && username.touched" class="text-danger">
-            Please fill out the username!
-        </p>
         <div class="form-group">
-            <label>Password</label>
-            <input type="password" required name="password" class="form-control"
-                   [ngClass]="{'is-invalid':password.errors && password.touched}"
-                   ngModel #password="ngModel"/>
-            <p *ngIf="password.errors?.required && password.touched" class="text-danger">
-                Please fill out the password!
-            </p>
+            <label>Password<span class="text-danger">*</span></label>
+            <input type="password"
+                   required
+                   name="password"
+                   class="form-control"
+                   [ngClass]="{'is-invalid':password.errors && ((password.touched && isSubmitted)  || isSubmitted)}"
+                   ngModel
+                   #password="ngModel" #formField/>
         </div>
-        <common-message-response [messageResponse]="messageResponse"></common-message-response>
-        <button type="submit" class="btn btn-primary" [disabled]="form.invalid && form.touched">
+        <button type="submit" class="btn btn-primary mt-2 mb-2">
             Login
         </button>
     </form>
+    <div class="form-inline">
+        <label class="mr-2">Don't have an account? </label>
+        <a class="" [routerLink]="[ROUTE.REGISTER]"> Sign up</a>
+    </div>
+    <form-validation-message *ngIf="isDialogOpen && formGroup"
+                             [controlValidators]="controlValidators"
+                             [formGroup]="formGroup"
+                             (confirm)="closeDialog($event)"
+
+    >
+    </form-validation-message>
 </div>

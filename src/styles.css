@@ -1,0 +1,141 @@
+.toast-container {
+    right: 10px;
+    position: fixed;
+    top: 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 9999;
+    max-width: 90vw;
+}
+
+.confirm-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 9998;
+    pointer-events: auto;
+}
+
+.bottom-right-dialog {
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 15px 20px;
+    border-radius: 8px;
+    position: static;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.bottom-right-dialog hr {
+    margin: 0 0 4px 0;
+    border: none;
+    border-top: 1px solid #ccc;
+}
+
+.toast-container .bottom-right-dialog {
+    max-width: 300px;
+}
+
+.confirm-container .bottom-right-dialog {
+    max-width: 680px;
+    min-width: 400px;
+    max-height: 80vh;
+    overflow-y: auto;
+    background-color: #fff;
+    color: #333;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 15px 20px;
+    border-radius: 8px;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.toast-container .bottom-right-dialog .dialog-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.toast-container .bottom-right-dialog .dialog-body {
+    font-size: 16px;
+}
+
+.confirm-container .bottom-right-dialog .dialog-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.confirm-container .bottom-right-dialog .dialog-body {
+    font-size: 20px;
+}
+
+.bottom-right-dialog p {
+    margin: 0;
+    font-size: 14px;
+}
+
+
+.close-btn {
+    position: absolute;
+    top: 4px;
+    right: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #999;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    color: #000;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dialog-button-group {
+    margin: 10px;
+}
+
+.dialog-button-group > button {
+    width: 80px;
+    margin: 10px;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.table .selected-row{
+    background-color: #eee;
+    cursor: default;
+}
+.table .selectable-row {
+    cursor: pointer;
+}
+
+.table .selectable-row:hover {
+    background-color: #eee;
+}
