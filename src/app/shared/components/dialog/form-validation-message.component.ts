@@ -1,10 +1,10 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {MessageType} from "../constant/message.type";
-import {FormHelper} from "../utils/form-helper";
-import {ControlValidator} from "../../core/models/control-validator.model";
-import {getMessageByKey} from "../constant/message-mapping";
-import {DialogType} from "../constant/dialog.type";
+import {MessageType} from "../../constant/message.type";
+import {FormHelper} from "../../utils/form-helper";
+import {ControlValidator} from "../../../core/models/control-validator.model";
+import {getMessageByKey} from "../../constant/message-mapping";
+import {DialogType} from "../../constant/dialog.type";
 
 @Component({
     selector: 'form-validation-message',

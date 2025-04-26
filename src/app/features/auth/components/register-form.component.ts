@@ -1,4 +1,4 @@
-import {Component, ElementRef, HostListener, QueryList, ViewChildren} from '@angular/core';
+import {Component, ElementRef, QueryList, ViewChildren} from '@angular/core';
 import {FormGroup, NgForm} from '@angular/forms';
 
 import {LoadingStateType} from '../../../shared/constant/loading-state.type';

@@ -13,7 +13,7 @@ import {ApiInterceptor} from './core/interceptors/api.interceptor';
 import {ErrorInterceptor} from './core/interceptors/error.interceptor';
 import {UserService} from './shared/services/user.service';
 import {TokenService} from './shared/services/token.service';
-import {HeaderComponent} from './shared/components/header.component';
+import {HeaderComponent} from './shared/components/layout/header.component';
 import {ShareModule} from "./shared/share.module";
 import {UnauthorizedComponent} from "./shared/components/unauthorized.component";
 import {PageNotFoundComponent} from "./shared/components/page-not-found.component";

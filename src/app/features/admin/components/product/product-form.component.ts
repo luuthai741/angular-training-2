@@ -112,7 +112,6 @@ export class ProductFormComponent implements OnInit {
     }
 
     redirectPage() {
-        const state: { [k: string]: any } = {};
         let url = "";
         if (this.formType == FormType.CREATE) {
             url = ROUTE.ADMIN_PRODUCTS;

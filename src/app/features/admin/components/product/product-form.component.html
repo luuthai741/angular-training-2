@@ -16,7 +16,6 @@
                     aria-describedby="emailHelp"
                     [ngClass]="{ 'is-invalid': formHelper.isInvalid('title', productForm) && isSubmitted }"
                     autoFocus
-
                     #formFields
             />
         </div>
@@ -24,6 +23,7 @@
             <label [appRequiredMark]="'price'">Price</label>
             <div class="input-group">
                 <input type="text" class="form-control" formControlName="price"
+                       appCurrencyInput
                        [ngClass]="{ 'is-invalid': formHelper.isInvalid('price', productForm) && isSubmitted }"
                        #formFields
                 />

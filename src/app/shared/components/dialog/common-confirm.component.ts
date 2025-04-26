@@ -1,6 +1,6 @@
-import {Component, Input, Output, EventEmitter} from "@angular/core";
-import {MessageType} from "../constant/message.type";
-import {DialogType} from "../constant/dialog.type";
+import {Component, EventEmitter, Input, Output} from "@angular/core";
+import {MessageType} from "../../constant/message.type";
+import {DialogType} from "../../constant/dialog.type";
 
 @Component({
     selector: "common-confirm",

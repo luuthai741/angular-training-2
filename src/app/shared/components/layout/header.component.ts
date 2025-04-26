@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 
-import {AuthService} from "../services/auth.service";
-import {User} from "../../core/models/user.model";
-import {UserService} from "../services/user.service";
-import {RoleType} from "../constant/role.type";
+import {AuthService} from "../../services/auth.service";
+import {User} from "../../../core/models/user.model";
+import {UserService} from "../../services/user.service";
+import {RoleType} from "../../constant/role.type";
 import {ActivatedRoute, Router} from "@angular/router";
-import {publicUrl, ROUTE} from "../constant/public-url";
+import {publicUrl, ROUTE} from "../../constant/public-url";
 
 @Component({
     selector: 'header',

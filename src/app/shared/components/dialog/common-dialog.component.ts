@@ -1,12 +1,11 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {MessageType} from "../constant/message.type";
-import {DialogType} from "../constant/dialog.type";
-import {getMessageByKey} from "../constant/message-mapping";
+import {MessageType} from "../../constant/message.type";
+import {DialogType} from "../../constant/dialog.type";
+import {getMessageByKey} from "../../constant/message-mapping";
 
 @Component({
     selector: "common-dialog",
-    templateUrl: "./common-dialog.component.html",
-    styleUrls: ["./common-dialog.component.css"],
+    templateUrl: "./common-dialog.component.html"
 })
 export class CommonDialogComponent {
     @Input() messageType: MessageType = MessageType.ERROR;

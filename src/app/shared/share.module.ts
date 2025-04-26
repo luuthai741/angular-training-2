@@ -9,11 +9,12 @@ import {RequiredMarkDirective} from "./directives/required-mark.directive";
 import {UsernameExistingDirective} from "./directives/username-existing.directive";
 import {ConfirmPasswordDirective} from "./directives/confirm-password.directive";
 import {AutoFocusDirective} from "./directives/auto-focus.directive";
-import {CommonDialogComponent} from "./components/common-dialog.component";
-import {FormValidationMessageComponent} from "./components/form-validation-message.component";
-import {CommonConfirm} from "./components/common-confirm.component";
+import {CommonDialogComponent} from "./components/dialog/common-dialog.component";
+import {FormValidationMessageComponent} from "./components/dialog/form-validation-message.component";
+import {CommonConfirm} from "./components/dialog/common-confirm.component";
 import {InvalidPasswordDirective} from "./directives/invalid-password.directive";
 import {CloseDialogDirective} from "./directives/close-dialog.directive";
+import {CurrencyInputDirective} from "./directives/currency-input.directive";
 
 @NgModule({
     declarations: [TruncatePipe,
@@ -28,7 +29,8 @@ import {CloseDialogDirective} from "./directives/close-dialog.directive";
         FormValidationMessageComponent,
         CommonConfirm,
         InvalidPasswordDirective,
-        CloseDialogDirective
+        CloseDialogDirective,
+        CurrencyInputDirective
     ],
     exports: [TruncatePipe,
         MessageResponseComponent,
@@ -43,7 +45,8 @@ import {CloseDialogDirective} from "./directives/close-dialog.directive";
         FormValidationMessageComponent,
         CommonConfirm,
         InvalidPasswordDirective,
-        CloseDialogDirective
+        CloseDialogDirective,
+        CurrencyInputDirective
     ],
     imports: [CommonModule],
 })
